@@ -1,6 +1,8 @@
 package Zabook.models;
 
 import java.util.List;
+
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
     @Id
-    private int userID;
+    private ObjectId userID;
     private String firstName;
     private String lastName;
     private String gender;
@@ -19,112 +21,108 @@ public class User {
     private String bio;
     private List<Integer> followers;
     private List<Integer> followings;
+	
+	public ObjectId getUserID() {
+		return userID;
+	}
 
-    public User() {
-    }
+	public void setUserID(ObjectId userID) {
+		this.userID = userID;
+	}
 
-    public User(int userID, String firstName, String lastName, String gender, String birthDay,
-                String address, String email, String password, String bio,
-                List<Integer> followers, List<Integer> followings) {
-        this.userID = userID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.birthDay = birthDay;
-        this.address = address;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.followers = followers;
-        this.followings = followings;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    // Getters và Setters
-    public int getUserID() {
-        return userID;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getGender() {
+		return gender;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public String getBirthDay() {
+		return birthDay;
+	}
 
-    public String getGender() {
-        return gender;
-    }
+	public void setBirthDay(String birthDay) {
+		this.birthDay = birthDay;
+	}
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getBirthDay() {
-        return birthDay;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getBio() {
+		return bio;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public List<Integer> getFollowers() {
+		return followers;
+	}
 
-    public String getBio() {
-        return bio;
-    }
+	public void setFollowers(List<Integer> followers) {
+		this.followers = followers;
+	}
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
+	public List<Integer> getFollowings() {
+		return followings;
+	}
 
-    public List<Integer> getFollowers() {
-        return followers;
-    }
+	public void setFollowings(List<Integer> followings) {
+		this.followings = followings;
+	}
 
-    public void setFollowers(List<Integer> followers) {
-        this.followers = followers;
-    }
-
-    public List<Integer> getFollowings() {
-        return followings;
-    }
-
-    public void setFollowings(List<Integer> followings) {
-        this.followings = followings;
-    }
+    public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
+			String email, String password, String bio, List<Integer> followers, List<Integer> followings) {
+		super();
+		this.userID = userID;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.birthDay = birthDay;
+		this.address = address;
+		this.email = email;
+		this.password = password;
+		this.bio = bio;
+		this.followers = followers;
+		this.followings = followings;
+	}
 }

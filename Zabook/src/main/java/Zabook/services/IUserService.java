@@ -2,18 +2,20 @@ package Zabook.services;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import Zabook.models.User;
 
 public interface IUserService {
 
 
-    void deleteUser(int userID);
+    void deleteUser(ObjectId userID);
 
-    User updateUser(int userID, User user);
+    User updateUser(ObjectId userID, User user);
 
     User createUser(User user);
 
-    User getUserById(int userID);
+    User getUserById(ObjectId userID);
 
     List<User> getAllUsers();
 
