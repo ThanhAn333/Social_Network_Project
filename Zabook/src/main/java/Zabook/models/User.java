@@ -125,4 +125,10 @@ public class User {
 		this.followers = followers;
 		this.followings = followings;
 	}
+
+	public User() {
+		super();
+		
+	}
+    
 }
