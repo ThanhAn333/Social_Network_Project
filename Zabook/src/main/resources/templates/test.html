@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Post</title>
+</head>
+<body>
+    <h1>Chỉnh sửa bài viết</h1>
+
+    <!-- Form cập nhật bài đăng -->
+    <form th:action="@{/update}" method="post" th:object="${post}">
+        <input type="hidden" th:field="*{id}" /> <!-- ID của Post để nhận diện -->
+        
+        <label>User ID:</label>
+        <input type="text" th:field="*{userId}" /><br>
+
+        <label>Content:</label>
+        <textarea th:field="*{content}"></textarea><br>
+
+        <label>Image URL:</label>
+        <input type="text" th:field="*{image}" /><br>
+
+        <button type="submit">Update Post</button>
+    </form>
+
+    <!-- Thông báo kết quả -->
+    <p th:text="${message}"></p>
+
+    <!-- Hiển thị post đã cập nhật -->
+    <div th:if="${post != null}">
+        <h3>Updated Post:</h3>
+        <p>ID: <span th:text="${post.id}"></span></p>
+        <p>User ID: <span th:text="${post.userId}"></span></p>
+        <p>Content: <span th:text="${post.content}"></span></p>
+        <p>Image URL: <img th:src="${post.image}" alt="Post Image" /></p>
+    </div>
+</body>
+</html>

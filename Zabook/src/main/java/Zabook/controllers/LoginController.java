@@ -5,40 +5,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import Zabook.models.User;
 import Zabook.services.IUserService;
 
 @Controller
-@RequestMapping("/login")
 public class LoginController {
 
-	@Autowired
-	private IUserService userService;
-	
-	@GetMapping
-    public String showLoginPage() {
+    @Autowired
+    private IUserService userService;
+
+    @GetMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
-	
-	@PostMapping	
-    public ModelAndView login(@RequestBody User loginRequest, Model model) {
-        String username = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
 
-        User user = userService.getUserByEmail(username);
+    @PostMapping("/login")
+    public String login(@RequestParam String email,@RequestParam String pass, Model model) {
+        
 
-        if (user != null && user.getPassword().equals(password)) {
-            
-            return new ModelAndView("home");
+        User user = userService.getUserByEmail(email);
+
+        if (user != null && user.getPassword().equals(pass)) {
+            return "redirect:/home";
         } else {
-            
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
-            return new ModelAndView("login");  
+            return "login";
         }
     }
-
 }

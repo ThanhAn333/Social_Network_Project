@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-	<title>Pitnik Social Network Toolkit</title>
+	<title>ZABOOK</title>
     <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16"> 
     
     <link rel="stylesheet" href="css/main.min.css">
@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/color.css">
     <link rel="stylesheet" href="css/responsive.css">
+	<title>ZABOOK Social Network Toolkit</title>
+    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16"> 
+
 
 </head>
 <body>
@@ -28,9 +31,9 @@
                         <div class="col-lg-8">
                             <div class="big-ad">
                                 <figure><img src="images/logo2.png" alt=""></figure>
-                                <h1>Welcome to the Pitnik</h1>
+                                <h1>Welcome to the ZABOOK</h1>
                                 <p>
-                                     Pitnik is a social network template that can be used to connect people. use this template for multipurpose social activities like job, dating, posting, bloging and much more. Now join & Make Cool Friends around the world !!!                             
+                                     ZABOOK is a social network template that can be used to connect people. use this template for multipurpose social activities like job, dating, posting, bloging and much more. Now join & Make Cool Friends around the world !!!                             
                                 </p>
                                 
                                 <div class="fun-fact">
@@ -77,12 +80,16 @@
                                     <i class="fa fa-key"></i>login
                                     <span>sign in now and meet the awesome Friends around the world.</span>
                                 </div>
-                                <form class="we-form" method="post">
-                                    <input type="text" placeholder="Email">
-                                    <input type="password" placeholder="Password">
+                                <form class="we-form" method="post" action="/login">
+									
+									<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+									        <p th:text="${errorMessage}"></p>
+									    </div>
+                                    <input type="text" placeholder="Email" name="email">
+                                    <input type="password" placeholder="Password" name="pass">
                                     <input type="checkbox"><label>remember me</label>
                                     <button type="submit" data-ripple="">sign in</button>
-                                    <a class="forgot underline" href="#" title="">forgot password?</a>
+									<a class="forgot underline" href="#" title="">forgot password?</a>
                                 </form>
                                 <a class="with-smedia facebook" href="#" title="" data-ripple=""><i class="fa fa-facebook"></i></a>
                                 <a class="with-smedia twitter" href="#" title="" data-ripple=""><i class="fa fa-twitter"></i></a>
@@ -98,9 +105,10 @@
         </section>
          
     </div>
-    
     	<script src="js/main.min.js"></script>
 		<script src="js/script.js"></script>
+		<div th:replace="~{/fragments/script::script}"></div>
+		<div th:replace="~{/fragments/css::css}"></div>
 </body>	
 
 </html>
