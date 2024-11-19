@@ -6,17 +6,20 @@ import java.util.Optional;
 import org.bson.types.ObjectId;
 
 import Zabook.models.Post;
+import Zabook.models.User;
 
 public interface IPostService {
 	Post createPost(Post post) ;
-
-    List<Post> getUserPosts(ObjectId userId);
     
-    void deletePost(String postId);
     
     Post updatePost(Post post);
-
-	boolean existsById(String id); 
 	
-	Optional<Post> findById(String id);
+
+	void deletePost(ObjectId postId);
+
+	Optional<Post> findById(ObjectId id);
+
+	boolean existsById(ObjectId id);
+
+	List<Post> getUserPosts(User user);
 }

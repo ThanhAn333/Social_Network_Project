@@ -1,6 +1,7 @@
 package Zabook.services.impl;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -8,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Zabook.models.Post;
+import Zabook.models.User;
 import Zabook.repository.PostRepository;
 import Zabook.services.IPostService;
+
 @Service
 public class PostService implements IPostService{
 
@@ -22,12 +25,12 @@ public class PostService implements IPostService{
 	}
 
 	@Override
-	public List<Post> getUserPosts(ObjectId userId) {
-		return postRepository.findByUserId(userId);
+	public List<Post> getUserPosts(User user) {
+		return postRepository.findByUser(user);
 	}
 
 	@Override
-	public void deletePost(String postId) {
+	public void deletePost(ObjectId postId) {
 		postRepository.deleteById(postId);
 	}
 
@@ -45,7 +48,7 @@ public class PostService implements IPostService{
 	}
 
 	@Override
-	public boolean existsById(String id) {
+	public boolean existsById(ObjectId id) {
 		if(postRepository.existsById(id)){
 			return true;
 		}else
@@ -53,7 +56,7 @@ public class PostService implements IPostService{
 	}
 
 	@Override
-	public Optional<Post> findById(String id) {
+	public Optional<Post> findById(ObjectId id) {
 		return postRepository.findById(id);
 	}
 

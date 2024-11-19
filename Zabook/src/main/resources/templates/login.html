@@ -75,28 +75,30 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="we-login-register">
-                                <div class="form-title">
-                                    <i class="fa fa-key"></i>login
-                                    <span>sign in now and meet the awesome Friends around the world.</span>
-                                </div>
-                                <form class="we-form" method="post" action="/login">
-									
-									<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-									        <p th:text="${errorMessage}"></p>
-									    </div>
-                                    <input type="text" placeholder="Email" name="email">
-                                    <input type="password" placeholder="Password" name="pass">
-                                    <input type="checkbox"><label>remember me</label>
-                                    <button type="submit" data-ripple="">sign in</button>
-									<a class="forgot underline" href="#" title="">forgot password?</a>
-                                </form>
-                                <a class="with-smedia facebook" href="#" title="" data-ripple=""><i class="fa fa-facebook"></i></a>
-                                <a class="with-smedia twitter" href="#" title="" data-ripple=""><i class="fa fa-twitter"></i></a>
-								<a class="with-smedia instagram" href="#" title="" data-ripple=""><i class="fa fa-instagram"></i></a>
-								<a class="with-smedia google" href="#" title="" data-ripple=""><i class="fa fa-google-plus"></i></a>
-                                <span>don't have an account? <a class="we-account underline" href="#" title="">register now</a></span>
-                            </div>
+							<div class="we-login-register">
+							    <div class="form-title">
+							        <i class="fa fa-key"></i>login
+							        <span>sign in now and meet the awesome Friends around the world.</span>
+							    </div>
+							    <form class="we-form" method="post" action="/login">
+							        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+							            <p th:text="${errorMessage}"></p>
+							        </div>
+							        <input type="text" placeholder="Email" name="email">
+							        <input type="password" placeholder="Password" name="pass">
+							        <input type="checkbox"><label>remember me</label>
+							        <button type="submit" data-ripple="">sign in</button>
+							        <a class="forgot underline" href="#" title="">forgot password?</a>
+							    </form>
+							    <div class="register-link">
+							        <span>Don't have an account?</span>
+							        <a class="btn register-btn" href="/register" data-ripple="">Register Now</a>
+							    </div>
+							    <a class="with-smedia facebook" href="#" title="" data-ripple=""><i class="fa fa-facebook"></i></a>
+							    <a class="with-smedia twitter" href="#" title="" data-ripple=""><i class="fa fa-twitter"></i></a>
+							    <a class="with-smedia instagram" href="#" title="" data-ripple=""><i class="fa fa-instagram"></i></a>
+							    <a class="with-smedia google" href="#" title="" data-ripple=""><i class="fa fa-google-plus"></i></a>
+							</div>
                         </div>
                         
                     </div>
