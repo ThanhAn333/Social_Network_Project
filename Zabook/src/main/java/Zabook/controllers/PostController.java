@@ -1,6 +1,7 @@
 package Zabook.controllers;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import Zabook.models.Post;
+import Zabook.models.User;
 import Zabook.services.IPostService;
 @Controller
 @RequestMapping("/post")
@@ -29,10 +31,11 @@ public class PostController {
 	public String index() {
 		return "index";
 	}
-	@GetMapping("/user/{userId}")
+	@GetMapping("/users/{userId}")
 	public String getUserPosts(@PathVariable String userId, Model model) {
-	    ObjectId objectId = new ObjectId(userId);  
-	    List<Post> list = postService.getUserPosts(objectId);
+		User user = new User();
+	    user.setUserID(new ObjectId(userId));  
+	    List<Post> list = postService.getUserPosts(user);
 	    model.addAttribute("listpost", list);
 	    return "index"; 
 	}
@@ -51,7 +54,7 @@ public class PostController {
 	    return new ModelAndView("index", modelMap);
 	}
 	@DeleteMapping("/delete/{id}")
-	public ModelAndView deletePost(@PathVariable String id, ModelMap modelMap) {
+	public ModelAndView deletePost(@PathVariable ObjectId id, ModelMap modelMap) {
 	    if (postService.existsById(id)) {
 	        postService.deletePost(id);
 	        modelMap.addAttribute("message", "Deleted successfully!");
@@ -62,7 +65,7 @@ public class PostController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public ModelAndView editPost(@PathVariable String id, ModelMap modelMap) {
+	public ModelAndView editPost(@PathVariable ObjectId id, ModelMap modelMap) {
 	    Optional<Post> optionalPost = postService.findById(id);
 	    if (optionalPost.isPresent()) {
 	        modelMap.addAttribute("post", optionalPost.get());

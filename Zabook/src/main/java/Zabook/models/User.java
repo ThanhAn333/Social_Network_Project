@@ -4,24 +4,41 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Users")
 public class User {
 
-    @Id
-    private ObjectId userID;
-    private String firstName;
-    private String lastName;
-    private String gender;
-    private String birthDay;
-    private String address;
-    private String email;
-    private String password;
-    private String bio;
-    private List<Integer> followers;
-    private List<Integer> followings;
+	@Id
+	private ObjectId userID;
+	private String firstName;
+	private String lastName;
+	private String gender;
+	private String birthDay;
+	private String address;
+	private String email;
+	private String password;
+	private String bio;
 	
+	@DBRef
+	private Image avatar;
+
+	private String page;
+
+	@DBRef
+	private List<Video> video;
+
+	@DBRef
+	private List<Image> image;
+
+	private String role;
+	private String phone;
+
+	private List<User> friend;
+	private List<User> requestFriend;
+	private List<User> following;
+
 	public ObjectId getUserID() {
 		return userID;
 	}
@@ -94,24 +111,84 @@ public class User {
 		this.bio = bio;
 	}
 
-	public List<Integer> getFollowers() {
-		return followers;
+	public Image getAvatar() {
+		return avatar;
 	}
 
-	public void setFollowers(List<Integer> followers) {
-		this.followers = followers;
+	public void setAvatar(Image avatar) {
+		this.avatar = avatar;
 	}
 
-	public List<Integer> getFollowings() {
-		return followings;
+	public String getPage() {
+		return page;
 	}
 
-	public void setFollowings(List<Integer> followings) {
-		this.followings = followings;
+	public void setPage(String page) {
+		this.page = page;
 	}
 
-    public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
-			String email, String password, String bio, List<Integer> followers, List<Integer> followings) {
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public List<User> getFriend() {
+		return friend;
+	}
+
+	public void setFriend(List<User> friend) {
+		this.friend = friend;
+	}
+
+	public List<User> getRequestFriend() {
+		return requestFriend;
+	}
+
+	public void setRequestFriend(List<User> requestFriend) {
+		this.requestFriend = requestFriend;
+	}
+
+	public List<User> getFollowing() {
+		return following;
+	}
+
+	public void setFollowing(List<User> following) {
+		this.following = following;
+	}
+	
+	
+
+	public List<Video> getVideo() {
+		return video;
+	}
+
+	public void setVideo(List<Video> video) {
+		this.video = video;
+	}
+
+	public List<Image> getImage() {
+		return image;
+	}
+
+	public void setImage(List<Image> image) {
+		this.image = image;
+	}
+
+	public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
+			String email, String password, String bio,Image avatar, String page, List<Video> video, List<Image> image,
+			String role, String phone, List<User> friend, List<User> requestFriend, List<User> following) {
 		super();
 		this.userID = userID;
 		this.firstName = firstName;
@@ -122,13 +199,20 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.bio = bio;
-		this.followers = followers;
-		this.followings = followings;
+		this.avatar = avatar;
+		this.page = page;
+		this.video = video;
+		this.image = image;
+		this.role = role;
+		this.phone = phone;
+		this.friend = friend;
+		this.requestFriend = requestFriend;
+		this.following = following;
 	}
 
 	public User() {
 		super();
-		
+
 	}
-    
+
 }
