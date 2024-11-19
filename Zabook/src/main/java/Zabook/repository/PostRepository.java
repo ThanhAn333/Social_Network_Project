@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import Zabook.models.Post;
 
-public interface PostRepository extends MongoRepository<Post, String> {
+public interface PostRepository extends MongoRepository<Post, Object> {
     List<Post> findByUserId(ObjectId userId);
 }
