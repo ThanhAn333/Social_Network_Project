@@ -11,7 +11,7 @@ public interface IUserService {
 
     void deleteUser(ObjectId userID);
 
-    User updateUser(ObjectId userID, User user);
+    void updateUser(User user);
 
     User createUser(User user);
 

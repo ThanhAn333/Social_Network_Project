@@ -28,12 +28,10 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User updateUser(ObjectId userID, User user) {
-		if (userRepository.existsById(userID)) {
-            user.setUserID(userID);
-            return userRepository.save(user);
-        }
-        return null;
+	public void updateUser(User user) {
+		
+    	userRepository.save(user);
+        
 	}
 
 	@Override
