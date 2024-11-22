@@ -17,6 +17,7 @@ public class Post {
 	private User user;
 
 	private String content;
+	
 	private LocalDateTime createdAt;
 	
 	@DBRef
@@ -24,6 +25,9 @@ public class Post {
 	
 	@DBRef
 	private List<Video> video;
+	
+	@DBRef
+	private List<Comment> comment;
 
 	public Post() {
 		this.createdAt = LocalDateTime.now();
@@ -75,6 +79,16 @@ public class Post {
 
 	public void setVideo(List<Video> video) {
 		this.video = video;
+	}
+
+	
+	
+	public List<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
 	}
 
 	public Post(ObjectId id, User user, String content, LocalDateTime createdAt, List<Image> image, List<Video> video) {
