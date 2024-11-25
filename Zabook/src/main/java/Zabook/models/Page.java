@@ -1,17 +1,23 @@
 package Zabook.models;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 
 @Document(collection = "Pages")
 public class Page {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int id;
+    
     private String image;
     private String pageName;
     
@@ -42,7 +48,7 @@ public class Page {
 
 
 
-    public Page(String id, String image, String pageName, User admin, String introduce, String contact,
+    public Page(Integer id, String image, String pageName, User admin, String introduce, String contact,
 			String background, String category, List<Post> posts, List<Image> images, List<Video> videos,
 			List<User> followers, Date createTime, Boolean enabled) {
 		super();
@@ -64,11 +70,11 @@ public class Page {
 
 
 
-	public String getId() {
+	public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
