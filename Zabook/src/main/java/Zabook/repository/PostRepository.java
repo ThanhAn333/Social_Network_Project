@@ -12,4 +12,8 @@ import Zabook.models.User;
 @Repository
 public interface PostRepository extends MongoRepository<Post, ObjectId> {
     List<Post> findByUser(User user);
+    //
+    List<Post> findByOriginalPostId(String originalPostId);
+    
+    
 }
