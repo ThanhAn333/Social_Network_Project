@@ -12,7 +12,13 @@ import Zabook.models.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, ObjectId> {
+
 	Optional<User> findByFirstNameAndLastName(String firstname, String lastname);
-	Optional<User> findByEmail(String email);
+
+	public boolean existsByEmail(String emai);
+
+    public User findByEmail(String email);
+    
+    public User findByVerificationCode(String verificationCode);
 
 }

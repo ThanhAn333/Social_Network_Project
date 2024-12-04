@@ -1,24 +1,22 @@
 package Zabook.services;
 
-import java.util.List;
 
-import org.bson.types.ObjectId;
-
+import Zabook.dto.UserRequest;
 import Zabook.models.User;
 
 public interface IUserService {
+    public User createUser(User user, String url);
+	
+	public boolean checkEmail(String email);
+	
+	User getUserById(String id);
+	
+	User getUserByEmail(String email);
 
+	boolean checkPassword(String rawPassword, String encodedPassword);
+	
+	public boolean verifyAccount(String code);
 
-    void deleteUser(ObjectId userID);
-
-    User updateUser(ObjectId userID, User user);
-
-    User createUser(User user);
-
-    User getUserById(ObjectId userID);
-
-    List<User> getAllUsers();
-    
-    User getUserByEmail(String email);
+	public String login(UserRequest request);
 
 }
