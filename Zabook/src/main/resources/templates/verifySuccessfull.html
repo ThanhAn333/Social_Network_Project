@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail Verification</title>
+    <title>Email Verified Successfully</title>
     <!-- Thêm Font Awesome CDN để dùng icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -36,7 +36,7 @@
         }
 
         h1 {
-            color: #4285f4;
+            color: #34a853;
             font-size: 28px;
             margin-bottom: 12px;
         }
@@ -88,13 +88,21 @@
 
 <body>
     <section>
-        <h1>Chào mừng bạn!</h1>
-        <p>Nhấn vào nút bên dưới để mở hộp thư của bạn và xác nhận tài khoản:</p>
-        <!-- Điều hướng đến Gmail -->
-        <a href="https://mail.google.com/" target="_blank">
+        <h1><i class="fa-solid fa-check-circle"></i> Xác thực thành công!</h1>
+        <p>Cảm ơn bạn đã xác nhận email. Tài khoản của bạn đã được kích hoạt và sẵn sàng sử dụng.</p>
+        <p>Bạn có thể quay lại trang chủ hoặc tiếp tục sử dụng dịch vụ:</p>
+        <!-- Điều hướng đến trang chủ hoặc trang khác -->
+        <a href="/" target="_self">
             <button>
-                <i class="fa-solid fa-envelope"></i>
-                Mở Gmail
+                <i class="fa-solid fa-home"></i>
+                Quay lại trang chủ
+            </button>
+        </a>
+        <p>Hoặc, bạn có thể tiếp tục đến trang đăng nhập.</p>
+        <a href="/login" target="_self">
+            <button>
+                <i class="fa-solid fa-sign-in-alt"></i>
+                Đăng nhập ngay
             </button>
         </a>
     </section>

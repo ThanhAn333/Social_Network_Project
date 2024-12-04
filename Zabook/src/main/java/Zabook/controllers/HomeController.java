@@ -61,6 +61,15 @@ public class HomeController {
 	public String getVerify() {
 		return "notifyVerify";
 	}
+
+	@GetMapping("/verify")
+	public String verifyAccount(@RequestParam("code") String code) {
+		if (userService.verifyAccount(code)) {
+			return "verifySuccessfull";
+		} else {
+			return "fail";
+		}
+	}
 	
 
 	@PostMapping("/login")

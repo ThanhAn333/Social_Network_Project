@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail Verification</title>
+    <title>Email Verification Failed</title>
     <!-- Thêm Font Awesome CDN để dùng icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             margin: 0;
-            background-color: #f0f2f5;
+            background-color: #f8d7da;
         }
 
         section {
@@ -36,7 +36,7 @@
         }
 
         h1 {
-            color: #4285f4;
+            color: #d9534f;
             font-size: 28px;
             margin-bottom: 12px;
         }
@@ -49,7 +49,7 @@
 
         button {
             padding: 12px 30px;
-            background-color: #4285f4;
+            background-color: #d9534f;
             color: white;
             border: none;
             cursor: pointer;
@@ -66,7 +66,7 @@
         }
 
         button:hover {
-            background-color: #357ae8;
+            background-color: #c9302c;
             transform: translateY(-3px);
         }
 
@@ -82,19 +82,28 @@
         a {
             text-decoration: none;
         }
-
     </style>
 </head>
 
 <body>
     <section>
-        <h1>Chào mừng bạn!</h1>
-        <p>Nhấn vào nút bên dưới để mở hộp thư của bạn và xác nhận tài khoản:</p>
-        <!-- Điều hướng đến Gmail -->
-        <a href="https://mail.google.com/" target="_blank">
+        <h1><i class="fa-solid fa-times-circle"></i> Lỗi xác thực!</h1>
+        <p>Rất tiếc, có sự cố trong quá trình xác thực email của bạn. Vui lòng thử lại hoặc yêu cầu gửi lại email xác thực.</p>
+        <p>Nhấn vào nút dưới đây để yêu cầu gửi lại email xác thực:</p>
+        
+        <!-- Nút yêu cầu gửi lại email xác thực -->
+        <a href="/resend-verification" target="_self">
             <button>
-                <i class="fa-solid fa-envelope"></i>
-                Mở Gmail
+                <i class="fa-solid fa-paper-plane"></i>
+                Gửi lại email xác thực
+            </button>
+        </a>
+
+        <p>Hoặc quay lại trang đăng nhập nếu bạn đã có tài khoản.</p>
+        <a href="/login" target="_self">
+            <button>
+                <i class="fa-solid fa-sign-in-alt"></i>
+                Đăng nhập ngay
             </button>
         </a>
     </section>
