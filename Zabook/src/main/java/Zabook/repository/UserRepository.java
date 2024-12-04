@@ -21,4 +21,5 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     
     public User findByVerificationCode(String verificationCode);
 
+	Optional<User> findById(ObjectId userId);
 }
