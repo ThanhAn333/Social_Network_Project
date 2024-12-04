@@ -53,11 +53,17 @@ public class HomeController {
 		return "redirect:/login";
 	}
 	@GetMapping("/login")
-	public String getMethodName() {
+	public String getLogin() {
 		return "login";
 	}
 
-	@PostMapping("/signin")
+	@GetMapping("/notifyVerify")
+	public String getVerify() {
+		return "notifyVerify";
+	}
+	
+
+	@PostMapping("/login")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserRequest authRequest) throws Exception {
 		try {
 			authenticationManager.authenticate(
@@ -88,6 +94,7 @@ public class HomeController {
 				User createdUser = userService.createUser(user, url);
 				if (createdUser != null) {
 					redirectAttributes.addFlashAttribute("msg", "Register successful!");
+					return "redirect:/notifyVerify";
 				} else {
 					redirectAttributes.addFlashAttribute("msg", "Something went wrong! Please try again.");
 				}
@@ -97,7 +104,7 @@ public class HomeController {
 		} else {
 			redirectAttributes.addFlashAttribute("msg", "Email already exists!");
 		}
-		return "redirect:/home";
+		return "redirect:/login";
 	}
 
 	

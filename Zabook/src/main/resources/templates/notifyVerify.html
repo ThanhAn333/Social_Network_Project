@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mail Verification</title>
+	<!-- Thêm Font Awesome CDN để dùng icon -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<style>
+		/* Căn giữa nội dung của trang */
+		body {
+			font-family: Arial, sans-serif;
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 0;
+			background-color: #f4f4f4;
+		}
+
+		section {
+			text-align: center;
+			background-color: white;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		}
+
+		button {
+			padding: 12px 25px;
+			background-color: #4285f4;
+			color: white;
+			border: none;
+			cursor: pointer;
+			font-size: 16px;
+			border-radius: 5px;
+			transition: background-color 0.3s ease, transform 0.2s ease;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			justify-content: center;
+		}
+
+		button:hover {
+			background-color: #357ae8;
+			transform: translateY(-3px);
+		}
+
+		h1 {
+			color: #333;
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+
+		p {
+			color: #555;
+			font-size: 16px;
+			margin-bottom: 20px;
+		}
+
+		/* Phong cách cho liên kết */
+		a {
+			text-decoration: none;
+		}
+	</style>
+</head>
+
+<body>
+	<section>
+		<h1>Chào mừng bạn!</h1>
+		<p>Nhấn vào nút bên dưới để mở hộp thư của bạn và xác nhận tài khoản:</p>
+		<!-- Điều hướng đến Gmail -->
+		<a href="https://mail.google.com/" target="_blank">
+			<button>
+				<i class="fa-solid fa-envelope"></i>
+				Mở Gmail
+			</button>
+		</a>
+	</section>
+</body>
+
+</html>
