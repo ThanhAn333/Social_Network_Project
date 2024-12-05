@@ -18,51 +18,53 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	public AuthenticationSuccessHandler customsuccessHandler;
+    @Autowired
+    public AuthenticationSuccessHandler customsuccessHandler;
 
-	@Bean
-	public JwtFilter jwtFilter() {
-		return new JwtFilter();
-	}
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter();
+    }
 
-	@Bean
-	public UserDetailsService userDetailsServices() {
-		return new UserDetailsServiceImpl();
-	}
+    @Bean
+    public UserDetailsService userDetailsServices() {
+        return new UserDetailsServiceImpl();
+    }
 
-	@Bean
-	public BCryptPasswordEncoder getPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public DaoAuthenticationProvider daoAuthenticationProvider() {
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		daoAuthenticationProvider.setUserDetailsService(userDetailsServices());
-		daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
-		return daoAuthenticationProvider;
-	}
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsServices());
+        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/user/**").hasRole("USER").requestMatchers("/admin/**").hasRole("ADMIN")
-						.requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**", "/notifyVerify", "/createUser","/verifySuccessfull", "/verify").permitAll().anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login")
-						.failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
-	
-				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
-						.invalidateHttpSession(true).permitAll())
-				.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/user/**").hasRole("USER").requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**", "/notifyVerify", "/createUser", "/verifySuccessfull", "/verify").permitAll().anyRequest().authenticated())
+                .formLogin(form -> form.loginPage("/login")
+                .failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
+                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true).permitAll())
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .csrf().disable();
 
-		return http.build();
+        return http.build();
 
-	}
+    }
 
 }
