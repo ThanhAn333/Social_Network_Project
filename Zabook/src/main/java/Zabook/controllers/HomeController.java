@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import Zabook.repository.UserRepository;
 import Zabook.services.IUserService;
 import Zabook.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -69,6 +71,42 @@ public class HomeController {
 			return "fail";
 		}
 	}
+
+	@GetMapping("/forgotPassword")
+	public String getForgorPassword() {
+		return "forgotPassword";
+	}
+
+	@GetMapping("/resetPassword")
+	public String getMethodName() {
+		return "resetPassword";
+	}
+	
+
+
+	@GetMapping("/verifyOTP")
+	public String verifyOTP(Model model, HttpSession session) {
+		String msg = (String) session.getAttribute("msg");
+		if (msg != null) {
+			model.addAttribute("msg", msg);
+			session.removeAttribute("msg");
+		}
+
+		Long otpTimestamp = (Long) session.getAttribute("otpTimestamp");
+		if (otpTimestamp == null) {
+			model.addAttribute("remainingTime", 0);
+			return "verifyOTP";
+		}
+
+		long currentTime = System.currentTimeMillis();
+		long remainingTime = (5 * 60 * 1000) - (currentTime - otpTimestamp);
+
+		if (remainingTime < 0)
+			remainingTime = 0;
+		model.addAttribute("remainingTime", remainingTime);
+		return "verifyOTP";
+	}
+	
 	
 
 	@PostMapping("/login")
@@ -115,6 +153,49 @@ public class HomeController {
 		return "redirect:/login";
 	}
 
+	
+	@PostMapping("/forgotPassword")
+	public String postForgotPassword(@RequestParam("email") String email,HttpSession session, RedirectAttributes redirectAttributes) {
+		
+        boolean otpSent = userService.sendOTP(email, session);
+        if (!otpSent) {
+            redirectAttributes.addFlashAttribute("msg", "Email không tồn tại trong hệ thống. Vui lòng kiểm tra lại!");
+            return "redirect:/forgotPassword";
+        }
+        return "verifyOTP";
+	}
+
+
+	@PostMapping("/verifyOTP")
+	public String verifyOtp(@RequestParam("otp1") String otp1, @RequestParam("otp2") String otp2,
+                            @RequestParam("otp3") String otp3, @RequestParam("otp4") String otp4,
+                            @RequestParam("otp5") String otp5, @RequestParam("otp6") String otp6,
+                            HttpSession session, RedirectAttributes redirectAttributes) {
+
+        return userService.verifyOTP(otp1, otp2, otp3, otp4, otp5, otp6, session, redirectAttributes);
+    }
+	
+
+	@PostMapping("/resetPassword")
+	public String postResetPassword(@RequestParam("newPassword") String password, @RequestParam("confirmPassword") String password1, HttpSession session, RedirectAttributes redirectAttributes) {
+		 String email = (String) session.getAttribute("email");
+
+		 if (!password.equals(password1)) {
+			redirectAttributes.addFlashAttribute("msg", "Mật khẩu và mật khẩu xác nhận không khớp!");
+			return "redirect:/resetPassword";
+		}
+
+		boolean isPasswordUpdated = userService.resetPassword(email, password);
+	
+		if (isPasswordUpdated) {
+			session.setAttribute("msg", "Mật khẩu đã được thay đổi thành công!");
+			return "redirect:/login"; 
+		} else {
+			session.setAttribute("msg", "Đã xảy ra lỗi. Vui lòng thử lại sau!");
+			return "redirect:/resetPassword";
+		}
+	
+	}
 	
 	
 	
