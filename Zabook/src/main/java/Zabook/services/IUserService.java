@@ -19,4 +19,5 @@ public interface IUserService {
 
 	public String login(UserRequest request);
 
+	public User getCurrentUser();
 }

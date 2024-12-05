@@ -1,6 +1,5 @@
 package Zabook.services.impl;
 
-
 import java.security.SecureRandom;
 
 import org.bson.types.ObjectId;
@@ -11,10 +10,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import Zabook.configs.CustomUserDetails;
 import Zabook.dto.UserRequest;
 import Zabook.models.User;
 import Zabook.repository.UserRepository;
@@ -24,138 +26,151 @@ import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class UserService implements IUserService {
-	@Autowired
-	private JwtService jwtService;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtService jwtService;
 
-	@Autowired
-	private JavaMailSender mailSender;
-	
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UserRepository userRepo;
+    @Autowired
+    private JavaMailSender mailSender;
 
-	private String generateRandomString(int length) {
-		final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		SecureRandom random = new SecureRandom();
-		StringBuilder sb = new StringBuilder(length);
-		for (int i = 0; i < length; i++) {
-			sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepo;
+
+    private String generateRandomString(int length) {
+        final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+        return userRepo.existsByEmail(email);
+    }
+
+    @Override
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    @Override
+    public User createUser(User user, String url) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER");
+        user.setEnabled(false);
+        user.setAccounNonLocked(true);
+
+        String verificationCode = generateRandomString(64);
+        user.setVerificationCode(verificationCode);
+
+        User us = userRepo.save(user);
+
+        sendVerificationMail(user, url);
+
+        return us;
+    }
+
+    public void sendVerificationMail(User user, String url) {
+        String from = "nguyenthanhan26.qngai@gmail.com";
+        String to = user.getEmail();
+        String subject = "Account Verification";
+        String content = "Dear, [[name]],<br>" + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>" + "Thank you,<br>" + "ThanhAn";
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
+
+            mimeMessageHelper.setFrom(from, "4P");
+            mimeMessageHelper.setTo(to);
+            mimeMessageHelper.setSubject(subject);
+
+            String name = user.getFirstName() + " " + user.getLastName();
+
+            content = content.replace("[[name]]", name);
+
+            String siteUrl = url + "/verify?code=" + user.getVerificationCode();
+
+            content = content.replace("[[URL]]", siteUrl);
+
+            mimeMessageHelper.setText(content, true);
+
+            mailSender.send(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        User user = userRepo.findByEmail(email);
+        return user;
+    }
+
+    @Override
+    public User getUserById(String id) {
+        ObjectId id1 = new ObjectId(id);
+        return userRepo.findById(id1).orElse(null);
+    }
+
+    @Override
+    public String login(UserRequest request) {
+        try {
+            Authentication authenticate = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+            if (authenticate.isAuthenticated()) {
+                System.out.println("Authentication successful for email: " + request.getEmail());
+                return jwtService.generateToken(request.getEmail());
+            }
+        } catch (BadCredentialsException e) {
+            System.out.println("Bad credentials for email: " + request.getEmail());
+            throw new RuntimeException("Đăng nhập thất bại: Sai thông tin tài khoản hoặc mật khẩu");
+        } catch (UsernameNotFoundException e) {
+            System.out.println("User not found: " + request.getEmail());
+            throw new RuntimeException("Đăng nhập thất bại: Người dùng không tồn tại");
+        } catch (Exception e) {
+            System.out.println("Unexpected error during login: " + e.getMessage());
+            throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());
+        }
+
+        throw new RuntimeException("Xác thực thất bại");
+    }
+
+    @Override
+    public boolean verifyAccount(String code) {
+        User user = userRepo.findByVerificationCode(code);
+
+        if (user != null) {
+            user.setEnabled(true);
+            user.setVerificationCode(code);
+            userRepo.save(user);
+            return true;
+        }
+        return false;
+    }
+    //lam
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null || !authentication.isAuthenticated()) {
+			throw new RuntimeException("Người dùng chưa đăng nhập");
 		}
-		return sb.toString();
-	}
-	@Override
-	public boolean checkEmail(String email) {
-		return userRepo.existsByEmail(email);
-	}
-
-	@Override
-	public boolean checkPassword(String rawPassword, String encodedPassword) {
-		return passwordEncoder.matches(rawPassword, encodedPassword);
-	}
-
-	@Override
-	public User createUser(User user, String url) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRole("USER");
-		user.setEnabled(false);
-		user.setAccounNonLocked(true);
-
-		String verificationCode = generateRandomString(64);
-		user.setVerificationCode(verificationCode);
-
-		User us = userRepo.save(user);
-
-		sendVerificationMail(user, url);
-
-		return us;
-	}
-
-	public void sendVerificationMail(User user, String url) {
-		String from = "nguyenthanhan26.qngai@gmail.com";
-		String to = user.getEmail();
-		String subject = "Account Verification";
-		String content = "Dear, [[name]],<br>" + "Please click the link below to verify your registration:<br>"
-				+ "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>" + "Thank you,<br>" + "ThanhAn";
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
-
-			mimeMessageHelper.setFrom(from, "4P");
-			mimeMessageHelper.setTo(to);
-			mimeMessageHelper.setSubject(subject);
-
-			String name = user.getFirstName() + " " + user.getLastName();
-
-			content = content.replace("[[name]]",name);
-
-			String siteUrl = url + "/verify?code=" + user.getVerificationCode();
-
-			content = content.replace("[[URL]]", siteUrl);
-
-			mimeMessageHelper.setText(content, true);
-
-			mailSender.send(message);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public User getUserByEmail(String email) {
-		User user = userRepo.findByEmail(email);
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // Lấy User từ UserService
+		User user = this.getUserByEmail(userDetails.getUsername ());
 		return user;
-	}
-
-	@Override
-	public User getUserById(String id) {
-		ObjectId id1 = new ObjectId(id);
-		return userRepo.findById(id1).orElse(null);
-	}
-
-	@Override
-	public String login(UserRequest request) {
-		try {
-			Authentication authenticate = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-			if (authenticate.isAuthenticated()) {
-				System.out.println("Authentication successful for email: " + request.getEmail());
-				return jwtService.generateToken(request.getEmail());
-			}
-		} catch (BadCredentialsException e) {
-			System.out.println("Bad credentials for email: " + request.getEmail());
-			throw new RuntimeException("Đăng nhập thất bại: Sai thông tin tài khoản hoặc mật khẩu");
-		} catch (UsernameNotFoundException e) {
-			System.out.println("User not found: " + request.getEmail());
-			throw new RuntimeException("Đăng nhập thất bại: Người dùng không tồn tại");
-		} catch (Exception e) {
-			System.out.println("Unexpected error during login: " + e.getMessage());
-			throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());
-		}
-
-		throw new RuntimeException("Xác thực thất bại");
-	}
-
-	@Override
-	public boolean verifyAccount(String code) {
-		User user = userRepo.findByVerificationCode(code);
-
-		if (user != null) {
-			user.setEnabled(true);
-			user.setVerificationCode(code);
-			userRepo.save(user);
-			return true;
-		}
-		return false;
-	}
-
-	
-    
+    }
+    //lam
 
 }

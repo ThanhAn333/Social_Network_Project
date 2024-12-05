@@ -58,10 +58,7 @@ public class SecurityConfig {
                 .failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true).permitAll())
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .headers().frameOptions().sameOrigin()
-                .and()
-                .csrf().disable();
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 

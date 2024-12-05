@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .profile-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .post-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-header .user-details {
+            flex-grow: 1;
+        }
+
+        .post-header .username {
+            font-weight: bold;
+            margin: 0;
+            font-size: 0.95rem;
+            color: #050505;
+        }
+
+        .post-header .time {
+            font-size: 0.85rem;
+            color: #65676b;
+            margin: 0;
+        }
+
+        .post-content {
+            font-size: 0.95rem;
+            color: #050505;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .post-content img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e4e6eb;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: #65676b;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-actions button i {
+            margin-right: 5px;
+        }
+
+        .post-actions button:hover {
+            color: #1877f2;
+        }
+    </style>
+</head>
+<div th:replace="user/header"></div>
+
+<body>
+
+    <div class="container mt-4">
+        <!-- Profile Section -->
+        <div class="profile-section text-center">
+            <img src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-pic">
+            <h3 th:text="${currentuser.firstName + currentuser.lastName}"></h3>
+            <p>Web Developer | Tech Enthusiast</p>
+            <button class="btn btn-primary">Edit Profile</button>
+        </div>
+
+        <div class="container mt-4">
+            <!-- Post Section in a raised box -->
+            <div class="post-section card shadow-sm p-4 bg-white rounded">
+                <!-- Textarea for post content -->
+                <textarea class="post-input form-control mb-3" rows="3" placeholder="What's on your mind?"></textarea>
+
+                <!-- Display image or video preview -->
+                <div id="file-preview" class="mb-3" style="display: none;">
+                    <!-- Preview sẽ được thêm qua JavaScript -->
+                </div>
+
+                <div class="mb-3">
+                    <label for="post-image" class="form-label">Add photos or videos</label>
+                    <!-- Cho phép chọn nhiều tệp với multiple và hỗ trợ hình ảnh và video -->
+                    <input type="file" class="form-control" id="post-image" accept="image/*, video/*" multiple>
+                </div>
+
+
+
+                <script>
+                    const fileInput = document.getElementById('post-image');
+                    const filePreviewContainer = document.getElementById('file-preview');
+
+                    // Hàm kiểm tra xem file đã được thêm vào chưa
+                    function isFileAlreadyAdded(file) {
+                        const previews = filePreviewContainer.getElementsByClassName('file-preview-item');
+                        for (let i = 0; i < previews.length; i++) {
+                            const preview = previews[i];
+                            const previewFile = preview.querySelector('img, video');
+                            if (previewFile && previewFile.src === URL.createObjectURL(file)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    fileInput.addEventListener('change', function () {
+                        const files = fileInput.files;
+
+                        // Duyệt qua các file đã chọn
+                        for (let i = 0; i < files.length; i++) {
+                            const file = files[i];
+
+                            // Kiểm tra xem file đã được thêm chưa
+                            if (isFileAlreadyAdded(file)) {
+                                continue; // Nếu đã thêm, bỏ qua và không thêm file này
+                            }
+
+                            // Tạo một div cho mỗi preview
+                            const previewWrapper = document.createElement('div');
+                            previewWrapper.classList.add('file-preview-item');
+                            previewWrapper.style.position = 'relative';
+
+                            // Kiểm tra loại file là hình ảnh hay video và hiển thị tương ứng
+                            const fileReader = new FileReader();
+
+                            fileReader.onload = function (e) {
+                                const fileUrl = e.target.result;
+
+                                if (file.type.startsWith('image')) {
+                                    // Hiển thị hình ảnh mà không hiển thị tên file
+                                    const img = document.createElement('img');
+                                    img.src = fileUrl;
+                                    img.classList.add('img-fluid');
+                                    img.style.maxHeight = '200px';
+                                    previewWrapper.appendChild(img);
+                                } else if (file.type.startsWith('video')) {
+                                    // Hiển thị video mà không hiển thị tên file
+                                    const video = document.createElement('video');
+                                    video.src = fileUrl;
+                                    video.controls = true;
+                                    video.style.maxWidth = '200px';
+                                    previewWrapper.appendChild(video);
+                                }
+
+                                // Thêm nút "x" để xóa
+                                const removeButton = document.createElement('button');
+                                removeButton.innerHTML = '×';
+                                removeButton.classList.add('remove-btn');
+                                removeButton.style.position = 'absolute';
+                                removeButton.style.top = '5px';
+                                removeButton.style.right = '5px';
+                                removeButton.style.background = 'rgba(0, 0, 0, 0.5)';
+                                removeButton.style.color = 'white';
+                                removeButton.style.border = 'none';
+                                removeButton.style.borderRadius = '50%';
+                                removeButton.style.padding = '5px';
+                                removeButton.style.cursor = 'pointer';
+
+                                // Xử lý sự kiện xóa tệp
+                                removeButton.addEventListener('click', function () {
+                                    previewWrapper.remove();
+                                });
+
+                                previewWrapper.appendChild(removeButton);
+                                filePreviewContainer.appendChild(previewWrapper);
+                            };
+
+                            fileReader.readAsDataURL(file);
+                        }
+
+                        // Hiển thị phần preview sau khi có file được chọn
+                        filePreviewContainer.style.display = 'block';
+                    });
+                </script>
+
+                <style>
+                    /* Hiệu ứng bo góc và mượt mà cho card */
+                    .post-section {
+                        border-radius: 15px;
+                        /* Bo góc cho card */
+                        background-color: white;
+                        transition: box-shadow 0.3s ease-in-out;
+                        /* Thêm hiệu ứng khi thay đổi box-shadow */
+                    }
+
+                    /* Thêm hiệu ứng khi hover vào card */
+                    .post-section:hover {
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                        /* Hiệu ứng đổ bóng khi hover */
+                    }
+
+                    /* Đổi màu nền cho textarea khi hover */
+                    .post-input:focus {
+                        border-color: #007bff;
+                        /* Màu viền khi focus */
+                        box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+                        /* Hiệu ứng ánh sáng xung quanh khi focus */
+                    }
+
+                    /* Tùy chỉnh nút x */
+                    .remove-btn {
+                        font-size: 18px;
+                        font-weight: bold;
+                        width: 22px;
+                        height: 22px;
+                        text-align: center;
+                        line-height: 16px;
+                        color: white;
+                        background-color: #007bff;
+                        /* Màu nền xanh biển */
+                        border-radius: 50%;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        /* Hiệu ứng chuyển màu nền */
+                    }
+
+                    /* Hiệu ứng hover cho nút x */
+                    .remove-btn:hover {
+                        background-color: #0056b3;
+                        /* Màu nền khi hover */
+                    }
+
+                    /* Tùy chỉnh phần preview ảnh/video */
+                    .file-preview-item {
+                        display: inline-block;
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                        position: relative;
+                        border-radius: 10px;
+                        /* Bo góc cho preview */
+                        overflow: hidden;
+                        transition: transform 0.3s ease;
+                        /* Hiệu ứng khi di chuột vào */
+                    }
+
+                    /* Hiệu ứng khi hover vào preview ảnh/video */
+                    .file-preview-item:hover {
+                        transform: scale(1.05);
+                        /* Phóng to nhẹ khi hover */
+                    }
+
+                    /* Nút post */
+                    .btn-primary {
+                        background-color: #007bff;
+                        /* Màu nền xanh biển */
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        border-radius: 5px;
+                        transition: background-color 0.3s ease;
+                        /* Hiệu ứng chuyển màu nền */
+                    }
+
+                    /* Hiệu ứng hover cho nút post */
+                    .btn-primary:hover {
+                        background-color: #0056b3;
+                        /* Màu nền khi hover */
+                    }
+
+                    /* Chỉnh sửa phần preview file */
+                    #file-preview {
+                        display: flex;
+                        flex-wrap: wrap;
+                    }
+
+                    /* Tùy chỉnh cho container của file preview */
+                    .file-preview-item img,
+                    .file-preview-item video {
+                        max-width: 150px;
+                        border-radius: 10px;
+                    }
+                </style>
+
+                <div class="text-end">
+                    <button class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- Feed Section -->
+        <div class="post-container">
+            <h5 class="mb-3">Recent Posts</h5>
+
+            <div class="post">
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/40" alt="User Avatar">
+                    <div class="user-details">
+                        <p class="username">John Doe</p>
+                        <p class="time">10 phút trước</p>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
+                    <img src="https://via.placeholder.com/600x300" alt="Post Image">
+                </div>
+                <div class="post-actions">
+                    <button><i class="fas fa-thumbs-up"></i> Thích</button>
+                    <button><i class="fas fa-comment-alt"></i> Bình luận</button>
+                    <button><i class="fas fa-share"></i> Chia sẻ</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

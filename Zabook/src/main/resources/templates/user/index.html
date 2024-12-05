@@ -15,7 +15,7 @@
         }
 
         .post-container {
-            max-width: 600px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -99,9 +99,221 @@
     </style>
 </head>
 
-<iframe src="/user/header" style="width: 100%; "></iframe>
+<div th:replace="user/header"></div>
 
 <body>
+    <div class="container mt-4">
+        <!-- Post Section in a raised box -->
+        <div class="post-section card shadow-sm p-4 bg-white rounded">
+            <!-- Textarea for post content -->
+            <textarea class="post-input form-control mb-3" rows="3" placeholder="What's on your mind?"></textarea>
+
+            <!-- Display image or video preview -->
+            <div id="file-preview" class="mb-3" style="display: none;">
+                <!-- Preview sẽ được thêm qua JavaScript -->
+            </div>
+
+            <div class="mb-3">
+                <label for="post-image" class="form-label">Add photos or videos</label>
+                <!-- Cho phép chọn nhiều tệp với multiple và hỗ trợ hình ảnh và video -->
+                <input type="file" class="form-control" id="post-image" accept="image/*, video/*" multiple>
+            </div>
+
+
+
+            <script>
+                const fileInput = document.getElementById('post-image');
+                const filePreviewContainer = document.getElementById('file-preview');
+
+                // Hàm kiểm tra xem file đã được thêm vào chưa
+                function isFileAlreadyAdded(file) {
+                    const previews = filePreviewContainer.getElementsByClassName('file-preview-item');
+                    for (let i = 0; i < previews.length; i++) {
+                        const preview = previews[i];
+                        const previewFile = preview.querySelector('img, video');
+                        if (previewFile && previewFile.src === URL.createObjectURL(file)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                fileInput.addEventListener('change', function () {
+                    const files = fileInput.files;
+
+                    // Duyệt qua các file đã chọn
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+
+                        // Kiểm tra xem file đã được thêm chưa
+                        if (isFileAlreadyAdded(file)) {
+                            continue; // Nếu đã thêm, bỏ qua và không thêm file này
+                        }
+
+                        // Tạo một div cho mỗi preview
+                        const previewWrapper = document.createElement('div');
+                        previewWrapper.classList.add('file-preview-item');
+                        previewWrapper.style.position = 'relative';
+
+                        // Kiểm tra loại file là hình ảnh hay video và hiển thị tương ứng
+                        const fileReader = new FileReader();
+
+                        fileReader.onload = function (e) {
+                            const fileUrl = e.target.result;
+
+                            if (file.type.startsWith('image')) {
+                                // Hiển thị hình ảnh mà không hiển thị tên file
+                                const img = document.createElement('img');
+                                img.src = fileUrl;
+                                img.classList.add('img-fluid');
+                                img.style.maxHeight = '200px';
+                                previewWrapper.appendChild(img);
+                            } else if (file.type.startsWith('video')) {
+                                // Hiển thị video mà không hiển thị tên file
+                                const video = document.createElement('video');
+                                video.src = fileUrl;
+                                video.controls = true;
+                                video.style.maxWidth = '200px';
+                                previewWrapper.appendChild(video);
+                            }
+
+                            // Thêm nút "x" để xóa
+                            const removeButton = document.createElement('button');
+                            removeButton.innerHTML = '×';
+                            removeButton.classList.add('remove-btn');
+                            removeButton.style.position = 'absolute';
+                            removeButton.style.top = '5px';
+                            removeButton.style.right = '5px';
+                            removeButton.style.background = 'rgba(0, 0, 0, 0.5)';
+                            removeButton.style.color = 'white';
+                            removeButton.style.border = 'none';
+                            removeButton.style.borderRadius = '50%';
+                            removeButton.style.padding = '5px';
+                            removeButton.style.cursor = 'pointer';
+
+                            // Xử lý sự kiện xóa tệp
+                            removeButton.addEventListener('click', function () {
+                                previewWrapper.remove();
+                            });
+
+                            previewWrapper.appendChild(removeButton);
+                            filePreviewContainer.appendChild(previewWrapper);
+                        };
+
+                        fileReader.readAsDataURL(file);
+                    }
+
+                    // Hiển thị phần preview sau khi có file được chọn
+                    filePreviewContainer.style.display = 'block';
+                });
+            </script>
+
+            <style>
+                /* Hiệu ứng bo góc và mượt mà cho card */
+                .post-section {
+                    border-radius: 15px;
+                    /* Bo góc cho card */
+                    background-color: white;
+                    transition: box-shadow 0.3s ease-in-out;
+                    /* Thêm hiệu ứng khi thay đổi box-shadow */
+                }
+
+                /* Thêm hiệu ứng khi hover vào card */
+                .post-section:hover {
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                    /* Hiệu ứng đổ bóng khi hover */
+                }
+
+                /* Đổi màu nền cho textarea khi hover */
+                .post-input:focus {
+                    border-color: #007bff;
+                    /* Màu viền khi focus */
+                    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+                    /* Hiệu ứng ánh sáng xung quanh khi focus */
+                }
+
+                /* Tùy chỉnh nút x */
+                .remove-btn {
+                    font-size: 18px;
+                    font-weight: bold;
+                    width: 22px;
+                    height: 22px;
+                    text-align: center;
+                    line-height: 16px;
+                    color: white;
+                    background-color: #007bff;
+                    /* Màu nền xanh biển */
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    /* Hiệu ứng chuyển màu nền */
+                }
+
+                /* Hiệu ứng hover cho nút x */
+                .remove-btn:hover {
+                    background-color: #0056b3;
+                    /* Màu nền khi hover */
+                }
+
+                /* Tùy chỉnh phần preview ảnh/video */
+                .file-preview-item {
+                    display: inline-block;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    position: relative;
+                    border-radius: 10px;
+                    /* Bo góc cho preview */
+                    overflow: hidden;
+                    transition: transform 0.3s ease;
+                    /* Hiệu ứng khi di chuột vào */
+                    width: 400px; 
+                    height: 400px;
+                }
+
+                /* Hiệu ứng khi hover vào preview ảnh/video */
+                .file-preview-item:hover {
+                    transform: scale(1.05);
+                    /* Phóng to nhẹ khi hover */
+                }
+
+                /* Nút post */
+                .btn-primary {
+                    background-color: #007bff;
+                    /* Màu nền xanh biển */
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    transition: background-color 0.3s ease;
+                    /* Hiệu ứng chuyển màu nền */
+                }
+
+                /* Hiệu ứng hover cho nút post */
+                .btn-primary:hover {
+                    background-color: #0056b3;
+                    /* Màu nền khi hover */
+                }
+
+                /* Chỉnh sửa phần preview file */
+                #file-preview {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                /* Tùy chỉnh cho container của file preview */
+                .file-preview-item img,
+                .file-preview-item video {
+                    max-width: 150px;
+                    border-radius: 10px;
+                }
+            </style>
+
+            <div class="text-end">
+                <button class="btn btn-primary">Post</button>
+            </div>
+        </div>
+    </div>
+
     <div class="post-container">
         <!-- Bài viết 1 -->
         <div class="post">
