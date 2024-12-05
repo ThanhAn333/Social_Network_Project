@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media - Facebook Style</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0px;
+        }
+
+        .post-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-header .user-details {
+            flex-grow: 1;
+        }
+
+        .post-header .username {
+            font-weight: bold;
+            margin: 0;
+            font-size: 0.95rem;
+            color: #050505;
+        }
+
+        .post-header .time {
+            font-size: 0.85rem;
+            color: #65676b;
+            margin: 0;
+        }
+
+        .post-content {
+            font-size: 0.95rem;
+            color: #050505;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .post-content img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e4e6eb;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: #65676b;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-actions button i {
+            margin-right: 5px;
+        }
+
+        .post-actions button:hover {
+            color: #1877f2;
+        }
+    </style>
+</head>
+
+<iframe src="/user/header" style="width: 100%; "></iframe>
+
+<body>
+    <div class="post-container">
+        <!-- Bài viết 1 -->
+        <div class="post">
+            <div class="post-header">
+                <img src="https://via.placeholder.com/40" alt="User Avatar">
+                <div class="user-details">
+                    <p class="username">John Doe</p>
+                    <p class="time">10 phút trước</p>
+                </div>
+            </div>
+            <div class="post-content">
+                Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
+                <img src="https://via.placeholder.com/600x300" alt="Post Image">
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-thumbs-up"></i> Thích</button>
+                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
+                <button><i class="fas fa-share"></i> Chia sẻ</button>
+            </div>
+        </div>
+
+        <!-- Bài viết 2 -->
+        <div class="post">
+            <div class="post-header">
+                <img src="https://via.placeholder.com/40" alt="User Avatar">
+                <div class="user-details">
+                    <p class="username">Jane Smith</p>
+                    <p class="time">1 giờ trước</p>
+                </div>
+            </div>
+            <div class="post-content">
+                Đã đến lúc nghỉ ngơi và thư giãn. 💆‍♀️
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-thumbs-up"></i> Thích</button>
+                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
+                <button><i class="fas fa-share"></i> Chia sẻ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & FontAwesome -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
