@@ -73,7 +73,12 @@ public class HomeController {
 	}
 
 	@GetMapping("/forgotPassword")
-	public String getForgorPassword() {
+	public String getForgorPassword(Model model, HttpSession session) {
+		String msg = (String) session.getAttribute("msg");
+		if (msg != null) {
+			model.addAttribute("msg", msg);
+			session.removeAttribute("msg");
+		}
 		return "forgotPassword";
 	}
 
@@ -91,21 +96,20 @@ public class HomeController {
 			model.addAttribute("msg", msg);
 			session.removeAttribute("msg");
 		}
-
+	
 		Long otpTimestamp = (Long) session.getAttribute("otpTimestamp");
-		if (otpTimestamp == null) {
-			model.addAttribute("remainingTime", 0);
-			return "verifyOTP";
+		long remainingTime = 0;
+		if (otpTimestamp != null) {
+			long currentTime = System.currentTimeMillis();
+			remainingTime = (5 * 60 * 1000) - (currentTime - otpTimestamp);
+			if (remainingTime < 0) {
+				remainingTime = 0;
+			}
 		}
-
-		long currentTime = System.currentTimeMillis();
-		long remainingTime = (5 * 60 * 1000) - (currentTime - otpTimestamp);
-
-		if (remainingTime < 0)
-			remainingTime = 0;
 		model.addAttribute("remainingTime", remainingTime);
 		return "verifyOTP";
 	}
+	
 	
 	
 
@@ -164,6 +168,7 @@ public class HomeController {
         }
         return "verifyOTP";
 	}
+	
 
 
 	@PostMapping("/verifyOTP")
@@ -196,7 +201,23 @@ public class HomeController {
 		}
 	
 	}
-	
+		
+	@PostMapping("/resendOTP")
+	public ResponseEntity<String> resendOtp(HttpSession session) {
+		String email = (String) session.getAttribute("email");
+
+		if (email == null || email.isEmpty()) {
+			return ResponseEntity.badRequest().body("Email không hợp lệ.");
+		}
+
+		boolean isSent = userService.sendOTP(email, session);
+		if (isSent) {
+			return ResponseEntity.ok("OTP mới đã được gửi tới email của bạn.");
+		} else {
+			return ResponseEntity.status(500).body("Không thể gửi OTP. Vui lòng thử lại sau.");
+		}
+	}
+
 	
 	
 

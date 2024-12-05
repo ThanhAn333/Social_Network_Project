@@ -27,6 +27,9 @@
       .otp-input:disabled {
         background-color: #f7f7f7;
       }
+      .alert-danger p {
+    color: red; /* Màu chữ đỏ */
+}
     </style>
   </head>
   <body>
@@ -43,19 +46,13 @@
             <p class="description">
               Enter the OTP sent to your email to reset your password.
             </p>
-
-            <!-- Error or Success Messages -->
             <div class="alert-container">
-              <!-- Error Message -->
-              <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
-                [[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
-              </div>
-              <!-- Success Message -->
-              <div th:if="${param.success}" class="alert alert-success text-center" role="alert">
-                OTP verified successfully. You can now reset your password.
-              </div>
+                <div th:if="${msg != null}" class="alert alert-danger">
+                    <p th:text="${msg}"></p>
+                </div>
             </div>
 
+            <div id="countdown">Thời gian còn lại: </div>
             <!-- OTP Input Fields -->
             <div class="otp-container">
               <input type="text" name="otp1" class="otp-input" maxlength="1" required autofocus />
@@ -104,14 +101,39 @@
 
     <script src="/js/app.js"></script>
     <script>
-      // JavaScript to automatically focus the next input field when a user types
-      document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
-        input.addEventListener('input', () => {
-          if (input.value.length === 1 && index < inputs.length - 1) {
-            inputs[index + 1].focus();
-          }
+        // Tự động chuyển focus giữa các ô OTP
+        document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+          input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          });
         });
-      });
-    </script>
+    
+        // Đếm ngược thời gian OTP
+        let remainingTime = /*[[${remainingTime}]]*/ 300000; // Giá trị thời gian từ server (5 phút)
+        const countdownElement = document.getElementById('countdown');
+    
+        function startCountdown() {
+          if (remainingTime <= 0) {
+            countdownElement.innerText = "OTP đã hết hạn.";
+            return;
+          }
+    
+          const interval = setInterval(() => {
+            if (remainingTime <= 0) {
+              clearInterval(interval);
+              countdownElement.innerText = "OTP đã hết hạn.";
+            } else {
+              const minutes = Math.floor(remainingTime / 60000);
+              const seconds = Math.floor((remainingTime % 60000) / 1000);
+              countdownElement.innerText = `Thời gian nhập OTP còn lại: ${minutes} phút ${seconds} giây`;
+              remainingTime -= 1000;
+            }
+          }, 1000);
+        }
+    
+        startCountdown();
+      </script>
   </body>
 </html>
