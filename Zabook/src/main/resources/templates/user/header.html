@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Facebook</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background-color: #07489e;
+            /* Màu xanh Facebook */
+            padding: 10px 15px;
+            /* Tăng chiều cao header */
+        }
+
+        .navbar-custom .navbar-brand {
+            color: white;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+
+        .navbar-custom .nav-link {
+            color: white;
+            font-size: 1.4rem;
+            padding: 10px 15px;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #dfe3ee;
+        }
+
+        .search-box {
+            width: 400px;
+            font-size: 1.2rem;
+            padding: 10px;
+            margin-left: 20px;
+        }
+
+        .navbar-nav i {
+            font-size: 1.5rem;
+            padding-right: 15px;
+        }
+
+        .navbar-toggler-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Sửa lại phần chứa thanh tìm kiếm và icon */
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item {
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">Za</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <input class="form-control mr-sm-2 search-box" type="search" placeholder="Tìm kiếm" aria-label="Search">
+
+
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Bạn Bè">
+                        <i class="fas fa-user-friends"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Thông Báo">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Tin Nhắn">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Tài Khoản">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

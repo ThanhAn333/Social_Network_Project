@@ -10,209 +10,216 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Users")
 public class User {
 
-	@Id
-	private ObjectId userID;
-	private String firstName;
-	private String lastName;
-	private String gender;
-	private String birthDay;
-	private String address;
-	private String email;
-	private String password;
-	private String bio;
-	
-	@DBRef
-	private Image avatar;
+    @Id
+    private ObjectId userID;
 
-	private String page;
+    private String firstName;
+    private String lastName;
+    private String gender;
+    private String birthDay;
+    private String address;
+    private String email;
+    private String password;
+    private String bio;
 
-	@DBRef
-	private List<Video> video;
+    @DBRef
+    private Image avatar;
 
-	@DBRef
-	private List<Image> image;
+    private String page;
 
-	private String role;
-	private String phone;
+    @DBRef
+    private List<Video> video;
 
-	private List<User> friend;
-	private List<User> requestFriend;
-	private List<User> following;
+    @DBRef
+    private List<Image> image;
 
-	public ObjectId getUserID() {
-		return userID;
-	}
+    private String role;
+    private String phone;
 
-	public void setUserID(ObjectId userID) {
-		this.userID = userID;
-	}
+    @DBRef
+    private List<FriendShip> friendships;  // Danh sách quan hệ bạn bè (thay vì danh sách bạn bè trực tiếp)
 
-	public String getFirstName() {
-		return firstName;
-	}
+    private boolean accounNonLocked;
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    private boolean enabled = false;
 
-	public String getLastName() {
-		return lastName;
-	}
+    private String verificationCode;
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    // Các getter và setter
+    public ObjectId getUserID() {
+        return userID;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public void setUserID(ObjectId userID) {
+        this.userID = userID;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getBirthDay() {
-		return birthDay;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setBirthDay(String birthDay) {
-		this.birthDay = birthDay;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getGender() {
+        return gender;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getBirthDay() {
+        return birthDay;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getBio() {
-		return bio;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Image getAvatar() {
-		return avatar;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setAvatar(Image avatar) {
-		this.avatar = avatar;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getPage() {
-		return page;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setPage(String page) {
-		this.page = page;
-	}
+    public String getBio() {
+        return bio;
+    }
 
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    public Image getAvatar() {
+        return avatar;
+    }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getPage() {
+        return page;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setPage(String page) {
+        this.page = page;
+    }
 
-	public List<User> getFriend() {
-		return friend;
-	}
+    public List<Video> getVideo() {
+        return video;
+    }
 
-	public void setFriend(List<User> friend) {
-		this.friend = friend;
-	}
+    public void setVideo(List<Video> video) {
+        this.video = video;
+    }
 
-	public List<User> getRequestFriend() {
-		return requestFriend;
-	}
+    public List<Image> getImage() {
+        return image;
+    }
 
-	public void setRequestFriend(List<User> requestFriend) {
-		this.requestFriend = requestFriend;
-	}
+    public void setImage(List<Image> image) {
+        this.image = image;
+    }
 
-	public List<User> getFollowing() {
-		return following;
-	}
+    public String getRole() {
+        return role;
+    }
 
-	public void setFollowing(List<User> following) {
-		this.following = following;
-	}
-	
-	
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-	public List<Video> getVideo() {
-		return video;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setVideo(List<Video> video) {
-		this.video = video;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public List<Image> getImage() {
-		return image;
-	}
+    public List<FriendShip> getFriendships() {
+        return friendships;
+    }
 
-	public void setImage(List<Image> image) {
-		this.image = image;
-	}
+    public void setFriendships(List<FriendShip> friendships) {
+        this.friendships = friendships;
+    }
 
-	public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
-			String email, String password, String bio,Image avatar, String page, List<Video> video, List<Image> image,
-			String role, String phone, List<User> friend, List<User> requestFriend, List<User> following) {
-		super();
-		this.userID = userID;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.gender = gender;
-		this.birthDay = birthDay;
-		this.address = address;
-		this.email = email;
-		this.password = password;
-		this.bio = bio;
-		this.avatar = avatar;
-		this.page = page;
-		this.video = video;
-		this.image = image;
-		this.role = role;
-		this.phone = phone;
-		this.friend = friend;
-		this.requestFriend = requestFriend;
-		this.following = following;
-	}
+    public boolean isAccounNonLocked() {
+        return accounNonLocked;
+    }
 
-	public User() {
-		super();
+    public void setAccounNonLocked(boolean accounNonLocked) {
+        this.accounNonLocked = accounNonLocked;
+    }
 
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    // Constructor
+    public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
+                String email, String password, String bio, Image avatar, String page, List<Video> video, List<Image> image,
+                String role, String phone, List<FriendShip> friendships) {
+        this.userID = userID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.birthDay = birthDay;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.avatar = avatar;
+        this.page = page;
+        this.video = video;
+        this.image = image;
+        this.role = role;
+        this.phone = phone;
+        this.friendships = friendships;
+    }
+
+    public User() {
+    }
 }

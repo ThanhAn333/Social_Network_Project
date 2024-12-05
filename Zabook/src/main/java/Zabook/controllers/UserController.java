@@ -1,45 +1,24 @@
 package Zabook.controllers;
 
-import java.util.List;
-
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import Zabook.models.User;
-import Zabook.services.IUserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
-@RestController
-@RequestMapping("/api/users")
+
+
+@Controller
+@RequestMapping("/user")
 public class UserController {
 
-	@Autowired
-    private IUserService userService;
+	@GetMapping("/")
+	public String getMethodName() {
+		return "user/index";
+	}
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable ObjectId id) {
-        return userService.getUserById(id);
-    }
-
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @PutMapping("/{id}")
-    public void updateUser(@PathVariable ObjectId id, @RequestBody User user) {
-        userService.updateUser(user);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable ObjectId id) {
-        userService.deleteUser(id);
-    }
-
+	//lâm
+	@GetMapping("/header")
+	public String header() {
+		return "user/header";
+	}
 }

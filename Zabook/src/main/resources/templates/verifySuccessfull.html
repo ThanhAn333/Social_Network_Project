@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verified Successfully</title>
+    <!-- Thêm Font Awesome CDN để dùng icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Căn giữa nội dung của trang */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+
+        section {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #34a853;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button i {
+            font-size: 18px;
+        }
+
+        /* Phong cách cho liên kết */
+        a {
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <section>
+        <h1><i class="fa-solid fa-check-circle"></i> Xác thực thành công!</h1>
+        <p>Cảm ơn bạn đã xác nhận email. Tài khoản của bạn đã được kích hoạt và sẵn sàng sử dụng.</p>
+        <p>Bạn có thể quay lại trang chủ hoặc tiếp tục sử dụng dịch vụ:</p>
+        <!-- Điều hướng đến trang chủ hoặc trang khác -->
+        <a href="/" target="_self">
+            <button>
+                <i class="fa-solid fa-home"></i>
+                Quay lại trang chủ
+            </button>
+        </a>
+        <p>Hoặc, bạn có thể tiếp tục đến trang đăng nhập.</p>
+        <a href="/login" target="_self">
+            <button>
+                <i class="fa-solid fa-sign-in-alt"></i>
+                Đăng nhập ngay
+            </button>
+        </a>
+    </section>
+</body>
+
+</html>

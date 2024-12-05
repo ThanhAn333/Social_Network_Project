@@ -1,116 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-	<title>ZABOOK</title>
-    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16"> 
-    
-    <link rel="stylesheet" href="css/main.min.css">
-	<link rel="stylesheet" href="css/weather-icon.css">
-	<link rel="stylesheet" href="css/weather-icons.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
-	<title>ZABOOK Social Network Toolkit</title>
-    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16"> 
-
-
-</head>
-<body>
-	<div class="www-layout">
-        <section>
-        	<div class="gap no-gap signin whitish medium-opacity">
-                <div class="bg-image" style="background-image:url(images/resources/theme-bg.jpg)"></div>
-                <div class="container">
-                	<div class="row">
-                        <div class="col-lg-8">
-                            <div class="big-ad">
-                                <figure><img src="images/logo2.png" alt=""></figure>
-                                <h1>Welcome to the ZABOOK</h1>
-                                <p>
-                                     ZABOOK is a social network template that can be used to connect people. use this template for multipurpose social activities like job, dating, posting, bloging and much more. Now join & Make Cool Friends around the world !!!                             
-                                </p>
-                                
-                                <div class="fun-fact">
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-3 col-sm-4">
-                                            <div class="fun-box">
-                                                <i class="ti-check-box"></i>
-                                                <h6>Registered People</h6>
-                                                <span>1,01,242</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-4">
-                                            <div class="fun-box">
-                                                <i class="ti-layout-media-overlay-alt-2"></i>
-                                                <h6>Posts Published</h6>
-                                                <span>21,03,245</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-sm-4">
-                                            <div class="fun-box">
-                                                <i class="ti-user"></i>
-                                                <h6>Online Users</h6>
-                                                <span>40,145</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="barcode">
-                                    <figure><img src="images/resources/Barcode.jpg" alt=""></figure>
-                                    <div class="app-download">
-                                        <span>Download Mobile App and Scan QR Code to login</span>
-                                        <ul class="colla-apps">
-                                            <li><a title="" href="https://play.google.com/store?hl=en"><img src="images/android.png" alt="">android</a></li>
-                                            <li><a title="" href="https://www.apple.com/lae/ios/app-store/"><img src="images/apple.png" alt="">iPhone</a></li>
-                                            <li><a title="" href="https://www.microsoft.com/store/apps"><img src="images/windows.png" alt="">Windows</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-							<div class="we-login-register">
-							    <div class="form-title">
-							        <i class="fa fa-key"></i>login
-							        <span>sign in now and meet the awesome Friends around the world.</span>
-							    </div>
-							    <form class="we-form" method="post" action="/login">
-							        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-							            <p th:text="${errorMessage}"></p>
-							        </div>
-							        <input type="text" placeholder="Email" name="email">
-							        <input type="password" placeholder="Password" name="pass">
-							        <input type="checkbox"><label>remember me</label>
-							        <button type="submit" data-ripple="">sign in</button>
-							        <a class="forgot underline" href="#" title="">forgot password?</a>
-							    </form>
-							    <div class="register-link">
-							        <span>Don't have an account?</span>
-							        <a class="btn register-btn" href="/register" data-ripple="">Register Now</a>
-							    </div>
-							    <a class="with-smedia facebook" href="#" title="" data-ripple=""><i class="fa fa-facebook"></i></a>
-							    <a class="with-smedia twitter" href="#" title="" data-ripple=""><i class="fa fa-twitter"></i></a>
-							    <a class="with-smedia instagram" href="#" title="" data-ripple=""><i class="fa fa-instagram"></i></a>
-							    <a class="with-smedia google" href="#" title="" data-ripple=""><i class="fa fa-google-plus"></i></a>
-							</div>
-                        </div>
-                        
-                    </div>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/a.css" />
+    <title>Sign in & Sign up Form</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="forms-container">
+        <div class="signin-signup">
+          <!-- Form đăng nhập -->
+          <form action="/login" class="sign-in-form" method="post">
+            <div class="logo-container">
+              <img src="images/th.png" alt="ZABOOK Logo" class="logo" />
             </div>
-        </section>
-         
-    </div>
-    	<script src="js/main.min.js"></script>
-		<script src="js/script.js"></script>
-		<div th:replace="~{/fragments/script::script}"></div>
-		<div th:replace="~{/fragments/css::css}"></div>
-</body>	
+            <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+              [[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success text-center" role="alert">
+              Logout successfully
+            </div>
+            <h2 class="title">Sign in</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" placeholder="Username" name="username" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" placeholder="Password" name="password" required />
+            </div>
+            <input type="submit" value="Login" class="btn solid" />
+            <p class="social-text">Or Sign in with social platforms</p>
+            <div class="social-media">
+              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </form>
 
+          <!-- Form đăng ký -->
+          <form action="/createUser" class="sign-up-form" method="post">
+            <div th:if="${msg}" class="alert" th:class="${msg.contains('successful') ? 'alert-success' : 'alert-danger'}" role="alert">
+              <p class="text-center fs-4 fw-bold" th:text="${msg}" style="display: flex; justify-content: center; align-items: center;"></p>
+            </div>
+            <h2 class="title">Sign up</h2>
+
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" name="firstName" placeholder="First Name" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" name="lastName" placeholder="Last Name" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" placeholder="Password" minlength="6" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="confirmPassword" placeholder="Confirm Password" minlength="6" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-phone"></i>
+              <input type="tel" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" required />
+            </div>
+
+            <input type="submit" class="btn" value="Sign up" />
+            <p class="social-text">Or Sign up with social platforms</p>
+            <div class="social-media">
+              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panels-container">
+        <div class="panel left-panel">
+          <div class="content">
+            <h3>ZABOOK</h3>
+            <p>
+              Don't have an account yet? Sign up today to connect with friends, share memorable moments, and explore an exciting community around you!
+            </p>
+            <button class="btn transparent" id="sign-up-btn">Sign up</button>
+          </div>
+          <img src="images/log.svg" class="image" alt="" />
+        </div>
+        <div class="panel right-panel">
+          <div class="content">
+            <h3>ZABOOK</h3>
+            <p>
+              Already have an account? Log in now to continue sharing amazing experiences with your friends!
+            </p>
+            <button class="btn transparent" id="sign-in-btn">Sign in</button>
+          </div>
+          <img src="images/register.svg" class="image" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+  </body>
 </html>
