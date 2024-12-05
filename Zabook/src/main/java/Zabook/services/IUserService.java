@@ -22,6 +22,7 @@ public interface IUserService {
 
 	public String login(UserRequest request);
 
+
 	public boolean sendOTP(String email, HttpSession session);
 
 	public String verifyOTP(String otp1, String otp2, String otp3, String otp4, String otp5, String otp6,

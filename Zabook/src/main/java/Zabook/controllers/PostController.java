@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import Zabook.models.Post;
@@ -91,5 +93,11 @@ public class PostController {
 	    return new ModelAndView("index", modelMap);
 	}
 
+	
+	@PostMapping("/{originalPostId}/share")
+    public ResponseEntity<String> sharePost(@PathVariable ObjectId originalPostId, @RequestParam ObjectId userId) {
+        Post sharedPost = postService.sharePost(userId, originalPostId);
+        return ResponseEntity.ok("Share success!!");
+    }
 
 }
