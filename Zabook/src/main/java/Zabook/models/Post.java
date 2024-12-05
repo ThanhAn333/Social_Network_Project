@@ -36,7 +36,7 @@ public class Post {
 	
 	private ObjectId originalPostId; // Nếu là bài chia sẻ, lưu ID của bài gốc
     private boolean isShared;      // Đánh dấu bài viết là bài chia sẻ hay không
-    private int shareCount; 
+    private int shareCount;
 	
 	
 

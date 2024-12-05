@@ -1,151 +1,395 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media - Facebook Style</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0px;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Facebook-like Post</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f2f5;
+			margin: 0;
+			padding: 0;
+		}
 
-        .post-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+		.post-container {
+			max-width: 600px;
+			margin: 20px auto;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 15px;
+		}
 
-        .post {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 15px;
-        }
+		.post-header {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+		}
 
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+		.post-header img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			margin-right: 10px;
+		}
 
-        .post-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+		.post-header .user-details {
+			flex-grow: 1;
+		}
 
-        .post-header .user-details {
-            flex-grow: 1;
-        }
+		.post-header .username {
+			font-weight: bold;
+			margin: 0;
+			font-size: 0.95rem;
+			color: #050505;
+		}
 
-        .post-header .username {
-            font-weight: bold;
-            margin: 0;
-            font-size: 0.95rem;
-            color: #050505;
-        }
+		.post-header .time {
+			font-size: 0.85rem;
+			color: #65676b;
+			margin: 0;
+		}
 
-        .post-header .time {
-            font-size: 0.85rem;
-            color: #65676b;
-            margin: 0;
-        }
+		.post-content {
+			font-size: 0.95rem;
+			color: #050505;
+			line-height: 1.5;
+			margin-bottom: 15px;
+		}
 
-        .post-content {
-            font-size: 0.95rem;
-            color: #050505;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
+		.post-content img {
+			width: 100%;
+			border-radius: 8px;
+			margin-top: 10px;
+		}
 
-        .post-content img {
-            width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
+		.post-actions {
+			display: flex;
+			justify-content: space-between;
+			border-top: 1px solid #e4e6eb;
+			padding-top: 10px;
+			margin-top: 10px;
+		}
 
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid #e4e6eb;
-            padding-top: 10px;
-            margin-top: 10px;
-        }
+		.post-actions button {
+			background: none;
+			border: none;
+			color: #65676b;
+			font-size: 0.9rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			position: relative;
+			padding: 10px;
+		}
 
-        .post-actions button {
-            background: none;
-            border: none;
-            color: #65676b;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
+		.post-actions button i {
+			margin-right: 5px;
+		}
 
-        .post-actions button i {
-            margin-right: 5px;
-        }
+		.post-actions button:hover {
+			color: #1877f2;
+		}
 
-        .post-actions button:hover {
-            color: #1877f2;
-        }
-    </style>
+		.emoji-icons {
+			position: absolute;
+			display: none;
+			top: -40px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 5px;
+			border-radius: 20px;
+			justify-content: space-evenly;
+			width: 250px;
+			height: 50px;
+			z-index: 1;
+		}
+
+		.post-actions .btn-like:hover .emoji-icons {
+			display: flex;
+		}
+
+		.emoji-icons i {
+			font-size: 24px;
+			margin: 5px;
+			cursor: pointer;
+			transition: transform 0.2s;
+		}
+
+		.emoji-icons i:hover {
+			transform: scale(1.2);
+		}
+
+		.like {
+			color: #4267b2;
+		}
+
+		.love {
+			color: #f02849;
+		}
+
+		.haha {
+			color: #f7b731;
+		}
+
+		.wow {
+			color: #f1c40f;
+		}
+
+		.sad {
+			color: #f39c12;
+		}
+
+		.angry {
+			color: #e74c3c;
+		}
+
+		.btn-like.selected {
+			color: #1877f2;
+		}
+
+	/* Phần comment */
+.comment-form-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding-top: 10px;
+}
+
+.comment-form-container textarea {
+	width: 100%;
+	resize: none;
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	margin-bottom: 10px;
+	background-color: #f5f6f7;
+	box-sizing: border-box;
+}
+
+.comment-form-container .btn-send {
+	background-color: #1877f2;
+	color: white;
+	border: none;
+	padding: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 16px;
+	position: absolute;
+	right: 15px;
+	bottom: 10px;
+}
+
+.comment-form-container button i {
+	font-size: 16px;
+}
+
+.comment-box {
+	display: flex;
+	margin-bottom: 15px;
+	padding: 10px;
+	border: 1px solid #e4e6eb;
+	border-radius: 8px;
+	background-color: #fafbfc;
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.comment-content {
+	flex-grow: 1;
+}
+
+.comment-content p {
+	margin: 0;
+	font-size: 14px;
+	color: #050505;
+}
+
+.comment-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 12px;
+	color: #65676b;
+}
+
+.comment-actions span {
+	margin-right: 10px;
+}
+
+.comment-actions button {
+	background: none;
+	border: none;
+	color: #65676b;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.comment-actions button:hover {
+	color: #1877f2;
+}
+
+.comment-box:hover {
+	background-color: #f0f2f5;
+}
+
+.comment-form-container textarea:focus {
+	border-color: #1877f2;
+	outline: none;
+}
+.comment-input-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.comment-input-container textarea {
+    width: 90%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: none;
+    padding-right: 40px; /* Space for the send button */
+}
+
+.comment-input-container .btn-send {
+    position: absolute;
+    right: 10px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    bottom: 20px;
+}
+
+	</style>
 </head>
-
 <iframe src="/user/header" style="width: 100%; "></iframe>
-
 <body>
-    <div class="post-container">
-        <!-- Bài viết 1 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">John Doe</p>
-                    <p class="time">10 phút trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
-                <img src="https://via.placeholder.com/600x300" alt="Post Image">
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
+	<div class="post-container">
+		<div class="post-header">
+			<img src="https://via.placeholder.com/40" alt="User Avatar">
+			<div class="user-details">
+				<p class="username">John Doe</p>
+				<p class="time">10 phút trước</p>
+			</div>
+		</div>
+		<div class="post-content">
+			Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
+			<img src="https://via.placeholder.com/600x300" alt="Post Image">
+		</div>
+		<div class="post-actions">
+			<button class="btn-like" onclick="toggleLike(event, this)">
+				<i class="fas fa-thumbs-up"></i> Thích
+				<div class="emoji-icons">
+					<i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
+					<i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
+					<i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
+					<i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
+					<i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
+					<i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
+				</div>
+			</button>
+			<button class="btn-comment" onclick="toggleCommentForm(this)"><i class="fas fa-comment-alt"></i> Bình
+				luận</button>
+			<button><i class="fas fa-share"></i> Chia sẻ</button>
 
-        <!-- Bài viết 2 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">Jane Smith</p>
-                    <p class="time">1 giờ trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Đã đến lúc nghỉ ngơi và thư giãn. 💆‍♀️
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
+
+		</div>
+		<!-- Form bình luận ẩn mặc định -->
+		<div class="comment-form-container" style="display: none;">
+			<c:forEach begin="1" end="3">
+				<div class="comment-box">
+					<img class="avatar" src="avatar.jpg" alt="Avatar">
+					<div class="comment-content">
+						<p><strong>Tấn Thành</strong></p>
+						<p>Miền cực lạc đâu</p>
+						<div class="comment-actions">
+							<span>5 giờ</span>
+							<button class="buttoncomment">Thích</button>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+
+			 <div class="comment-input-container">
+				
+        <textarea class="form-control" placeholder="Viết bình luận của bạn..."></textarea>
+        <button class="btn-send">
+            <i class="fas fa-arrow-right"></i>
+        </button>
     </div>
 
-    <!-- Bootstrap & FontAwesome -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+		</div>
+	</div>
+
+	<script>
+		//phần thả cảm xúc
+		function toggleLike(event, button) {
+			const hasSelectedReaction = button.classList.contains('selected');
+			if (hasSelectedReaction) {
+				// Nếu đã chọn cảm xúc, ấn thêm lần nữa để hủy thích
+				button.classList.remove('selected');
+				button.innerHTML = `
+                    <i class="fas fa-thumbs-up"></i> Thích
+                    <div class="emoji-icons">
+                        <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
+                        <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
+                        <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
+                        <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
+                        <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
+                        <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
+                    </div>
+                `;
+			}
+		}
+
+		function selectReaction(event, icon, reactionText) {
+			event.stopPropagation();
+
+			// Tìm nút cha
+			const button = icon.closest('.btn-like');
+			button.classList.add('selected');
+			button.innerHTML = `<i class="${icon.className}"></i> ${reactionText}
+                <div class="emoji-icons">
+                    <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
+                    <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
+                    <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
+                    <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
+                    <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
+                    <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
+                </div>`;
+		}
+
+
+		// Phần comment
+		function toggleCommentForm(button) {
+			// Thay đổi 'post' thành 'post-container'
+			const commentForm = button.closest('.post-container').querySelector('.comment-form-container');
+			if (commentForm.style.display === 'none' || commentForm.style.display === '') {
+				commentForm.style.display = 'block'; // Hiện form
+			} else {
+				commentForm.style.display = 'none'; // Ẩn form
+			}
+		}
+
+
+	</script>
 </body>
 
 </html>
