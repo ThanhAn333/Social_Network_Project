@@ -6,6 +6,46 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/a.css" />
     <title>Sign in & Sign up Form</title>
+    <style>
+      /* CSS cho hoạt ảnh của link */
+.forgot-password-link {
+  color: #007bff;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0056b3;
+}
+
+/* Hiệu ứng khi click vào Forgot Password */
+.forgot-password-link.clicked {
+  animation: slide-up 0.5s forwards, fade-out 0.5s forwards;
+}
+
+/* Hiệu ứng mờ dần (fade) */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Hiệu ứng di chuyển lên (slide up) */
+@keyframes slide-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-20px);
+  }
+}
+
+      </style>
   </head>
   <body>
     <div class="container">
@@ -32,6 +72,7 @@
               <input type="password" placeholder="Password" name="password" required />
             </div>
             <input type="submit" value="Login" class="btn solid" />
+            <a href="/forgotPassword" class="forgot-password-link">Forgot Password?</a>
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -47,6 +88,9 @@
               <p class="text-center fs-4 fw-bold" th:text="${msg}" style="display: flex; justify-content: center; align-items: center;"></p>
             </div>
             <h2 class="title">Sign up</h2>
+            <div th:if="${msg != null}" class="alert alert-danger">
+              <p th:text="${msg}"></p>
+          </div>
 
             <div class="input-field">
               <i class="fas fa-user"></i>

@@ -53,15 +53,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/user/**").hasRole("USER").requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**", "/notifyVerify", "/createUser", "/verifySuccessfull", "/verify").permitAll().anyRequest().authenticated())
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**", "/notifyVerify", "/createUser", "/verifySuccessfull", "/verify", "/forgotPassword", "/resetPassword", "/verifyOTP")
+                .permitAll().
+                anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                 .failureUrl("/login?error=true").successHandler(customsuccessHandler).permitAll())
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true).permitAll())
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .headers().frameOptions().sameOrigin()
-                .and()
-                .csrf().disable();
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
