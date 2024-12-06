@@ -21,10 +21,9 @@ public class User {
     private String email;
     private String password;
     private String bio;
+    private String  avatar;
 
     @DBRef
-    private Image avatar;
-
     private String page;
 
     @DBRef
@@ -118,11 +117,11 @@ public class User {
         this.bio = bio;
     }
 
-    public Image getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Image avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
@@ -200,7 +199,7 @@ public class User {
 
     // Constructor
     public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
-                String email, String password, String bio, Image avatar, String page, List<Video> video, List<Image> image,
+                String email, String password, String bio, String avatar, String page, List<Video> video, List<Image> image,
                 String role, String phone, List<FriendShip> friendships) {
         this.userID = userID;
         this.firstName = firstName;

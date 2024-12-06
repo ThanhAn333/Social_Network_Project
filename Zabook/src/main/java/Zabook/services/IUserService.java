@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpSession;
 
 public interface IUserService {
     public User createUser(User user, String url);
+
+	public void updateUser(User user);
 	
 	public boolean checkEmail(String email);
 	

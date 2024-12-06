@@ -146,7 +146,13 @@ public class UserService implements IUserService {
 		User user = this.getUserByEmail(userDetails.getUsername ());
 		return user;
 	}
+    
+@Override
+    public void updateUser(User user) {
+        userRepo.save(user);
+    }
 
+    // lâm
 	@Override
 	public User getUserById(String id) {
 		ObjectId id1 = new ObjectId(id);
