@@ -8,6 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Data;
+
+@Data
 @Document(collection = "Posts")
 public class Post {
 	@Id
@@ -28,6 +31,14 @@ public class Post {
 	
 	@DBRef
 	private List<Comment> comment;
+	
+	
+	
+	private ObjectId originalPostId; // Nếu là bài chia sẻ, lưu ID của bài gốc
+    private boolean isShared;      // Đánh dấu bài viết là bài chia sẻ hay không
+    private int shareCount;
+	
+	
 
 	public Post() {
 		this.createdAt = LocalDateTime.now();

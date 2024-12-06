@@ -1,363 +1,548 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media - Facebook Style</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0px;
-        }
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+	<title>facebook.com</title>
+	<!-- style css link -->
+	<link rel="stylesheet" href="/css/style.css">
+	<!-- fontawesome css link -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://cdn.jsdelivr.net/npm/@feathericons/feather@4.28.0/dist/feather.min.css" rel="stylesheet">
 
-        .post-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
 
-        .post {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 15px;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .post-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .post-header .user-details {
-            flex-grow: 1;
-        }
-
-        .post-header .username {
-            font-weight: bold;
-            margin: 0;
-            font-size: 0.95rem;
-            color: #050505;
-        }
-
-        .post-header .time {
-            font-size: 0.85rem;
-            color: #65676b;
-            margin: 0;
-        }
-
-        .post-content {
-            font-size: 0.95rem;
-            color: #050505;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .post-content img {
-            width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid #e4e6eb;
-            padding-top: 10px;
-            margin-top: 10px;
-        }
-
-        .post-actions button {
-            background: none;
-            border: none;
-            color: #65676b;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .post-actions button i {
-            margin-right: 5px;
-        }
-
-        .post-actions button:hover {
-            color: #1877f2;
-        }
-    </style>
 </head>
 
-<div th:replace="user/header"></div>
-
 <body>
-    <div class="container mt-4">
-        <!-- Post Section in a raised box -->
-        <div class="post-section card shadow-sm p-4 bg-white rounded">
-            <!-- Textarea for post content -->
-            <textarea class="post-input form-control mb-3" rows="3" placeholder="What's on your mind?"></textarea>
 
-            <!-- Display image or video preview -->
-            <div id="file-preview" class="mb-3" style="display: none;">
-                <!-- Preview sẽ được thêm qua JavaScript -->
+	<!-- header section start -->
+
+
+	<header>
+		<div class="header-container">
+			<div class="header-wrapper">
+				<div class="logoBox">
+					<img src="/images/th.png" alt="logo">
+				</div>
+				<div class="searchBox">
+					<input type="search">
+					<i class="fas fa-search"></i>
+				</div>
+				<!-- Navigation Icons -->
+				<div class="iconBox1">
+					<a href="/user/"><i class="fa-solid fa-house"></i></a>
+					<a href="/user/groups"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
+					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
+				</div>
+
+				<!-- User Options -->
+				<div class="iconBox2">
+					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
+					<a href="#"><i class="fa-brands fa-facebook-messenger"></i></a>
+					<a href="#"><i class="fa-solid fa-bell"></i></a>
+					<label><img src="/images/user.jpg" alt="user"></label>
+					<a href="#"><i class="fa-solid fa-caret-down"></i></a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+	<!-- header section end -->
+	<!-- home section start -->
+
+
+	<div class="home">
+		<div class="container">
+			<div class="home-weapper">
+
+				<!-- home left start here -->
+				<div class="home-left">
+
+					<div class="profile">
+						<img src="/images/user.jpg" alt="user">
+						<h3>Zahidul hossain</h3>
+					</div>
+
+					<div class="pages">
+						<h4 class="mini-headign">Pages</h4>
+						<label>
+							<img src="/images/messenger.png" alt="messenger">
+							<span>messenger</span>
+						</label>
+						<label>
+							<img src="/images/instagram.png" alt="instagram">
+							<span>instagram</span>
+						</label>
+						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
+					</div>
+
+					<div class="group">
+						<h4 class="mini-headign">Group</h4>
+						<label>
+							<img src="/images/gg.png" alt="group01">
+							<span>Graphic design</span>
+						</label>
+
+						<label>
+							<img src="/images/gg2.png" alt="group02">
+							<span>website design</span>
+						</label>
+
+						<label>
+							<img src="/images/gg3.png" alt="group03">
+							<span>ZED.zahidul</span>
+						</label>
+
+						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
+					</div>
+
+					<div class="games">
+						<h4 class="mini-headign">Games</h4>
+						<label>
+							<img src="/images/game.png" alt="game01">
+							<span>Facebook games</span>
+						</label>
+						<label>
+							<img src="images/game2.png" alt="game02">
+							<span>Free Play Games</span>
+						</label>
+						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
+					</div>
+
+					<div class="explore">
+						<h4 class="mini-headign">Explore</h4>
+
+						<a href="#"><i class="fa-solid fa-user-group"></i> Group</a>
+						<a href="#"><i class="fa-solid fa-star"></i></i> Favorites</a>
+						<a href="#"><i class="fa-solid fa-bookmark"></i></i> Saves</a>
+						<a href="#"><i class="fa-solid fa-clock"></i> Events</a>
+						<a href="#"><i class="fa-solid fa-flag"></i> Pages</a>
+
+						<div><label class="darkTheme"> <span></span></label> Apply Dark Theme</div>
+
+						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
+					</div>
+
+				</div><!-- home left end here -->
+
+				<!-- home center start here -->
+
+				<div class="home-center">
+					<div class="home-center-wrapper">
+						<div class="stories">
+							<h3 class="mini-headign">Stories</h3>
+							<div class="stories-wrapper">
+
+								<div class="single-stories">
+									<label><img src="/images/user.jpg" alt="user"></label>
+									<div>
+										<img src="/images/user.jpg" alt="user">
+										<i class="fa-solid fa-circle-plus"></i>
+										<b>Create Stories</b>
+									</div>
+								</div>
+
+								<div class="single-stories">
+									<label><img src="/images/us.png" alt="sp"></label>
+									<div>
+										<img src="/images/ss.jpg" alt="ss">
+										<b>Your Name</b>
+									</div>
+								</div>
+
+								<div class="single-stories">
+									<label><img src="/images/us2.png" alt="sp2"></label>
+									<div>
+										<img src="/images/ss2.jpg" alt="ss2">
+										<b>Your Name</b>
+									</div>
+								</div>
+
+								<div class="single-stories">
+									<label><img src="/images/us3.png" alt="sp3"></label>
+									<div>
+										<img src="/images/ss3.jpg" alt="ss3">
+										<b>Your Name</b>
+									</div>
+								</div>
+
+								<div class="single-stories">
+									<label><img src="/images/us4.png" alt="sp4"></label>
+									<div>
+										<img src="/images/ss4.jpg" alt="ss4">
+										<b>Your Name</b>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+
+						<div class="createPost">
+
+							<h3 class="mini-headign">Create Post</h3>
+							<div class="post-text">
+								<img src="/images/user.jpg" alt="user">
+								<input type="text-area" placeholder="What's on your mind, zahidul">
+							</div>
+
+							<div class="post-icon">
+								<a href="#" style="background: #ffebed;">
+									<i style="background: #ff4154;" class="fa-solid fa-camera"></i>
+									Gallery</a>
+
+								<a href="#" style="background: #ccdcff;">
+									<i style="background: #0053ff;" class="fa-solid fa-video"></i>
+									Video</a>
+
+								<a href="#" style="background: #d7ffef;">
+									<i style="background: #00d181;" class="fa-solid fa-location-dot"></i>
+									Location</a>
+
+								<a href="#" style="background: #cff3ff;">
+									<i style="background: #04c3ff;" class="fa-solid fa-gift"></i>
+									Gift</a>
+
+								<a href="#" style="background: #fff4d1;">
+									<i style="background: #ffca28;" class="fa-solid fa-face-grin-beam"></i>
+									Feeling / Acrivity</a>
+
+							</div>
+
+						</div>
+
+
+						<div class="fb-post1">
+							<div class="fb-post1-container">
+								<div class="fb-post1-header">
+									<ul>
+										<li class="active">popular</li>
+										<li>recent</li>
+										<li>most view</li>
+									</ul>
+								</div>
+								<div class="fb-p1-main">
+									<div class="post-title">
+										<img src="/images/user2.jpg" alt="user picture">
+										<ul>
+											<li>
+												<h3>Arham Kabir <span> . 2 hours ago</span></h3>
+											</li>
+											<li><span>02 march at 12:55 PM</span></li>
+										</ul>
+										<p>Hello Everyone Thanks for Watching Please SUBSCRIBE My Channel - Like
+											Comments and Share
+											<a
+												href="https://www.youtube.com/channel/UCHhGX-DD7A8jq7J_NPGN6gA">https://www.youtube.com/channel/UCHhGX-DD7A8jq7J_NPGN6gA</a>
+										</p>
+									</div>
+
+									<div class="post-images">
+										<div class="post-images1">
+											<img src="/images/pp.jpg" alt="post images 01">
+											<img src="/images/pp2.jpg" alt="post images 02">
+											<img src="/images/pp3.jpg" alt="post images 03">
+										</div>
+										<div class="post-images2">
+											<img src="/images/pp4.jpg" alt="post images 04">
+										</div>
+									</div>
+
+									<div class="like-comment">
+										<ul>
+											<li>
+												<img src="/images/love.png" alt="love">
+												<img src="/images/like.png" alt="like">
+												<span>22k</span>
+												
+											</li>
+											<li> <span>555 comments</span></li>
+											<li> <span>254 share</span></li>
+										</ul>
+
+										<!--like comment-->
+										<div class="post-actions">
+											<button class="btn-like">
+												<i class="fas fa-thumbs-up"></i> Thích
+												<div class="emoji-icons">
+													<i class="fas fa-thumbs-up like"
+														onclick="selectReaction(event, this, 'Thích')"></i>
+													<i class="fas fa-heart love"
+														onclick="selectReaction(event, this, 'Yêu thích')"></i>
+													<i class="fas fa-laugh-squint haha"
+														onclick="selectReaction(event, this, 'Haha')"></i>
+													<i class="fas fa-surprise wow"
+														onclick="selectReaction(event, this, 'Wow')"></i>
+													<i class="fas fa-sad-tear sad"
+														onclick="selectReaction(event, this, 'Buồn')"></i>
+													<i class="fas fa-angry angry"
+														onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
+												</div>
+											</button>
+
+											<button class="btn-comment" onclick="toggleCommentForm(this)"><i
+													class="fas fa-comment-alt"></i> Bình
+												luận</button>
+
+
+											<button class="btn-share" onclick="toggleSharePopup()">
+												<i class="fa-solid fa-share-from-square"></i> Chia sẻ
+											</button>
+
+
+											<!-- Form chia sẻ dạng Popup -->
+											<div class="share-popup" style="display: none;">
+												<div class="popup-content">
+													<span class="popup-close"
+														onclick="toggleSharePopup()">&times;</span>
+													<h3>Chia sẻ bài viết</h3>
+
+													<div class="share-header">
+														<img src="/images/pp4.jpg" alt="User Avatar"
+															class="user-avatar">
+														<h4>Trần Thế Anh</h4>
+
+													</div>
+													<div class="share-textarea">
+														<textarea placeholder="Bạn nghĩ gì về bài viết này?"
+															rows="4"></textarea>
+													</div>
+													<div class="share-actions">
+														<button class="btn-send">
+															<i class="fas fa-arrow-right"></i> Chia sẻ
+														</button>
+														<button class="btn-cancel"
+															onclick="toggleSharePopup()">Hủy</button>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<!-- Form bình luận ẩn mặc định -->
+										<div class="comment-form-container" style="display: none;">
+											<div class="comment-box">
+												<img class="avatar" src="/images/avatar.jpg" alt="Avatar">
+												<div class="comment-content">
+													<p><strong>Tấn Thành</strong></p>
+													<p>Miền cực lạc đâu</p>
+													<div class="comment-actions">
+														<span>5 giờ</span>
+														<button class="buttoncomment">Thích</button>
+
+													</div>
+												</div>
+											</div>
+											<div class="comment-bar">
+												<input type="text" placeholder="Viết bình luận...">
+
+												<button>
+													<img class="img-send-comment" width="24" height="24"
+														src="https://img.icons8.com/material-rounded/24/sent.png"
+														alt="sent" />
+												</button>
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+
+
+
+
+
+						</div>
+					</div> <!-- home center wrapper end -->
+				</div> <!-- home center end -->
+
+				<div class="home-right">
+					<div class="home-right-wrapper">
+
+						<div class="event-friend">
+							<div class="event">
+								<h3 class="heading">Upcoming Events <span>see all</span></h3>
+								<img src="/images/eve.jpg" alt="event-img">
+								<div class="event-date">
+									<h3>21 <b>july</b></h3>
+									<h4>United state of America <span>New York City</span></h4>
+								</div>
+								<button><i class="fa-regular fa-star"></i> interested</button>
+							</div>
+
+							<hr>
+
+							<div class="friend">
+								<h3 class="heading">Friend Requests <span>see all</span></h3>
+								<ul>
+									<li><img src="/images/user4.jpg" alt="user"></li>
+									<li>
+										<b>armanul islam</b>
+										<p>Lorem ipsum dolor sit amet.</p>
+										<button>confirm</button><button class="friend-remove">remove</button>
+									</li>
+								</ul>
+							</div>
+
+						</div>
+
+						<div class="create-page">
+							<ul>
+								<li>
+									<i class="fa-solid fa-circle-plus"></i>
+									<h4>Create Page & Groups</h4>
+									<i class="fa-solid fa-magnifying-glass"></i>
+								</li>
+								<li>
+									<img src="/images/group.jpg" alt="groups">
+								</li>
+								<li>
+									<b>simple group or page name <span>200k Members</span></b>
+									<button>Join Group</button>
+								</li>
+							</ul>
+						</div>
+
+						<div class="messenger">
+							<div class="messenger-search">
+								<i class="fa-solid fa-user-group"></i>
+								<h4>Messenger</h4>
+								<input type="search" placeholder="Search">
+								<i class="fa-solid fa-magnifying-glass"></i>
+							</div>
+							<ul>
+								<li>
+									<img src="/images/us2.png" alt="user">
+									<b>Zunayed Hossain <span>Online</span></b>
+									<i class="fa-brands fa-facebook-messenger"></i>
+								</li>
+
+								<li>
+									<img src="/images/us3.png" alt="user">
+									<b>Armanul Islam <span>Offline</span></b>
+									<i class="fa-brands fa-facebook-messenger"></i>
+								</li>
+
+								<li>
+									<img src="/images/us4.png" alt="user">
+									<b>Mohammad Amir <span>Online</span></b>
+									<i class="fa-brands fa-facebook-messenger"></i>
+								</li>
+							</ul>
+						</div>
+
+					</div><!-- home right wrapper end -->
+				</div><!-- home right end -->
+
+
+
+
+
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!-- home section end -->
+
+	<script>
+		
+
+
+		function toggleLike(event, button) {
+			const hasSelectedReaction = button.classList.contains('selected');
+			if (hasSelectedReaction) {
+				// Nếu đã chọn cảm xúc, ấn thêm lần nữa để hủy thích
+				button.classList.remove('selected', 'like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
+				button.innerHTML = `
+            <i class="fas fa-thumbs-up"></i> Thích
+            <div class="emoji-icons">
+                <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
+                <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
+                <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
+                <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
+                <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
+                <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
             </div>
-
-            <div class="mb-3">
-                <label for="post-image" class="form-label">Add photos or videos</label>
-                <!-- Cho phép chọn nhiều tệp với multiple và hỗ trợ hình ảnh và video -->
-                <input type="file" class="form-control" id="post-image" accept="image/*, video/*" multiple>
-            </div>
+        `;
+			}
+		}
 
 
+		function selectReaction(event, icon, reactionText) {
+			event.stopPropagation();
 
-            <script>
-                const fileInput = document.getElementById('post-image');
-                const filePreviewContainer = document.getElementById('file-preview');
+			// Tìm nút cha
+			const button = icon.closest('.btn-like');
 
-                // Hàm kiểm tra xem file đã được thêm vào chưa
-                function isFileAlreadyAdded(file) {
-                    const previews = filePreviewContainer.getElementsByClassName('file-preview-item');
-                    for (let i = 0; i < previews.length; i++) {
-                        const preview = previews[i];
-                        const previewFile = preview.querySelector('img, video');
-                        if (previewFile && previewFile.src === URL.createObjectURL(file)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
+			// Xóa các class màu cũ
+			button.classList.remove('like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
 
-                fileInput.addEventListener('change', function () {
-                    const files = fileInput.files;
+			// Thêm class màu dựa trên loại cảm xúc
+			if (icon.classList.contains('like')) button.classList.add('like-color');
+			else if (icon.classList.contains('love')) button.classList.add('love-color');
+			else if (icon.classList.contains('haha')) button.classList.add('haha-color');
+			else if (icon.classList.contains('wow')) button.classList.add('wow-color');
+			else if (icon.classList.contains('sad')) button.classList.add('sad-color');
+			else if (icon.classList.contains('angry')) button.classList.add('angry-color');
 
-                    // Duyệt qua các file đã chọn
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-
-                        // Kiểm tra xem file đã được thêm chưa
-                        if (isFileAlreadyAdded(file)) {
-                            continue; // Nếu đã thêm, bỏ qua và không thêm file này
-                        }
-
-                        // Tạo một div cho mỗi preview
-                        const previewWrapper = document.createElement('div');
-                        previewWrapper.classList.add('file-preview-item');
-                        previewWrapper.style.position = 'relative';
-
-                        // Kiểm tra loại file là hình ảnh hay video và hiển thị tương ứng
-                        const fileReader = new FileReader();
-
-                        fileReader.onload = function (e) {
-                            const fileUrl = e.target.result;
-
-                            if (file.type.startsWith('image')) {
-                                // Hiển thị hình ảnh mà không hiển thị tên file
-                                const img = document.createElement('img');
-                                img.src = fileUrl;
-                                img.classList.add('img-fluid');
-                                img.style.maxHeight = '200px';
-                                previewWrapper.appendChild(img);
-                            } else if (file.type.startsWith('video')) {
-                                // Hiển thị video mà không hiển thị tên file
-                                const video = document.createElement('video');
-                                video.src = fileUrl;
-                                video.controls = true;
-                                video.style.maxWidth = '200px';
-                                previewWrapper.appendChild(video);
-                            }
-
-                            // Thêm nút "x" để xóa
-                            const removeButton = document.createElement('button');
-                            removeButton.innerHTML = '×';
-                            removeButton.classList.add('remove-btn');
-                            removeButton.style.position = 'absolute';
-                            removeButton.style.top = '5px';
-                            removeButton.style.right = '5px';
-                            removeButton.style.background = 'rgba(0, 0, 0, 0.5)';
-                            removeButton.style.color = 'white';
-                            removeButton.style.border = 'none';
-                            removeButton.style.borderRadius = '50%';
-                            removeButton.style.padding = '5px';
-                            removeButton.style.cursor = 'pointer';
-
-                            // Xử lý sự kiện xóa tệp
-                            removeButton.addEventListener('click', function () {
-                                previewWrapper.remove();
-                            });
-
-                            previewWrapper.appendChild(removeButton);
-                            filePreviewContainer.appendChild(previewWrapper);
-                        };
-
-                        fileReader.readAsDataURL(file);
-                    }
-
-                    // Hiển thị phần preview sau khi có file được chọn
-                    filePreviewContainer.style.display = 'block';
-                });
-            </script>
-
-            <style>
-                /* Hiệu ứng bo góc và mượt mà cho card */
-                .post-section {
-                    border-radius: 15px;
-                    /* Bo góc cho card */
-                    background-color: white;
-                    transition: box-shadow 0.3s ease-in-out;
-                    /* Thêm hiệu ứng khi thay đổi box-shadow */
-                }
-
-                /* Thêm hiệu ứng khi hover vào card */
-                .post-section:hover {
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                    /* Hiệu ứng đổ bóng khi hover */
-                }
-
-                /* Đổi màu nền cho textarea khi hover */
-                .post-input:focus {
-                    border-color: #007bff;
-                    /* Màu viền khi focus */
-                    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
-                    /* Hiệu ứng ánh sáng xung quanh khi focus */
-                }
-
-                /* Tùy chỉnh nút x */
-                .remove-btn {
-                    font-size: 18px;
-                    font-weight: bold;
-                    width: 22px;
-                    height: 22px;
-                    text-align: center;
-                    line-height: 16px;
-                    color: white;
-                    background-color: #007bff;
-                    /* Màu nền xanh biển */
-                    border-radius: 50%;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease;
-                    /* Hiệu ứng chuyển màu nền */
-                }
-
-                /* Hiệu ứng hover cho nút x */
-                .remove-btn:hover {
-                    background-color: #0056b3;
-                    /* Màu nền khi hover */
-                }
-
-                /* Tùy chỉnh phần preview ảnh/video */
-                .file-preview-item {
-                    display: inline-block;
-                    margin-right: 10px;
-                    margin-bottom: 10px;
-                    position: relative;
-                    border-radius: 10px;
-                    /* Bo góc cho preview */
-                    overflow: hidden;
-                    transition: transform 0.3s ease;
-                    /* Hiệu ứng khi di chuột vào */
-                    width: 400px; 
-                    height: 400px;
-                }
-
-                /* Hiệu ứng khi hover vào preview ảnh/video */
-                .file-preview-item:hover {
-                    transform: scale(1.05);
-                    /* Phóng to nhẹ khi hover */
-                }
-
-                /* Nút post */
-                .btn-primary {
-                    background-color: #007bff;
-                    /* Màu nền xanh biển */
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    border-radius: 5px;
-                    transition: background-color 0.3s ease;
-                    /* Hiệu ứng chuyển màu nền */
-                }
-
-                /* Hiệu ứng hover cho nút post */
-                .btn-primary:hover {
-                    background-color: #0056b3;
-                    /* Màu nền khi hover */
-                }
-
-                /* Chỉnh sửa phần preview file */
-                #file-preview {
-                    display: flex;
-                    flex-wrap: wrap;
-                }
-
-                /* Tùy chỉnh cho container của file preview */
-                .file-preview-item img,
-                .file-preview-item video {
-                    max-width: 150px;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="text-end">
-                <button class="btn btn-primary">Post</button>
-            </div>
+			// Thêm trạng thái "selected"
+			button.classList.add('selected');
+			button.innerHTML = `
+        <i class="${icon.className}"></i> ${reactionText}
+        <div class="emoji-icons">
+            <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
+            <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
+            <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
+            <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
+            <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
+            <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
         </div>
-    </div>
+    `;
+		}
+		//comment 
+		function toggleCommentForm(button) {
+			// Tìm phần tử form bình luận
+			const commentFormContainer = button.closest('.fb-p1-main').querySelector('.comment-form-container');
 
-    <div class="post-container">
-        <!-- Bài viết 1 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">John Doe</p>
-                    <p class="time">10 phút trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
-                <img src="https://via.placeholder.com/600x300" alt="Post Image">
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
+			// Kiểm tra trạng thái hiển thị và thay đổi
+			if (commentFormContainer.style.display === 'none' || commentFormContainer.style.display === '') {
+				commentFormContainer.style.display = 'block'; // Hiển thị form
+			} else {
+				commentFormContainer.style.display = 'none'; // Ẩn form
+			}
+		}
 
-        <!-- Bài viết 2 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">Jane Smith</p>
-                    <p class="time">1 giờ trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Đã đến lúc nghỉ ngơi và thư giãn. 💆‍♀️
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap & FontAwesome -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+		function toggleSharePopup() {
+			const sharePopup = document.querySelector('.share-popup');
+			// Đổi trạng thái hiển thị của popup
+			if (sharePopup.style.display === 'none' || sharePopup.style.display === '') {
+				sharePopup.style.display = 'block';
+			} else {
+				sharePopup.style.display = 'none';
+			}
+		}
+var darkButton = document.querySelector(".darkTheme");
+
+		darkButton.onclick = function () {
+			darkButton.classList.toggle("button-Active");
+			document.body.classList.toggle("dark-color")
+		}
+	</script>
+
 </body>
 
 </html>
