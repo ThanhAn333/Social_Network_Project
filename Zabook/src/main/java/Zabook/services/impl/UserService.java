@@ -12,7 +12,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -120,35 +119,7 @@ public class UserService implements IUserService {
         return user;
     }
 
-    @Override
-    public User getUserById(String id) {
-        ObjectId id1 = new ObjectId(id);
-        return userRepo.findById(id1).orElse(null);
-    }
-
-    @Override
-    public String login(UserRequest request) {
-        try {
-            Authentication authenticate = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-            if (authenticate.isAuthenticated()) {
-                System.out.println("Authentication successful for email: " + request.getEmail());
-                return jwtService.generateToken(request.getEmail());
-            }
-        } catch (BadCredentialsException e) {
-            System.out.println("Bad credentials for email: " + request.getEmail());
-            throw new RuntimeException("Đăng nhập thất bại: Sai thông tin tài khoản hoặc mật khẩu");
-        } catch (UsernameNotFoundException e) {
-            System.out.println("User not found: " + request.getEmail());
-            throw new RuntimeException("Đăng nhập thất bại: Người dùng không tồn tại");
-        } catch (Exception e) {
-            System.out.println("Unexpected error during login: " + e.getMessage());
-            throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());
-        }
-
-        throw new RuntimeException("Xác thực thất bại");
-    }
+    
 
     @Override
     public boolean verifyAccount(String code) {
@@ -206,18 +177,7 @@ public class UserService implements IUserService {
 		throw new RuntimeException("Xác thực thất bại");
 	}
 
-	@Override
-	public boolean verifyAccount(String code) {
-		User user = userRepo.findByVerificationCode(code);
-
-		if (user != null) {
-			user.setEnabled(true);
-			user.setVerificationCode(code);
-			userRepo.save(user);
-			return true;
-		}
-		return false;
-	}
+	
 	@Override
 	public boolean sendOTP(String email, HttpSession session) {
 		 User user = userRepo.findByEmail(email);

@@ -22,6 +22,7 @@ public interface IUserService {
 
 	public String login(UserRequest request);
 
+	public User getCurrentUser();
 
 	public boolean sendOTP(String email, HttpSession session);
 
