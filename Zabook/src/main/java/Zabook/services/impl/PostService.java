@@ -30,8 +30,8 @@ public class PostService implements IPostService{
 	}
 
 	@Override
-	public List<Post> getUserPosts(User user) {
-		return postRepository.findByUser(user);
+	public List<Post> findByUserId(ObjectId userId) {
+		return postRepository.findByUserId(userId);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package Zabook.services.impl;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,9 @@ public class CommentService implements ICommentService {
 		commentRepo.delete(comment);
 
 	}
+	@Override
+	public List<Comment> getCommentsByPostId(ObjectId postId) {
+        return commentRepo.findByPostId(postId);
+    }
 
 }

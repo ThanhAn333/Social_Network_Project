@@ -1,6 +1,9 @@
 package Zabook.services;
 
 
+import java.security.Principal;
+
+import org.bson.types.ObjectId;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.dto.UserRequest;
@@ -32,4 +35,6 @@ public interface IUserService {
                             HttpSession session, RedirectAttributes redirectAttributes);
 
 	public boolean resetPassword(String email, String password);
+	
+	public ObjectId getCurrentBuyerId(Principal principal) ;
 }

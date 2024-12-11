@@ -1,6 +1,11 @@
 package Zabook.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.security.Principal;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,6 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+
+import Zabook.models.Post;
+import Zabook.models.User;
+import Zabook.services.IPostService;
+import Zabook.services.impl.CommentService;
+import Zabook.services.impl.UserService;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,16 +32,44 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import Zabook.models.User;
-import Zabook.services.IUserService;
-import Zabook.services.impl.UserService;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
+	
+	private final CommentService commentService;
+	UserService userService;
+	IPostService postService;
 
-    @Autowired
-    IUserService userService = new UserService();
+	// Inject service thông qua constructor
+	public UserController(CommentService commentService, UserService userService,IPostService postService) {
+		this.commentService = commentService;
+		this.userService=userService;
+		this.postService=postService;
+	}
+
+    
+	//lâm
+	@GetMapping("/header")
+	public String header() {
+		return "user/header";
+	}
+	
+	//anh
+	@GetMapping("")
+	public String getPostByUserId(Principal principal, Model model) {
+	    try {
+	    	ObjectId userId = userService.getCurrentBuyerId(principal);
+	        List<Post> posts = postService.findByUserId(userId);
+	        // Gọi service để lấy danh sách bình luận theo bài viết
+	        //List<Comment> comments = commentService.getCommentsByPostId(postObjectId);
+	        model.addAttribute("posts",posts);
+	        model.addAttribute("hilo","hi");
+	        return "user/index";
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
 
     @Value("${upload.directory}")
     private String uploadDir;

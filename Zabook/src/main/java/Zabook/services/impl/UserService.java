@@ -1,5 +1,7 @@
 package Zabook.services.impl;
 
+
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -257,7 +259,15 @@ public class UserService implements IUserService {
         }
 	}
 
-	
+	@Override
+	public ObjectId getCurrentBuyerId(Principal principal) {
+    	String username = principal.getName();
+	    
+	    // Tìm User theo email hoặc username để lấy ID
+	    User user = getUserByEmail(username);
+	    
+	    return user.getUserID();
+ 	}
     
 
 }
