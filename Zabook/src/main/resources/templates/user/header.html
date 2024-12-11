@@ -57,6 +57,15 @@
         .navbar-nav .nav-item {
             margin-left: 15px;
         }
+
+        .dropdown-menu {
+            min-width: 150px;
+            /* Tùy chỉnh chiều rộng */
+        }
+
+        .nav-link {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -64,7 +73,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <a class="navbar-brand" href="#">Za</a>
+        <a class="navbar-brand" href="/user/">Za</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,10 +83,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
 
             <input class="form-control mr-sm-2 search-box" type="search" placeholder="Tìm kiếm" aria-label="Search">
-
-
-
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#" title="Bạn Bè">
                         <i class="fas fa-user-friends"></i>
@@ -90,15 +96,25 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" title="Tin Nhắn">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fab fa-facebook-messenger"></i>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" title="Tài Khoản">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false" title="Tài Khoản">
                         <i class="fas fa-user-circle"></i>
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                        <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+                        <li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+
+                    </ul>
                 </li>
+
             </ul>
+
         </div>
     </nav>
 
