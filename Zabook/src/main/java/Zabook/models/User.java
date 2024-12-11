@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
     @Id
-    private ObjectId userID;
+    private ObjectId id;
 
     private String firstName;
     private String lastName;
@@ -47,11 +47,11 @@ public class User {
 
     // Các getter và setter
     public ObjectId getUserID() {
-        return userID;
+        return id;
     }
 
     public void setUserID(ObjectId userID) {
-        this.userID = userID;
+        this.id = userID;
     }
 
     public String getFirstName() {
@@ -202,7 +202,7 @@ public class User {
     public User(ObjectId userID, String firstName, String lastName, String gender, String birthDay, String address,
                 String email, String password, String bio, Image avatar, String page, List<Video> video, List<Image> image,
                 String role, String phone, List<FriendShip> friendships) {
-        this.userID = userID;
+        this.id = userID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

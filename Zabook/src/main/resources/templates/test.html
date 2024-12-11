@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:if="${listpost != null and not #lists.isEmpty(listpost)}">
+    <div th:each="post : ${listpost}">
+        <p th:text="${post.content}"></p>
+    </div>
+</div>
+<div th:if="${listpost == null or #lists.isEmpty(listpost)}">
+    <p>Không có bài viết nào.</p>
+</div>
+
+</body>
+</html>

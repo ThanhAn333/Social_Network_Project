@@ -1,5 +1,6 @@
 package Zabook.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import java.util.Optional;
@@ -22,24 +23,26 @@ import org.springframework.web.servlet.ModelAndView;
 import Zabook.models.Post;
 import Zabook.models.User;
 import Zabook.services.IPostService;
+import Zabook.services.IUserService;
 @Controller
-@RequestMapping("/post")
+@RequestMapping("/user/post")
 
 public class PostController {
 	
 	@Autowired
 	IPostService postService;
+	@Autowired
+	IUserService userService;
 	@GetMapping("")
 	public String index() {
 		return "index";
 	}
-	@GetMapping("/users/{userId}")
-	public String getUserPosts(@PathVariable String userId, Model model) {
-		User user = new User();
-	    user.setUserID(new ObjectId(userId));  
-	    List<Post> list = postService.getUserPosts(user);
+	@GetMapping("/users/")
+	public String getUserPosts(Principal principal, Model model) {
+		
+	    List<Post> list = postService.findByUserId(userService.getCurrentBuyerId(principal));
 	    model.addAttribute("listpost", list);
-	    return "index"; 
+	    return "test"; 
 	}
 	@PostMapping("/create")
 	public ModelAndView createPost(@RequestBody Post post, ModelMap modelMap) {

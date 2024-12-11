@@ -21,7 +21,7 @@ public interface IPostService {
 
 	boolean existsById(ObjectId id);
 
-	List<Post> getUserPosts(User user);
+	List<Post> findByUserId(ObjectId userId);
 	
 	public Post sharePost(ObjectId userId, ObjectId originalPostId);
 }

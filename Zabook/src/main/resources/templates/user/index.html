@@ -219,6 +219,7 @@
 
 						</div>
 
+<div th:each="post : ${posts}">
 
 						<div class="fb-post1">
 							<div class="fb-post1-container">
@@ -234,7 +235,7 @@
 										<img src="/images/user2.jpg" alt="user picture">
 										<ul>
 											<li>
-												<h3>Arham Kabir <span> . 2 hours ago</span></h3>
+												<h3 th:text="${hi}"> <span> . 2 hours ago</span></h3>
 											</li>
 											<li><span>02 march at 12:55 PM</span></li>
 										</ul>
@@ -262,7 +263,7 @@
 												<img src="/images/love.png" alt="love">
 												<img src="/images/like.png" alt="like">
 												<span>22k</span>
-												
+
 											</li>
 											<li> <span>555 comments</span></li>
 											<li> <span>254 share</span></li>
@@ -341,13 +342,17 @@
 												</div>
 											</div>
 											<div class="comment-bar">
-												<input type="text" placeholder="Viết bình luận...">
-
-												<button>
+												
+													<input type="hidden" name="postId" value="6732221ed711a16b44025e36">
+													<input type="text" id="contentInput" name="content"
+													placeholder="Viết bình luận...">
+												<button id="sendCommentBtn">
 													<img class="img-send-comment" width="24" height="24"
 														src="https://img.icons8.com/material-rounded/24/sent.png"
 														alt="sent" />
 												</button>
+												
+												
 											</div>
 
 										</div>
@@ -362,6 +367,7 @@
 
 
 						</div>
+</div>
 					</div> <!-- home center wrapper end -->
 				</div> <!-- home center end -->
 
@@ -458,7 +464,7 @@
 	<!-- home section end -->
 
 	<script>
-		
+
 
 
 		function toggleLike(event, button) {
@@ -535,7 +541,7 @@
 				sharePopup.style.display = 'none';
 			}
 		}
-var darkButton = document.querySelector(".darkTheme");
+		var darkButton = document.querySelector(".darkTheme");
 
 		darkButton.onclick = function () {
 			darkButton.classList.toggle("button-Active");
@@ -544,5 +550,5 @@ var darkButton = document.querySelector(".darkTheme");
 	</script>
 
 </body>
-
+<script src="/js/index.js"></script>
 </html>
