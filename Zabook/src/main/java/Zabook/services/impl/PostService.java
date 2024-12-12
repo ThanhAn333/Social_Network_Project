@@ -16,11 +16,11 @@ import Zabook.repository.UserRepository;
 import Zabook.services.IPostService;
 
 @Service
-public class PostService implements IPostService{
+public class PostService implements IPostService {
 
 	@Autowired
-    private PostRepository postRepository;
-	
+	private PostRepository postRepository;
+
 	@Autowired
 	private UserRepository userRepo;
 
@@ -41,22 +41,22 @@ public class PostService implements IPostService{
 
 	@Override
 	public Post updatePost(Post post) {
-	    if (postRepository.existsById(post.getId())) {
-	        Post exitPost = postRepository.findById(post.getId()).orElse(null);
-	        if (exitPost != null) {
-	        	exitPost.setContent(post.getContent());
-	        	exitPost.setImage(post.getImage());
-	            return postRepository.save(exitPost); 
-	        }
-	    }
-	    return null; 
+		if (postRepository.existsById(post.getId())) {
+			Post exitPost = postRepository.findById(post.getId()).orElse(null);
+			if (exitPost != null) {
+				exitPost.setContent(post.getContent());
+				exitPost.setImage(post.getImage());
+				return postRepository.save(exitPost);
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public boolean existsById(ObjectId id) {
-		if(postRepository.existsById(id)){
+		if (postRepository.existsById(id)) {
 			return true;
-		}else
+		} else
 			return false;
 	}
 
@@ -68,32 +68,50 @@ public class PostService implements IPostService{
 	@Override
 	public Post sharePost(ObjectId userId, ObjectId originalPostId) {
 		// Tìm bài viết gốc
-        Post originalPost = postRepository.findById(originalPostId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+		Post originalPost = postRepository.findById(originalPostId)
+				.orElseThrow(() -> new RuntimeException("Post not found"));
 
-        // Tăng số lần chia sẻ của bài gốc
-        originalPost.setShareCount(originalPost.getShareCount() + 1);
-        postRepository.save(originalPost);
-        Optional<User> userOptional = userRepo.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+		// Tăng số lần chia sẻ của bài gốc
+		originalPost.setShareCount(originalPost.getShareCount() + 1);
+		postRepository.save(originalPost);
+		Optional<User> userOptional = userRepo.findById(userId);
+		if (userOptional.isEmpty()) {
+			throw new RuntimeException("User not found");
+		}
 
-        // Lấy User từ Optional
-        User user = userOptional.get();
+		// Lấy User từ Optional
+		User user = userOptional.get();
 
-        // Tạo bài viết chia sẻ
-        Post sharedPost = new Post();
-        sharedPost.setUser(user);
+		// Tạo bài viết chia sẻ
+		Post sharedPost = new Post();
+		sharedPost.setUser(user);
 
-        sharedPost.setOriginalPostId(originalPostId);
-        sharedPost.setContent(originalPost.getContent()); // Copy nội dung (hoặc thay đổi tùy ý)
-        sharedPost.setCreatedAt(LocalDateTime.now());
-        sharedPost.setImage(originalPost.getImage());
-        sharedPost.setShared(true);
-        sharedPost.setShareCount(0);
+		sharedPost.setOriginalPostId(originalPostId);
+		sharedPost.setContent(originalPost.getContent()); // Copy nội dung (hoặc thay đổi tùy ý)
+		sharedPost.setCreatedAt(LocalDateTime.now());
+		sharedPost.setImage(originalPost.getImage());
+		sharedPost.setShared(true);
+		sharedPost.setShareCount(0);
 
-        return postRepository.save(sharedPost);
+		return postRepository.save(sharedPost);
+	}
+
+	@Override
+	public List<Post> getAllPost() {
+		// TODO Auto-generated method stub
+		return postRepository.findAll();
+	}
+
+	@Override
+	public List<User> getUsersWhoLiked(ObjectId postId) {
+		Post post = postRepository.findById(postId).orElse(null);
+
+		// Kiểm tra bài viết có tồn tại không, nếu không trả về null hoặc danh sách rỗng
+		if (post != null) {
+			return post.getLikedUsers(); // Trả về danh sách người dùng đã like
+		}
+
+		return null;
 	}
 
 }

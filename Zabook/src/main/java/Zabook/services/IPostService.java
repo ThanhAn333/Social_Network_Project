@@ -11,7 +11,8 @@ import Zabook.models.User;
 public interface IPostService {
 	Post createPost(Post post) ;
     
-    
+    List<Post> getAllPost();
+	
     Post updatePost(Post post);
 	
 
@@ -24,4 +25,6 @@ public interface IPostService {
 	List<Post> findByUserId(ObjectId userId);
 	
 	public Post sharePost(ObjectId userId, ObjectId originalPostId);
+	
+	List<User> getUsersWhoLiked(ObjectId postId);
 }

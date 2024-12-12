@@ -1,6 +1,7 @@
 package Zabook.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -8,38 +9,65 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
-@Data
+
+
+@Data  
+@AllArgsConstructor 
+@Builder 
 @Document(collection = "Posts")
 public class Post {
 	@Id
 	private ObjectId id;
 
-	@DBRef
+	@DBRef(lazy = false)
 	private User user;
 
 	private String content;
 	
 	private LocalDateTime createdAt;
 	
-	@DBRef
+	@DBRef(lazy = false)
 	private List<Image> image;
 	
-	@DBRef
+	@DBRef(lazy = false)
 	private List<Video> video;
 	
-	@DBRef
+	@DBRef(lazy = false)
 	private List<Comment> comment;
-	
+	public int getCommentCount() { return comment != null ? comment.size() : 0; }
 	
 	
 	private ObjectId originalPostId; // Nếu là bài chia sẻ, lưu ID của bài gốc
     private boolean isShared;      // Đánh dấu bài viết là bài chia sẻ hay không
     private int shareCount;
+	private int likeCount;
 	
-	
+	// Danh sách người dùng đã like bài viết
+    @DBRef(lazy = false)
+    private List<User> likedUsers;
+    
+    // Thêm người dùng vào danh sách likedUsers
+    public void addLikedUser(User user) {
+        if (likedUsers == null) {
+            likedUsers = new ArrayList<>();
+        }
+        likedUsers.add(user);
+        likeCount = likedUsers.size();  // Cập nhật số lượng like
+    }
 
+    // Xóa người dùng khỏi danh sách likedUsers
+    public void removeLikedUser(User user) {
+        if (likedUsers != null) {
+            likedUsers.remove(user);
+            likeCount = likedUsers.size();  // Cập nhật số lượng like
+        }
+    }
+
+	public void incrementLikeCount() { this.likeCount++; }
 	public Post() {
 		this.createdAt = LocalDateTime.now();
 	}

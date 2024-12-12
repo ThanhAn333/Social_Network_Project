@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
@@ -190,187 +190,253 @@
 
 
 						<div class="createPost">
+							<form action="/user/post/create" method="post" enctype="multipart/form-data">
 
-							<h3 class="mini-headign">Create Post</h3>
-							<div class="post-text">
-								<img src="/images/user.jpg" alt="user">
-								<input type="text-area" placeholder="What's on your mind, zahidul">
-							</div>
 
-							<div class="post-icon">
-								<a href="#" style="background: #ffebed;">
-									<i style="background: #ff4154;" class="fa-solid fa-camera"></i>
-									Gallery</a>
+								<h3 class="mini-headign">Create Post</h3>
+								<div class="post-text">
+									<img src="/images/user.jpg" alt="user">
+									<input type="text-area" placeholder="What's on your mind, zahidul" name="content">
+								</div>
 
-								<a href="#" style="background: #ccdcff;">
-									<i style="background: #0053ff;" class="fa-solid fa-video"></i>
-									Video</a>
+								<!-- Previews -->
+								<div id="previewSection" style="margin-top: 10px;">
 
-								<a href="#" style="background: #d7ffef;">
-									<i style="background: #00d181;" class="fa-solid fa-location-dot"></i>
-									Location</a>
+									<div id="galleryPreview" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
 
-								<a href="#" style="background: #cff3ff;">
-									<i style="background: #04c3ff;" class="fa-solid fa-gift"></i>
-									Gift</a>
 
-								<a href="#" style="background: #fff4d1;">
-									<i style="background: #ffca28;" class="fa-solid fa-face-grin-beam"></i>
-									Feeling / Acrivity</a>
+									<div id="videoPreview" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+								</div>
 
-							</div>
 
+								<div class="post-icon">
+
+									<!-- Gallery Upload -->
+									<label for="galleryInput" class="upload-label gallery">
+										<i class="upload-icon gallery-icon fa-solid fa-camera"></i> Gallery
+									</label>
+
+									<input type="file" id="galleryInput" name="images" accept="image/*" multiple
+										style="display: none;"
+										onchange="previewFiles('galleryPreview', 'galleryInput', 'image')">
+
+									<!-- Video Upload -->
+									<label for="videoInput" class="upload-label video">
+										<i class="upload-icon video-icon fa-solid fa-video"></i> Video
+									</label>
+									<input type="file" id="videoInput" name="videos" accept="video/*" multiple
+										style="display: none;"
+										onchange="previewFiles('videoPreview', 'videoInput', 'video')">
+
+
+
+									<button type="submit" class="upload-label button"> Đăng</button>
+								</div>
+
+							</form>
 						</div>
 
-<div th:each="post : ${posts}">
+						<div th:each="post : ${posts}">
 
-						<div class="fb-post1">
-							<div class="fb-post1-container">
-								<div class="fb-post1-header">
-									<ul>
-										<li class="active">popular</li>
-										<li>recent</li>
-										<li>most view</li>
-									</ul>
-								</div>
-								<div class="fb-p1-main">
-									<div class="post-title">
-										<img src="/images/user2.jpg" alt="user picture">
+							<div class="fb-post1">
+								<div class="fb-post1-container">
+									<div class="fb-post1-header">
 										<ul>
-											<li>
-												<h3 th:text="${hi}"> <span> . 2 hours ago</span></h3>
-											</li>
-											<li><span>02 march at 12:55 PM</span></li>
+											<li class="active">popular</li>
+											<li>recent</li>
+											<li>most view</li>
 										</ul>
-										<p>Hello Everyone Thanks for Watching Please SUBSCRIBE My Channel - Like
-											Comments and Share
-											<a
-												href="https://www.youtube.com/channel/UCHhGX-DD7A8jq7J_NPGN6gA">https://www.youtube.com/channel/UCHhGX-DD7A8jq7J_NPGN6gA</a>
-										</p>
 									</div>
+									<div class="fb-p1-main">
+										<div class="post-title">
+											<img src="/images/user2.jpg" alt="user picture">
+											<ul>
+												<li>
+													<h3
+														th:text="${post.getUser() != null  ? post.getUser().getFirstName() : 'Unknown User'}">
+														<span> . 2 hours ago</span>
+													</h3>
 
-									<div class="post-images">
-										<div class="post-images1">
-											<img src="/images/pp.jpg" alt="post images 01">
-											<img src="/images/pp2.jpg" alt="post images 02">
-											<img src="/images/pp3.jpg" alt="post images 03">
+												</li>
+												<li><span th:text="${post.createdAt}"></span></li>
+											</ul>
+											
+
+											<p th:text="${post.content}"></p>
 										</div>
-										<div class="post-images2">
-											<img src="/images/pp4.jpg" alt="post images 04">
-										</div>
-									</div>
 
-									<div class="like-comment">
-										<ul>
-											<li>
-												<img src="/images/love.png" alt="love">
-												<img src="/images/like.png" alt="like">
-												<span>22k</span>
+										<div class="post-images">
+											<div class="post-images1">
+												<ul>
+													<!-- Duyệt qua danh sách images và hiển thị -->
+													<li th:if="${post.image != null}"
+														th:each="image : ${post.getImage()}">
+														<div class="image-item">
+															<!-- Kiểm tra nếu linkImage khác null -->
 
-											</li>
-											<li> <span>555 comments</span></li>
-											<li> <span>254 share</span></li>
-										</ul>
-
-										<!--like comment-->
-										<div class="post-actions">
-											<button class="btn-like">
-												<i class="fas fa-thumbs-up"></i> Thích
-												<div class="emoji-icons">
-													<i class="fas fa-thumbs-up like"
-														onclick="selectReaction(event, this, 'Thích')"></i>
-													<i class="fas fa-heart love"
-														onclick="selectReaction(event, this, 'Yêu thích')"></i>
-													<i class="fas fa-laugh-squint haha"
-														onclick="selectReaction(event, this, 'Haha')"></i>
-													<i class="fas fa-surprise wow"
-														onclick="selectReaction(event, this, 'Wow')"></i>
-													<i class="fas fa-sad-tear sad"
-														onclick="selectReaction(event, this, 'Buồn')"></i>
-													<i class="fas fa-angry angry"
-														onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-												</div>
-											</button>
-
-											<button class="btn-comment" onclick="toggleCommentForm(this)"><i
-													class="fas fa-comment-alt"></i> Bình
-												luận</button>
+															<img th:if="${image != null and image.linkImage != null}"
+																th:src="@{'/uploads/images/' + ${image.linkImage}}" />
+														</div>
+													</li>
 
 
-											<button class="btn-share" onclick="toggleSharePopup()">
-												<i class="fa-solid fa-share-from-square"></i> Chia sẻ
-											</button>
+													<li th:each="video : ${post.video}">
+														<div class="video-item">
+															<!-- Kiểm tra nếu linkVideo khác null -->
+															<video th:if="${video.linkVideo != null}"
+																th:src="@{'/uploads/videos/' + ${video.linkVideo}}"
+																controls width="100%" style="border-radius: 10px" >
+																Trình duyệt của bạn không hỗ trợ thẻ video.
+															</video>
+
+														</div>
+													</li>
+												</ul>
+											</div>
+											<div class="post-images2">
 
 
-											<!-- Form chia sẻ dạng Popup -->
-											<div class="share-popup" style="display: none;">
-												<div class="popup-content">
-													<span class="popup-close"
-														onclick="toggleSharePopup()">&times;</span>
-													<h3>Chia sẻ bài viết</h3>
-
-													<div class="share-header">
-														<img src="/images/pp4.jpg" alt="User Avatar"
-															class="user-avatar">
-														<h4>Trần Thế Anh</h4>
-
-													</div>
-													<div class="share-textarea">
-														<textarea placeholder="Bạn nghĩ gì về bài viết này?"
-															rows="4"></textarea>
-													</div>
-													<div class="share-actions">
-														<button class="btn-send">
-															<i class="fas fa-arrow-right"></i> Chia sẻ
-														</button>
-														<button class="btn-cancel"
-															onclick="toggleSharePopup()">Hủy</button>
-													</div>
-												</div>
 											</div>
 
 										</div>
-										<!-- Form bình luận ẩn mặc định -->
-										<div class="comment-form-container" style="display: none;">
-											<div class="comment-box">
-												<img class="avatar" src="/images/avatar.jpg" alt="Avatar">
-												<div class="comment-content">
-													<p><strong>Tấn Thành</strong></p>
-													<p>Miền cực lạc đâu</p>
-													<div class="comment-actions">
-														<span>5 giờ</span>
-														<button class="buttoncomment">Thích</button>
 
-													</div>
-												</div>
-											</div>
-											<div class="comment-bar">
+										<div class="like-comment">
+											<ul>
+												<li>
+													<img src="/images/love.png" alt="love">
+													<img src="/images/like.png" alt="like">
+													<!-- Số lượt like, khi bấm vào sẽ mở cửa sổ modal -->
+													<span th:text="${post.likeCount}"></span>
+
+
+												</li>
+												<li> <span th:text="${post.getCommentCount()}"></span>bình luận</li>
+												<li> <span th:text="${post.shareCount}">254 share</span>chia sẻ</li>
+											</ul>
+<!--listUser-->
+
+									<!--like comment-->
+											
+											<div class="post-actions">
+											<input type="hidden" id="postId1" name="postId1" th:value="${post.id}">
 												
-													<input type="hidden" name="postId" value="6732221ed711a16b44025e36">
-													<input type="text" id="contentInput" name="content"
-													placeholder="Viết bình luận...">
-												<button id="sendCommentBtn">
-													<img class="img-send-comment" width="24" height="24"
-														src="https://img.icons8.com/material-rounded/24/sent.png"
-														alt="sent" />
+												<button class="btn-like">
+													
+													<i class="fas fa-thumbs-up"></i> Thích
+													<div class="emoji-icons">
+														<i class="fas fa-thumbs-up like"
+															onclick="selectReaction(event, this, 'Thích')"></i>
+														<i class="fas fa-heart love"
+															onclick="selectReaction(event, this, 'Yêu thích')"></i>
+														<i class="fas fa-laugh-squint haha"
+															onclick="selectReaction(event, this, 'Haha')"></i>
+														<i class="fas fa-surprise wow"
+															onclick="selectReaction(event, this, 'Wow')"></i>
+														<i class="fas fa-sad-tear sad"
+															onclick="selectReaction(event, this, 'Buồn')"></i>
+														<i class="fas fa-angry angry"
+															onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
+													</div>
 												</button>
-												
-												
+	
+												<button class="btn-comment" onclick="toggleCommentForm(this)"><i
+														class="fas fa-comment-alt"></i> Bình
+													luận</button>
+
+
+												<button class="btn-share" onclick="toggleSharePopup()">
+													<i class="fa-solid fa-share-from-square"></i> Chia sẻ
+												</button>
+
+
+												<!-- Form chia sẻ dạng Popup -->
+												<div class="share-popup" style="display: none;">
+													<div class="popup-content">
+														<span class="popup-close"
+															onclick="toggleSharePopup()">&times;</span>
+														<h3>Chia sẻ bài viết</h3>
+
+														<div class="share-header">
+															<img src="/images/pp4.jpg" alt="User Avatar"
+																class="user-avatar">
+															<h4>Trần Thế Anh</h4>
+
+														</div>
+														<div class="share-textarea">
+															<textarea placeholder="Bạn nghĩ gì về bài viết này?"
+																rows="4"></textarea>
+														</div>
+														<div class="share-actions">
+															<button class="btn-send">
+																<i class="fas fa-arrow-right"></i> Chia sẻ
+															</button>
+															<button class="btn-cancel"
+																onclick="toggleSharePopup()">Hủy</button>
+														</div>
+													</div>
+												</div>
+
+											</div>
+											<!-- Form bình luận ẩn mặc định -->
+											<div class="comment-form-container" style="display: none;">
+												<div>
+													<li th:if="${#lists.isEmpty(post.comment)}">
+														<label>Chưa có bình luận nào!</label>
+													</li>
+													<li th:if="${!#lists.isEmpty(post.comment)}"
+														th:each="comment : ${post.comment}">
+														<div class="comment-box">
+															<img class="avatar"
+																th:if="${comment.userComment.avatar}!=null"
+																th:src="${comment.userComment.avatar}" alt="Avatar">
+															<div class="comment-content">
+																<p><strong
+																		th:text="${comment.userComment.firstName + ' ' + comment.userComment.lastName}"></strong>
+																</p>
+																<p th:text="${comment.content}">Miền cực lạc đâu</p>
+																<div class="comment-actions">
+																	<span id="commentTime"
+																		th:text="${comment.createTime}"></span>
+																	<span id="elapsedTime"></span>
+
+																	<button class="buttoncomment">Thích</button>
+																</div>
+															</div>
+														</div>
+													</li>
+
+												</div>
+
+
+												<div class="comment-bar">
+													<form action="/user/comments/add" method="post"
+														id="comment-form">
+														<input type="hidden" id="postId" name="postId"
+															th:value="${post.id}">
+														<input type="text" id="contentInput" name="content"
+															placeholder="Viết bình luận...">
+														<button id="isendCommentBtn" type="submit">
+															<img class="img-send-comment" width="24" height="24"
+																src="https://img.icons8.com/material-rounded/24/sent.png"
+																alt="sent" />
+														</button>
+													</form>
+
+												</div>
+
 											</div>
 
 										</div>
-
 									</div>
 								</div>
+
+
+
+
+
+
 							</div>
-
-
-
-
-
-
 						</div>
-</div>
 					</div> <!-- home center wrapper end -->
 				</div> <!-- home center end -->
 
@@ -466,92 +532,10 @@
 
 	<!-- home section end -->
 
-	<script>
 
-
-
-		function toggleLike(event, button) {
-			const hasSelectedReaction = button.classList.contains('selected');
-			if (hasSelectedReaction) {
-				// Nếu đã chọn cảm xúc, ấn thêm lần nữa để hủy thích
-				button.classList.remove('selected', 'like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
-				button.innerHTML = `
-            <i class="fas fa-thumbs-up"></i> Thích
-            <div class="emoji-icons">
-                <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
-                <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
-                <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
-                <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
-                <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
-                <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-            </div>
-        `;
-			}
-		}
-
-
-		function selectReaction(event, icon, reactionText) {
-			event.stopPropagation();
-
-			// Tìm nút cha
-			const button = icon.closest('.btn-like');
-
-			// Xóa các class màu cũ
-			button.classList.remove('like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
-
-			// Thêm class màu dựa trên loại cảm xúc
-			if (icon.classList.contains('like')) button.classList.add('like-color');
-			else if (icon.classList.contains('love')) button.classList.add('love-color');
-			else if (icon.classList.contains('haha')) button.classList.add('haha-color');
-			else if (icon.classList.contains('wow')) button.classList.add('wow-color');
-			else if (icon.classList.contains('sad')) button.classList.add('sad-color');
-			else if (icon.classList.contains('angry')) button.classList.add('angry-color');
-
-			// Thêm trạng thái "selected"
-			button.classList.add('selected');
-			button.innerHTML = `
-        <i class="${icon.className}"></i> ${reactionText}
-        <div class="emoji-icons">
-            <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
-            <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
-            <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
-            <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
-            <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
-            <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-        </div>
-    `;
-		}
-		//comment 
-		function toggleCommentForm(button) {
-			// Tìm phần tử form bình luận
-			const commentFormContainer = button.closest('.fb-p1-main').querySelector('.comment-form-container');
-
-			// Kiểm tra trạng thái hiển thị và thay đổi
-			if (commentFormContainer.style.display === 'none' || commentFormContainer.style.display === '') {
-				commentFormContainer.style.display = 'block'; // Hiển thị form
-			} else {
-				commentFormContainer.style.display = 'none'; // Ẩn form
-			}
-		}
-
-
-		function toggleSharePopup() {
-			const sharePopup = document.querySelector('.share-popup');
-			// Đổi trạng thái hiển thị của popup
-			if (sharePopup.style.display === 'none' || sharePopup.style.display === '') {
-				sharePopup.style.display = 'block';
-			} else {
-				sharePopup.style.display = 'none';
-			}
-		}
-		var darkButton = document.querySelector(".darkTheme");
-
-		darkButton.onclick = function () {
-			darkButton.classList.toggle("button-Active");
-			document.body.classList.toggle("dark-color")
-		}
-	</script>
 
 </body>
+
 <script src="/js/index.js"></script>
+
 </html>

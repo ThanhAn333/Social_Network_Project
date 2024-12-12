@@ -13546,7 +13546,7 @@ aside.sidebar .friend-box .frnd-meta {
 }
 
 .post-title {
-	background: #46586f none repeat scroll 0 0;
+	background: rgb(255, 255, 255) none repeat scroll 0 0;
 	border-radius: 4px 4px 0 0;
 	display: inline-block;
 	padding: 14px 10px;
@@ -21198,6 +21198,7 @@ header {
 	border-radius: 20px;
 	padding: 15px 20px;
 	padding-bottom: 20px;
+	margin-bottom: 20px
 }
 
 .fb-post1-container {
@@ -21976,7 +21977,7 @@ textarea.form-control {
   color:  rgb(0, 0, 0);;
 }
 .comment-bar {
-    display: flex;
+    
     justify-content: space-between;
     align-items: center;
 }
@@ -22103,3 +22104,148 @@ textarea.form-control {
     background-color: #d6d8d9;
     cursor: not-allowed;
 }
+
+
+
+/*post*/
+/* ======= CÁC THUỘC TÍNH CHUNG ======= */
+/* Bo góc và căn giữa cho label */
+.upload-label {
+    cursor: pointer;
+    height: 40px;
+    display: flex; /* Sử dụng flexbox để căn giữa */
+    align-items: center; /* Căn giữa theo trục dọc */
+    justify-content: center; /* Căn giữa theo trục ngang */
+    padding: 0 10px; /* Khoảng cách hai bên */
+    border-radius: 10px; /* Bo góc của label */
+    font-size: 14px; /* Kích thước chữ */
+    gap: 5px; /* Khoảng cách giữa biểu tượng và chữ */
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+}
+
+/* Bo góc và căn giữa cho biểu tượng */
+.upload-icon {
+    color: #fff; /* Màu chữ trắng */
+    border-radius: 50%; /* Bo tròn biểu tượng */
+    padding: 8px; /* Khoảng cách bên trong biểu tượng */
+    font-size: 16px; /* Kích thước biểu tượng */
+    display: flex; /* Flexbox để căn giữa nội dung */
+    align-items: center; /* Căn giữa theo trục dọc */
+    justify-content: center; /* Căn giữa theo trục ngang */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+}
+
+/* ======= MÀU SẮC RIÊNG CHO TỪNG NÚT ======= */
+/* Gallery Label */
+.gallery {
+    background: #ffebed;
+}
+
+.gallery:hover {
+    background: #fbd2d5;
+}
+
+.gallery-icon {
+    background: #ff4154;
+}
+
+.gallery-icon:hover {
+    background: #d83545;
+}
+
+/* Video Label */
+.video {
+    background: #ccdcff;
+}
+
+
+.video:hover {
+    background: #9ebfff;
+}
+
+.video-icon {
+    background: #0053ff;
+}
+
+.video-icon:hover {
+    background: #0041cc;
+}
+
+/* Căn chỉnh khu vực post-icon */
+.post-icon {
+    display: flex; /* Sử dụng Flexbox */
+    align-items: center; /* Căn giữa các mục theo chiều dọc */
+    justify-content: space-between; /* Tạo khoảng cách đều giữa các mục */
+    flex-wrap: wrap; /* Để các mục xuống hàng nếu không đủ chỗ */
+    gap: 10px; /* Khoảng cách giữa các mục */
+}
+
+/* Căn chỉnh nút Đăng ở góc phải */
+.upload-label.button {
+    margin-left: auto; /* Đẩy nút sang phía bên phải */
+    background: rgba(0, 128, 255,0.8); /* Nền nút */
+    border-radius: 10px; /* Bo góc */
+    padding: 10px 20px; /* Khoảng cách bên trong nút */
+    color: #f0f0f0; /* Màu chữ */
+    font-weight: bold; /* Chữ in đậm */
+    cursor: pointer; /* Trỏ chuột kiểu nút */
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+    border: none; /* Xóa viền nút */
+}
+
+/* Hiệu ứng hover cho nút Đăng */
+.upload-label.button:hover {
+    background: rgb(0, 128, 255);
+}
+
+#comment-form { 
+	display: flex; align-items: center; 
+} 
+#comment-form input[type="text"] { 
+	flex: 1; 
+} 
+#comment-form #isendCommentBtn { 
+	margin-left: auto;
+	padding-left: 200px; 
+}
+
+
+/*hiển thị người like*/
+
+ /* Style cho Modal */
+  .modal {
+    display: none; /* Mặc định modal ẩn */
+    position: fixed;
+    z-index: 1; /* Đảm bảo modal nằm trên các phần tử khác */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    padding-top: 100px;
+    text-align: center;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    max-width: 600px;
+    border-radius: 8px;
+  }
+
+  .btn-close {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-close:hover {
+    background-color: #d32f2f;
+  }
