@@ -270,3 +270,44 @@
     bottom: 20px;
 }
 
+
+/* Bo góc và căn giữa cho label */
+.gallery-label {
+    background: #ffebed;
+    cursor: pointer;
+    height: 40px;
+    display: flex; /* Sử dụng flexbox để căn giữa */
+    align-items: center; /* Căn giữa theo trục dọc */
+    justify-content: center; /* Căn giữa theo trục ngang */
+    padding: 0 10px; /* Khoảng cách hai bên */
+    border-radius: 10px; /* Bo góc của label */
+    font-size: 14px; /* Kích thước chữ */
+    gap: 5px; /* Khoảng cách giữa biểu tượng và chữ */
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+}
+
+/* Hiệu ứng hover cho label */
+.gallery-label:hover {
+    background: #ffc0c0; /* Màu nền khi hover */
+}
+
+/* Bo góc và căn giữa cho biểu tượng */
+.gallery-icon {
+    background: #ff4154;
+    color: #fff; /* Màu chữ trắng */
+    border-radius: 50%; /* Bo tròn biểu tượng */
+    padding: 8px; /* Khoảng cách bên trong biểu tượng */
+    font-size: 16px; /* Kích thước biểu tượng */
+    display: flex; /* Flexbox để căn giữa nội dung */
+    align-items: center; /* Căn giữa theo trục dọc */
+    justify-content: center; /* Căn giữa theo trục ngang */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    transition: background-color 0.3s ease; /* Hiệu ứng hover */
+}
+
+/* Hiệu ứng hover cho biểu tượng */
+.gallery-icon:hover {
+    background: #e33a4a; /* Màu nền biểu tượng khi hover */
+}
+
+

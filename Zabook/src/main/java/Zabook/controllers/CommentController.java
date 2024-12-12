@@ -53,9 +53,10 @@ public class CommentController {
 
 	
 	@PostMapping("/add")
-	public ResponseEntity<String> addComment(
-	        @RequestParam("postId") String postId,
+	public String addComment(
+	        //@RequestBody Comment comment,
 	        @RequestParam("content") String content,
+	        @RequestParam("postId") String postId,
 	        @RequestParam(value = "rate", defaultValue = "0") double rate,
 	        Principal principal) {
 
@@ -66,9 +67,9 @@ public class CommentController {
 	        // Gọi service để thêm bình luận
 	        commentService.addComment(postObjectId, userId, content, rate);
 
-	        return ResponseEntity.ok("Comment added successfully");
+	        return "redirect:/user/";
 	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+	        return null;
 	    }
 	}
 

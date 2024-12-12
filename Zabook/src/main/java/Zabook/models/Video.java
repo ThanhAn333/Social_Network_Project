@@ -1,5 +1,6 @@
 package Zabook.models;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.persistence.Id;
@@ -8,17 +9,17 @@ import jakarta.persistence.Id;
 public class Video {
 
 	@Id
-	private Object videoID;
+	private ObjectId id;
 	private String linkVideo;
 	private String typeVideo;
 	
 	
-	public Object getVideoID() {
-		return videoID;
+	public ObjectId getVideoID() {
+		return id;
 	}
 
-	public void setVideoID(Object videoID) {
-		this.videoID = videoID;
+	public void setVideoID(ObjectId videoID) {
+		this.id = videoID;
 	}
 
 	public String getLinkVideo() {
@@ -36,9 +37,9 @@ public class Video {
 	public void setTypeVideo(String typeVideo) {
 		this.typeVideo = typeVideo;
 	}
-	public Video(Object videoID, String linkVideo, String typeVideo) {
+	public Video(ObjectId videoID, String linkVideo, String typeVideo) {
 		super();
-		this.videoID = videoID;
+		this.id = videoID;
 		this.linkVideo = linkVideo;
 		this.typeVideo = typeVideo;
 	}

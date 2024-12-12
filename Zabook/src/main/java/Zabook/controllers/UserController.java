@@ -75,8 +75,11 @@ public class UserController {
     private String uploadDir;
 
     @GetMapping("/")
-    public String getMethodName() {
-
+    public String getMethodName(Model model,Principal principal) {
+    	ObjectId userId = userService.getCurrentBuyerId(principal);
+    	List<Post> posts = postService.getAllPost();
+    	model.addAttribute("posts",posts);
+    	model.addAttribute("id",userId);
         return "user/index";
     }
 

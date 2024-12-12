@@ -1,5 +1,6 @@
 package Zabook.models;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.persistence.Id;
@@ -8,17 +9,17 @@ import jakarta.persistence.Id;
 public class Image {
 
 	@Id
-	private Object imageID;
+	private ObjectId id;
 
 	private String linkImage;
 	private String typeImage;
 
 
 	public Object getImageID() {
-		return imageID;
+		return id;
 	}
-	public void setImageID(Object imageID) {
-		this.imageID = imageID;
+	public void setImageID(ObjectId imageId) {
+		this.id = imageId;
 	}
 	public String getLinkImage() {
 		return linkImage;
@@ -33,9 +34,9 @@ public class Image {
 		this.typeImage = typeImage;
 	}
 	
-	public Image(Object imageID, String linkImage, String typeImage) {
+	public Image(ObjectId imageID, String linkImage, String typeImage) {
 		super();
-		this.imageID = imageID;
+		this.id = imageID;
 		this.linkImage = linkImage;
 		this.typeImage = typeImage;
 	}

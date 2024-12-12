@@ -1,6 +1,7 @@
 package Zabook.services.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -46,6 +47,12 @@ public class CommentService implements ICommentService {
 
 	    // Lưu comment vào cơ sở dữ liệu
 	    commentRepo.save(comment);
+	   
+	    post.getComment().add(comment);
+	   
+
+	    // Lưu lại Post
+	    postRepo.save(post);
 
 	}
 	@Override
