@@ -11,17 +11,22 @@ public class Story {
     @Id
     private ObjectId id;
     
-    private Image image;
+    private String image;
 
-    private Video video;
+    private String video;
+
+    private String textContent;
 
     private String timestamp;
+
+    private boolean isActive;
 
     @DBRef
     private User user;
 
     public Story() {}
 
+    
     public ObjectId getId() {
         return id;
     }
@@ -30,19 +35,19 @@ public class Story {
         this.id = id;
     }
 
-    public Image getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public Video getVideo() {
+    public String getVideo() {
         return video;
     }
 
-    public void setVideo(Video video) {
+    public void setVideo(String video) {
         this.video = video;
     }
 
@@ -54,6 +59,14 @@ public class Story {
         this.timestamp = timestamp;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     public User getUser() {
         return user;
     }
@@ -61,6 +74,18 @@ public class Story {
     public void setUser(User user) {
         this.user = user;
     }
+
+
+    public String getTextContent() {
+        return textContent;
+    }
+
+
+    public void setTextContent(String textContent) {
+        this.textContent = textContent;
+    }
+
+
 
     
 

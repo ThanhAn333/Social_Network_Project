@@ -21055,89 +21055,102 @@ header {
 
 /* home center section start here */
 
+
 .home-center {
-	width: 50%;
-	overflow: hidden;
+    width: 50%;
+    overflow: hidden;
+    margin: 0 auto; /* Căn giữa */
 }
 
 .home-center .stories,
 .home-center .createPost {
-	background: var(--white);
-	box-shadow: 0 2px 5px 0 var(--shadow);
-	border-radius: 20px;
-	padding: 15px;
-	margin-bottom: 20px;
+    background: var(--white);
+    box-shadow: 0 2px 5px 0 var(--shadow);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
 .stories-wrapper {
-	display: flex;
-	justify-content: space-between;
-	height: 170px;
-	margin-bottom: 12px;
+    display: flex;
+    justify-content: flex-start; /* Căn lề trái */
+    gap: 10px; /* Khoảng cách giữa các stories */
+    overflow-x: auto; /* Cho phép cuộn ngang */
+    padding-bottom: 10px; /* Khoảng cách dưới cùng khi cuộn */
+    max-height: 170px; /* Đảm bảo chiều cao của stories-wrapper */
 }
 
 .home-center .mini-headign {
-	color: #1877f2;
-	margin-bottom: 10px;
+    color: #1877f2;
+    margin-bottom: 10px;
 }
 
 .single-stories {
-	width: 18%;
-	position: relative;
-	padding-top: 25px;
+    width: 18%;
+    position: relative;
+    padding-top: 25px;
+    flex-shrink: 0; /* Ngừng co lại khi không đủ không gian */
 }
 
 .single-stories label {
-	width: 45px;
-	height: 45px;
-	background: #daeaff;
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	top: 0;
-	border-radius: 50px;
-	overflow: hidden;
-	border: 3px solid #1877f2;
+    width: 45px;
+    height: 45px;
+    background: #daeaff;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #1877f2;
 }
 
 .single-stories label img {
-	width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.single-stories>div {
-	width: 100%;
-	overflow: hidden;
-	height: 100%;
-	border-radius: 18px;
-	text-align: center;
-	box-shadow: 1px 6px 6px 0 var(--shadow);
+.single-stories > div {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 1px 6px 6px 0 var(--shadow);
 }
 
-.single-stories>div img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+.single-stories > div img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.single-stories>div b {
-	position: absolute;
-	bottom: 5px;
-	left: 50%;
-	transform: translateX(-50%);
-	font-size: 12px;
-	color: white;
-	font-weight: 400;
-	text-shadow: 0 1px 8px black;
+.single-stories > div b {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: white;
+    font-weight: 400;
+    text-shadow: 0 1px 8px black;
 }
 
-.single-stories>div i {
-	position: absolute;
-	bottom: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	font-size: 25px;
-	color: white;
+.single-stories > div i {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 25px;
+    color: white;
 }
+
+.single-stories:hover {
+    transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}
+
+
 
 
 
@@ -22249,3 +22262,154 @@ textarea.form-control {
   .btn-close:hover {
     background-color: #d32f2f;
   }
+
+  /* CSS cho popup form */
+  .popup-overlay {
+	display: none; /* Ẩn mặc định */
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
+	z-index: 999;
+}
+
+.popup-form {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	width: 400px;
+	text-align: center;
+}
+
+.popup-form h3 {
+	margin-bottom: 20px;
+}
+
+.popup-form input[type="file"] {
+	margin: 10px 0;
+}
+
+.popup-form button {
+	margin-top: 10px;
+	padding: 10px 15px;
+	background: #4267B2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.popup-form button:hover {
+	background: #365899;
+}
+
+.close-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	font-size: 20px;
+	color: #aaa;
+}
+
+.close-btn:hover {
+	color: #000;
+}
+
+/* CSS cho modal với vị trí góc trên bên trái */
+.story-modal {
+    position: fixed; /* Giữ modal cố định ở vị trí trên màn hình */
+    top: 20px; /* Khoảng cách từ trên xuống */
+    left: 20px; /* Khoảng cách từ trái qua */
+    width: 300px; /* Chiều rộng của modal */
+    height: auto; /* Chiều cao tự động theo nội dung */
+    background: rgba(0, 0, 0, 0.8); /* Màu nền đen mờ */
+    border-radius: 10px; /* Bo góc */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
+    color: #fff; /* Màu chữ trắng */
+    z-index: 1000; /* Hiển thị trên các phần tử khác */
+    display: none; /* Ẩn mặc định */
+    flex-direction: column; /* Hiển thị theo chiều dọc */
+    overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
+    padding: 10px;
+}
+
+/* Cấu trúc phần đầu của story (gồm avatar, tên người dùng, và thời gian) */
+.story-header {
+    display: flex;
+    align-items:  flex-start;
+    margin-bottom: 10px; /* Khoảng cách dưới phần avatar */
+    color: white;
+    position: absolute;
+    top: 10px; /* Đưa lên phía trên */
+    left: 10px; /* 	 sang trái */
+}
+
+.story-avatar {
+	width: 40px !important; /* Giảm kích thước avatar */
+    height: 40px !important; /* Giảm kích thước avatar */
+    border-radius: 50%; /* Hình tròn */
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.story-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+#modalUserName {
+    font-weight: bold;
+    font-size: 14px; /* Kích thước chữ người dùng */
+}
+
+#modalTime {
+    font-size: 12px; /* Kích thước chữ thời gian */
+    opacity: 0.8;
+}
+
+/* Cấu trúc nội dung của story (ảnh hoặc video) */
+.story-content img,
+.story-content video {
+    width: 100%; /* Ảnh hoặc video chiếm toàn bộ chiều rộng */
+    height: auto; /* Chiều cao tự động */
+}
+
+/* Nút đóng modal */
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+.story-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.story-nav.left {
+    left: 10px;
+}
+
+.story-nav.right {
+    right: 10px;
+}
+
+

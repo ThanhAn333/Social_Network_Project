@@ -5,7 +5,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import Zabook.models.Post;
+import Zabook.models.Story;
 import Zabook.models.User;
 import Zabook.services.IPostService;
+import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
 import Zabook.services.impl.UserService;
 
@@ -40,6 +42,9 @@ public class UserController {
 	private final CommentService commentService;
 	UserService userService;
 	IPostService postService;
+
+    @Autowired
+    private IStoryService storyService; 
 
 	// Inject service thông qua constructor
 	public UserController(CommentService commentService, UserService userService,IPostService postService) {
@@ -78,6 +83,8 @@ public class UserController {
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
     	List<Post> posts = postService.getAllPost();
+        List<Story> stories = storyService.getActiveStories();
+        model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
         return "user/index";
