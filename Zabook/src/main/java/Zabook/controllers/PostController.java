@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import Zabook.models.Comment;
 import Zabook.models.Image;
 import Zabook.models.Post;
 import Zabook.models.User;
@@ -89,17 +88,10 @@ public class PostController {
 		newpost.setUser(user);
 
 		// Xác định đường dẫn đầy đủ đến thư mục static
-		//String staticDir = new File("src/main/resources/static").getAbsolutePath();
-		String imageDir ="uploads/images/";
-		String videoDir ="uploads/videos/";
-		File dir = new File(imageDir);
-		if (!dir.exists()) {
-		    dir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-		}
-		File dir2 = new File(videoDir);
-		if (!dir2.exists()) {
-		    dir2.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-		}
+		String staticDir = new File("src/main/resources/static").getAbsolutePath();
+		String imageDir =staticDir+ "/uploads/images/";
+		String videoDir =staticDir+ "/uploads/videos/";
+		
 
 		// Lưu ảnh
 		List<Image> imageList = new ArrayList<>();
@@ -167,6 +159,7 @@ public class PostController {
 		}
 		return new ModelAndView("index", modelMap);
 	}
+
 
 	@GetMapping("/edit/{id}")
 	public ModelAndView editPost(@PathVariable ObjectId id, ModelMap modelMap) {

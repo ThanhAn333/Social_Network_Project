@@ -27,5 +27,7 @@ public interface IPostService {
 	public Post sharePost(ObjectId userId, ObjectId originalPostId , String contentShare);
 	
 	List<User> getUsersWhoLiked(ObjectId postId);
+
 	public int updateReaction(ObjectId postId, String reaction);
+
 }

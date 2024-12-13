@@ -1,9 +1,14 @@
 package Zabook.models;
 
-import java.time.LocalDate;
+
+import  Zabook.Until.TimeUntil;
+
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -143,5 +148,10 @@ public class Post {
 		this.video = video;
 	}
 
+	//lâm
+	public String getTimeAgo() {
+       return TimeUntil.timeAgo(createdAt);
+    }
+	//lâm
 	
 }
