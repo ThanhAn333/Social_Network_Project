@@ -22346,7 +22346,7 @@ textarea.form-control {
     display: flex;
     align-items:  flex-start;
     margin-bottom: 10px; /* Khoảng cách dưới phần avatar */
-    color: white;
+    color: black;
     position: absolute;
     top: 10px; /* Đưa lên phía trên */
     left: 10px; /* 	 sang trái */
@@ -22413,3 +22413,11 @@ textarea.form-control {
 }
 
 
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}

@@ -200,10 +200,12 @@
 
 								<div class="single-stories" onclick="showPopup()">
 									<label>
-										<img src="/images/user.jpg" alt="user">
+										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
+								alt="user-avatar">
 									</label>
 									<div>
-										<img src="/images/user.jpg" alt="user">
+										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
+								alt="user-avatar">
 										<i class="fa-solid fa-circle-plus"></i>
 										<b>Create Stories</b>
 									</div>
@@ -212,7 +214,7 @@
 								<div class="single-stories" th:each="story, i : ${stories}"
 									th:onclick="|openStory(${i.index})|">
 									<label>
-										<img th:src="@{${story.user != null ? story.getUser().getImage() : '/images/default-user.jpg'}}"
+										<img th:src="@{${story.user != null ? story.getUser().getAvatar() : '/images/avatar.jpg'}}"
 											alt="user-avatar">
 									</label>
 									<div>
@@ -571,7 +573,7 @@
 	<!-- home section end -->
 	<div id="popupOverlay" class="popup-overlay">
 		<div class="popup-form">
-			<span class="close-btn" onclick="hidePopup()">&times;</span>
+			<span class="close-btn1" onclick="hidePopup()">&times;</span>
 			<h3>Tạo Story mới</h3>
 
 			<!-- Lựa chọn loại Story -->
@@ -590,7 +592,7 @@
 				<!-- Phần nhập nội dung văn bản -->
 				<div id="textStory" style="margin-top: 10px;">
 					<label for="textContent">Nội dung Story:</label>
-					<textarea id="textContent" name="textContent" rows="4" placeholder="Nhập nội dung..."></textarea>
+					<textarea id="textContent" name="textContent" rows="4" placeholder="Nhập nội dung..." required></textarea>
 				</div>
 
 				<!-- Phần tải lên hình ảnh hoặc video -->
@@ -639,7 +641,7 @@
 			let stories = /*[[${stories}]]*/[];
 			stories = stories.map(story => {
 				return {
-					avatar: story.user != null ? story.user.image : '/images/avatar.jpg',
+					avatar: story.user != null ? story.user.avatar : '/images/avatar.jpg',
 					userName: story.user != null ? story.user.lastName + ' ' + story.user.firstName : 'Unknown User',
 					time: story.timestamp || 'Unknown Time',
 					image: story.image || null,
