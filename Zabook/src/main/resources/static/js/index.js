@@ -261,22 +261,39 @@ function openStory(index) {
 		const modal = document.getElementById('storyModal');
 		modal.style.display = 'flex';
 
-		document.getElementById('modalAvatar').src = story.avatar;
-		document.getElementById('modalUserName').textContent = story.userName;
-		document.getElementById('modalTime').textContent = story.time;
+        document.getElementById('modalAvatar').src = stories[currentStoryIndex].avatar;
+        document.getElementById('modalUserName').textContent = story.userName;
+        document.getElementById('modalTime').textContent = story.time;
 
 		const modalImage = document.getElementById('modalImage');
 		const modalVideo = document.getElementById('modalVideo');
 
-		if (story.image) {
-			modalImage.src = story.image;
-			modalImage.style.display = 'block';
-			modalVideo.style.display = 'none';
-		} else if (story.video) {
-			modalVideo.src = story.video;
-			modalVideo.style.display = 'block';
-			modalImage.style.display = 'none';
-		}
+        // Xử lý nội dung story
+    if (story.textContent) {
+        modalText.textContent = story.textContent;
+        modalText.style.display = "block"; // Hiển thị văn bản
+    } else {
+        modalText.style.display = "none"; // Ẩn văn bản nếu không có
+    }
+
+    // Xử lý hình ảnh
+    if (story.image) {
+        modalImage.src = story.image;
+        modalImage.style.display = "block"; // Hiển thị ảnh
+    } else {
+        modalImage.style.display = "none"; // Ẩn ảnh nếu không có
+    }
+
+    // Xử lý video
+    if (story.video) {
+        modalVideo.src = story.video;
+        modalVideo.style.display = "block"; // Hiển thị video
+        modalImage.style.display = "none"; // Ưu tiên video hơn ảnh
+    } else {
+        modalVideo.style.display = "none"; // Ẩn video nếu không có
+        modalVideo.src = "";
+    }
+
 
 		document.getElementById('modalText').textContent = story.textContent || '';
 	}

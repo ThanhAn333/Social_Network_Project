@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document(collection = "Friendships")
 public class FriendShip {
 
@@ -18,6 +20,8 @@ public class FriendShip {
     private User user2;  // Người dùng thứ hai trong mối quan hệ
 
     private String status;  // Trạng thái của mối quan hệ (ví dụ: "pending", "accepted", "rejected")
+
+    private Date createdAt; // Thêm trường thời gian
 
     public ObjectId getFriendshipID() {
         return friendshipID;
@@ -51,6 +55,14 @@ public class FriendShip {
         this.status = status;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     // Constructor mặc định
     public FriendShip() {}
 
@@ -59,5 +71,6 @@ public class FriendShip {
         this.user1 = user1;
         this.user2 = user2;
         this.status = status;
+        this.createdAt = new Date(); // Tự động set thời gian khi tạo
     }
 }

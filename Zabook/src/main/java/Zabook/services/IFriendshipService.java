@@ -13,4 +13,10 @@ public interface IFriendshipService {
 	public List<User> getFriendList(ObjectId userId);
 	// Lấy danh sách lời mời kết bạn đang chờ
 	public List<FriendShip> getPendingRequests(ObjectId userId);
+	// Từ chối lời mời kết bạn
+	public FriendShip rejectFriendRequest(ObjectId friendshipId);
+	// Tìm kiếm người dùng theo tên hoặc họ
+	public List<User> searchUsers(String firstName, String lastName);
+	// Thêm method mới
+	public List<FriendShip> getPendingRequestsSorted(ObjectId userId);
 }
