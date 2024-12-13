@@ -14,56 +14,61 @@
 		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link href="https://cdn.jsdelivr.net/npm/@feathericons/feather@4.28.0/dist/feather.min.css" rel="stylesheet">
-<style>.story-modal {
-    display: none; /* Ẩn ban đầu */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Nền tối mờ */
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+	<style>
+		.story-modal {
+			display: none;
+			/* Ẩn ban đầu */
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.8);
+			/* Nền tối mờ */
+			z-index: 1000;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
-.story-modal .story-content {
-    position: relative;
-    width: 40%;
-    max-width: 600px;
-    height: 80%;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    text-align: center;
-}
+		.story-modal .story-content {
+			position: relative;
+			width: 40%;
+			max-width: 600px;
+			height: 80%;
+			background: #fff;
+			border-radius: 10px;
+			overflow: hidden;
+			text-align: center;
+		}
 
-.story-modal img, .story-modal video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+		.story-modal img,
+		.story-modal video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 
-.story-modal p {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
-    text-shadow: 0 1px 8px black;
-    font-size: 18px;
-}
+		.story-modal p {
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			transform: translateX(-50%);
+			color: #fff;
+			text-shadow: 0 1px 8px black;
+			font-size: 18px;
+		}
 
-.close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 30px;
-    color: #fff;
-    cursor: pointer;
-    z-index: 1001;
-}</style>
+		.close-btn {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			font-size: 30px;
+			color: #fff;
+			cursor: pointer;
+			z-index: 1001;
+		}
+	</style>
 </head>
 
 <body>
@@ -115,8 +120,10 @@
 
 					<div class="profile">
 						<a href="/user/profile">
-							<img src="/images/user.jpg" alt="user">
-							<h3>Zahidul hossain</h3>
+							<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+								alt="Profile Picture">
+
+							<h3 th:text="${currentuser.lastName}"></h3>
 						</a>
 
 					</div>
@@ -201,17 +208,22 @@
 										<b>Create Stories</b>
 									</div>
 								</div>
-									<!-- Ảnh đại diện nhỏ -->
-									<div class="single-stories" th:each="story, i : ${stories}"  th:onclick="|openStory(${i.index})|">
-										<label>
-											<img th:src="@{${story.user != null ? story.getUser().getImage() : '/images/default-user.jpg'}}" alt="user-avatar">
-										</label>
-										<div>
-											<img th:if="${story.image != null}" th:src="@{${story.image}}" alt="story-image">
-											<p th:if="${story.textContent != null}" th:text="${story.textContent}"></p>
-											<b th:text="${story.user != null ? story.getUser().getLastName() + ' ' + story.getUser().getFirstName() : 'Unknown User'}">User Name</b>
-										</div>
+								<!-- Ảnh đại diện nhỏ -->
+								<div class="single-stories" th:each="story, i : ${stories}"
+									th:onclick="|openStory(${i.index})|">
+									<label>
+										<img th:src="@{${story.user != null ? story.getUser().getImage() : '/images/default-user.jpg'}}"
+											alt="user-avatar">
+									</label>
+									<div>
+										<img th:if="${story.image != null}" th:src="@{${story.image}}"
+											alt="story-image">
+										<p th:if="${story.textContent != null}" th:text="${story.textContent}"></p>
+										<b
+											th:text="${story.user != null ? story.getUser().getLastName() + ' ' + story.getUser().getFirstName() : 'Unknown User'}">User
+											Name</b>
 									</div>
+								</div>
 							</div>
 						</div>
 
@@ -268,26 +280,26 @@
 							<div class="fb-post1">
 								<div class="fb-post1-container">
 									<div class="fb-post1-header">
-										<ul>
+										<!-- <ul>
 											<li class="active">popular</li>
 											<li>recent</li>
 											<li>most view</li>
-										</ul>
+										</ul> -->
 									</div>
 									<div class="fb-p1-main">
 										<div class="post-title">
-											<img src="/images/user2.jpg" alt="user picture">
+											<img th:src="${post.user.avatar}" alt="user picture">
 											<ul>
 												<li>
 													<h3
-														th:text="${post.getUser() != null  ? post.getUser().getFirstName() : 'Unknown User'}">
-														<span> . 2 hours ago</span>
+														th:text="${post.getUser() != null  ? post.getUser().getLastName() : 'Unknown User'}">
+														
 													</h3>
 
 												</li>
-												<li><span th:text="${post.createdAt}"></span></li>
+												<li><span th:text="${post.timeAgo}"></span></li>
 											</ul>
-											
+
 
 											<p th:text="${post.content}"></p>
 										</div>
@@ -312,7 +324,7 @@
 															<!-- Kiểm tra nếu linkVideo khác null -->
 															<video th:if="${video.linkVideo != null}"
 																th:src="@{'/uploads/videos/' + ${video.linkVideo}}"
-																controls width="100%" style="border-radius: 10px" >
+																controls width="100%" style="border-radius: 10px">
 																Trình duyệt của bạn không hỗ trợ thẻ video.
 															</video>
 
@@ -340,15 +352,15 @@
 												<li> <span th:text="${post.getCommentCount()}"></span>bình luận</li>
 												<li> <span th:text="${post.shareCount}">254 share</span>chia sẻ</li>
 											</ul>
-<!--listUser-->
+											<!--listUser-->
 
-									<!--like comment-->
-											
+											<!--like comment-->
+
 											<div class="post-actions">
-											<input type="hidden" id="postId1" name="postId1" th:value="${post.id}">
-												
+												<input type="hidden" id="postId1" name="postId1" th:value="${post.id}">
+
 												<button class="btn-like">
-													
+
 													<i class="fas fa-thumbs-up"></i> Thích
 													<div class="emoji-icons">
 														<i class="fas fa-thumbs-up like"
@@ -365,7 +377,7 @@
 															onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
 													</div>
 												</button>
-	
+
 												<button class="btn-comment" onclick="toggleCommentForm(this)"><i
 														class="fas fa-comment-alt"></i> Bình
 													luận</button>
@@ -436,8 +448,7 @@
 
 
 												<div class="comment-bar">
-													<form action="/user/comments/add" method="post"
-														id="comment-form">
+													<form action="/user/comments/add" method="post" id="comment-form">
 														<input type="hidden" id="postId" name="postId"
 															th:value="${post.id}">
 														<input type="text" id="contentInput" name="content"
@@ -562,17 +573,18 @@
 		<div class="popup-form">
 			<span class="close-btn" onclick="hidePopup()">&times;</span>
 			<h3>Tạo Story mới</h3>
-	
+
 			<!-- Lựa chọn loại Story -->
 			<div>
 				<label>
-					<input type="radio" name="storyType" value="text" onchange="toggleStoryType()" checked> Đăng Nội dung
+					<input type="radio" name="storyType" value="text" onchange="toggleStoryType()" checked> Đăng Nội
+					dung
 				</label>
 				<label>
 					<input type="radio" name="storyType" value="media" onchange="toggleStoryType()"> Đăng Hình ảnh/Video
 				</label>
 			</div>
-	
+
 			<!-- Form tạo Story -->
 			<form th:action="@{/user/story/createStory}" method="post" enctype="multipart/form-data">
 				<!-- Phần nhập nội dung văn bản -->
@@ -580,70 +592,71 @@
 					<label for="textContent">Nội dung Story:</label>
 					<textarea id="textContent" name="textContent" rows="4" placeholder="Nhập nội dung..."></textarea>
 				</div>
-	
+
 				<!-- Phần tải lên hình ảnh hoặc video -->
 				<div id="mediaStory" style="display: none; margin-top: 10px;">
 					<label for="mediaFile">Hình ảnh hoặc Video:</label>
-					<input type="file" id="mediaFile" name="file" accept="image/*,video/*" onchange="previewMedia(event)">
-					
+					<input type="file" id="mediaFile" name="file" accept="image/*,video/*"
+						onchange="previewMedia(event)">
+
 					<!-- Khu vực xem trước -->
 					<div id="previewContainer" style="margin-top: 10px;">
 						<img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; display: none;">
 						<video id="videoPreview" controls style="max-width: 100%; display: none;"></video>
 					</div>
 				</div>
-	
+
 				<br><br>
 				<button type="submit">Đăng Story</button>
 			</form>
 		</div>
 	</div>
 	<div>
-	<div id="storyModal" class="story-modal">
-    <span class="close-btn" onclick="closeStory()">×</span>
-    <div class="story-content">
-        <!-- Thông tin người dùng: Avatar và thời gian -->
-        <div class="story-header">
-            <img id="modalAvatar" class="story-avatar" src="" alt="user-avatar">
-            <div class="story-info">
-                <b id="modalUserName">User Name</b>
-                <span id="modalTime">Time</span>
-            </div>
-        </div>
-        <img id="modalImage" src="" alt="story-image">
-        <video id="modalVideo" autoplay muted loop style="display:none;"></video>
-        <p id="modalText"></p>
-    </div>
-    
-    <!-- Nút chuyển story -->
-    <div class="story-nav left" onclick="prevStory()">&#10094;</div>
-    <div class="story-nav right" onclick="nextStory()">&#10095;</div>
-</div>
+		<div id="storyModal" class="story-modal">
+			<span class="close-btn" onclick="closeStory()">×</span>
+			<div class="story-content">
+				<!-- Thông tin người dùng: Avatar và thời gian -->
+				<div class="story-header">
+					<img id="modalAvatar" class="story-avatar" src="" alt="user-avatar">
+					<div class="story-info">
+						<b id="modalUserName">User Name</b>
+						<span id="modalTime">Time</span>
+					</div>
+				</div>
+				<img id="modalImage" src="" alt="story-image">
+				<video id="modalVideo" autoplay muted loop style="display:none;"></video>
+				<p id="modalText"></p>
+			</div>
 
-<!-- JavaScript -->
-<script th:inline="javascript">
-	let currentStoryIndex = 0;
-    let stories = /*[[${stories}]]*/ [];
-    stories = stories.map(story => {
-        return {
-            avatar: story.user != null ? story.user.image : '/images/avatar.jpg',
-            userName: story.user != null ? story.user.lastName + ' ' + story.user.firstName : 'Unknown User',
-            time: story.timestamp || 'Unknown Time',
-            image: story.image || null,
-            video: story.video || null,
-            textContent: story.textContent || ''
-        };
-    });
+			<!-- Nút chuyển story -->
+			<div class="story-nav left" onclick="prevStory()">&#10094;</div>
+			<div class="story-nav right" onclick="nextStory()">&#10095;</div>
+		</div>
 
-    // Đảm bảo modal được ẩn khi trang được load lại
-    document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById('storyModal');
-        if (modal) {
-            modal.style.display = 'none'; // Ẩn modal khi trang load xong
-        }
-    });
-</script>
-<script src="/js/index.js"></script>
+		<!-- JavaScript -->
+		<script th:inline="javascript">
+			let currentStoryIndex = 0;
+			let stories = /*[[${stories}]]*/[];
+			stories = stories.map(story => {
+				return {
+					avatar: story.user != null ? story.user.image : '/images/avatar.jpg',
+					userName: story.user != null ? story.user.lastName + ' ' + story.user.firstName : 'Unknown User',
+					time: story.timestamp || 'Unknown Time',
+					image: story.image || null,
+					video: story.video || null,
+					textContent: story.textContent || ''
+				};
+			});
+
+			// Đảm bảo modal được ẩn khi trang được load lại
+			document.addEventListener("DOMContentLoaded", function () {
+				const modal = document.getElementById('storyModal');
+				if (modal) {
+					modal.style.display = 'none'; // Ẩn modal khi trang load xong
+				}
+			});
+		</script>
+		<script src="/js/index.js"></script>
 
 </body>
 

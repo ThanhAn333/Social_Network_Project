@@ -161,7 +161,8 @@
 
                 <!-- Nút chỉnh sửa và lưu -->
                 <button type="button" id="editProfileBtn" class="btn btn-primary mt-2">Chỉnh sửa thông tin</button>
-                <button type="button" id="saveProfileBtn" class="btn btn-success mt-2" style="display: none;">Lưu</button>
+                <button type="button" id="saveProfileBtn" class="btn btn-success mt-2"
+                    style="display: none;">Lưu</button>
             </div>
 
 
@@ -509,27 +510,31 @@
 
 
 
-
         <!-- Feed Section -->
         <div class="post-container">
             <h5 class="mb-3">Recent Posts</h5>
 
-            <div class="post">
-                <div class="post-header">
-                    <img src="https://via.placeholder.com/40" alt="User Avatar">
+            <div th:each="post : ${posts}" class="post">
+                <div class="post-header" style="position: relative;">
+                    <img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+                        alt="User Avatar">
                     <div class="user-details">
-                        <p class="username">John Doe</p>
-                        <p class="time">10 phút trước</p>
+                        <p class="username" th:text="${currentuser.firstName + ' '+ currentuser.lastName}"></p>
+                        <p class="time" th:text="${post.timeAgo}"></p>
                     </div>
+                    <form action="/user/profile/deletepost/{id}(id=${post.id})" method="post"></form>
+                    <button onclick="return confirmDelete();"
+                        style="position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+
                 </div>
                 <div class="post-content">
-                    Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
-                    <img src="https://via.placeholder.com/600x300" alt="Post Image">
-                </div>
-                <div class="post-actions">
-                    <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                    <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                    <button><i class="fas fa-share"></i> Chia sẻ</button>
+                    <div th:text="${post.content}"></div>
+                    <div class="post-images">
+                        <img th:each="image : ${post.image}" th:src="@{'/uploads/images/' + ${image.linkImage}}"
+                            alt="Post Image" class="post-image">
+                    </div>
                 </div>
             </div>
 
@@ -633,6 +638,10 @@
             // Set the selected value
             const selectedValue = imgElement.getAttribute('data-value');
             document.getElementById('selectedAvatar').value = selectedValue;
+        }
+
+        function confirmDelete() {
+            return confirm("Bạn có chắc muốn xóa bài viết này không?");
         }
     </script>
 

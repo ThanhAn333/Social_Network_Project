@@ -185,6 +185,7 @@ public class PostController {
 		return new ModelAndView("index", modelMap);
 	}
 
+
 	@GetMapping("/edit/{id}")
 	public ModelAndView editPost(@PathVariable ObjectId id, ModelMap modelMap) {
 		Optional<Post> optionalPost = postService.findById(id);
@@ -241,6 +242,8 @@ public class PostController {
         // Gọi service để lấy danh sách người đã like bài viết
         return postService.getUsersWhoLiked(postId);
     }
+
+	
 
 	
 	

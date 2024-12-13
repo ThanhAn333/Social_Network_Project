@@ -1,21 +1,29 @@
 package Zabook.controllers;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import Zabook.models.Post;
 import Zabook.models.Story;
@@ -24,15 +32,6 @@ import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
 import Zabook.services.impl.UserService;
-
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
 
 
 @Controller
@@ -66,10 +65,11 @@ public class UserController {
 	    try {
 	    	ObjectId userId = userService.getCurrentBuyerId(principal);
 	        List<Post> posts = postService.findByUserId(userId);
-	        // Gọi service để lấy danh sách bình luận theo bài viết
+            
+            // Gọi service để lấy danh sách bình luận theo bài viết
 	        //List<Comment> comments = commentService.getCommentsByPostId(postObjectId);
 	        model.addAttribute("posts",posts);
-	        model.addAttribute("hilo","hi");
+            model.addAttribute("hilo","hi");
 	        return "user/index";
 	    } catch (Exception e) {
 	        return null;
@@ -83,6 +83,9 @@ public class UserController {
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
     	List<Post> posts = postService.getAllPost();
+        User user = userService.getCurrentUser();
+        model.addAttribute("currentuser", user);
+
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
@@ -93,11 +96,23 @@ public class UserController {
     //lâm
     @GetMapping("/profile")
     public String profile(Model model) {
+
         User user = userService.getCurrentUser();
+        List<Post> posts = postService.findByUserId(user.getUserID());
+
+        model.addAttribute("posts", posts );
         model.addAttribute("currentuser", user);
+        
         return "user/profile-page";
     }
+   
+	@PostMapping("/profile/deletepost/{id}")
+	public String deletePostFromProfilePage(@PathVariable ObjectId id) {
+		postService.deletePost(id);
+		return "redirect:/user/profile";
 
+	}
+	//lâm
     @PostMapping("/profile/save_avatar")
     public String changeAvatar(
             @RequestParam(value = "avatar", required = false) MultipartFile file) {

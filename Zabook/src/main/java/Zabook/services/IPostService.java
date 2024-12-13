@@ -27,4 +27,5 @@ public interface IPostService {
 	public Post sharePost(ObjectId userId, ObjectId originalPostId);
 	
 	List<User> getUsersWhoLiked(ObjectId postId);
+	
 }

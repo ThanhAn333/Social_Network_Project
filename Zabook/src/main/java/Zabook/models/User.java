@@ -23,6 +23,7 @@ public class User {
     private String bio;
     private String  avatar;
 
+
     @DBRef
     private String page;
 
