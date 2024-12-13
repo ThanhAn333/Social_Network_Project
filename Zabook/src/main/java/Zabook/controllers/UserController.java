@@ -82,14 +82,15 @@ public class UserController {
     @GetMapping("/")
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
+    	User user = userService.getCurrentUser();
     	List<Post> posts = postService.getAllPost();
-        User user = userService.getCurrentUser();
         model.addAttribute("currentuser", user);
 
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
+    	model.addAttribute("user",user);
         return "user/index";
     }
 

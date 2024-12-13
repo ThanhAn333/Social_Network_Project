@@ -1,6 +1,8 @@
 package Zabook.models;
 
+
 import  Zabook.Until.TimeUntil;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class Post {
 	@DBRef(lazy = false)
 	private User user;
 
+	private String contentShare;
+	
 	private String content;
 	
 	private LocalDateTime createdAt;

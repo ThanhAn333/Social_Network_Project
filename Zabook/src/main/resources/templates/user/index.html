@@ -282,10 +282,11 @@
 						<div th:each="post : ${posts}">
 
 							<div class="fb-post1">
-								<div class="fb-post1-container">
+								<div class="fb-post1-container" data-post-id="${post.id}">
 									<div class="fb-post1-header">
 										<!-- <ul>
 											<li class="active">popular</li>
+
 											<li>recent</li>
 											<li>most view</li>
 										</ul> -->
@@ -295,17 +296,28 @@
 											<img th:src="${post.user.avatar}" alt="user picture">
 											<ul>
 												<li>
-													<h3
-														th:text="${post.getUser() != null  ? post.getUser().getLastName() : 'Unknown User'}">
-														
-													</h3>
+													<h3 th:text="${post.getUser() != null ? post.getUser().getFirstName() + ' ' + post.getUser().getLastName() : 'Unknown User'}">
+    <span th:if="${post.isShared}" style="display: inline;"> - Chia sẻ bài viết</span>
+</h3>
 
+													
 												</li>
 												<li><span th:text="${post.timeAgo}"></span></li>
 											</ul>
 
+										
+											<p th:if="${post.contentShare == null || post.contentShare.isEmpty()}" th:text="${post.content}"></p>
+<p th:if="${post.contentShare != null && !post.contentShare.isEmpty()}">
+    <span th:text="${post.contentShare}"></span>
+   
+    <span th:text="${post.content}"></span>
+</p>
 
-											<p th:text="${post.content}"></p>
+												
+										
+											
+
+
 										</div>
 
 										<div class="post-images">
@@ -349,21 +361,26 @@
 													<img src="/images/love.png" alt="love">
 													<img src="/images/like.png" alt="like">
 													<!-- Số lượt like, khi bấm vào sẽ mở cửa sổ modal -->
-													<span th:text="${post.likeCount}"></span>
+													<span th:text="${post.likeCount}"
+														id="likeCountSpan_${post.id}"></span>
+
 
 
 												</li>
 												<li> <span th:text="${post.getCommentCount()}"></span>bình luận</li>
-												<li> <span th:text="${post.shareCount}">254 share</span>chia sẻ</li>
+												<li> <span th:text="${post.shareCount}"></span>chia sẻ</li>
 											</ul>
 											<!--listUser-->
 
 											<!--like comment-->
 
 											<div class="post-actions">
-												<input type="hidden" id="postId1" name="postId1" th:value="${post.id}">
 
-												<button class="btn-like">
+
+
+
+												<button class="btn-like" th:data-postId="${post.id}">
+
 
 													<i class="fas fa-thumbs-up"></i> Thích
 													<div class="emoji-icons">
@@ -387,34 +404,45 @@
 													luận</button>
 
 
-												<button class="btn-share" onclick="toggleSharePopup()">
+												<button class="btn-share" onclick="toggleSharePopup(this)"
+													th:data-user="${post.user.firstName+' '+post.user.lastName}"
+													th:data-postid="${post.id}">
 													<i class="fa-solid fa-share-from-square"></i> Chia sẻ
 												</button>
+
 
 
 												<!-- Form chia sẻ dạng Popup -->
 												<div class="share-popup" style="display: none;">
 													<div class="popup-content">
 														<span class="popup-close"
-															onclick="toggleSharePopup()">&times;</span>
+															onclick="toggleSharePopup(this)">&times;</span>
 														<h3>Chia sẻ bài viết</h3>
 
 														<div class="share-header">
-															<img src="/images/pp4.jpg" alt="User Avatar"
+															<img th:src="${user.avatar}" alt="User Avatar"
 																class="user-avatar">
-															<h4>Trần Thế Anh</h4>
+															<h4 th:text="${user.firstName+' '+user.lastName}">
+															</h4>
+
 
 														</div>
 														<div class="share-textarea">
 															<textarea placeholder="Bạn nghĩ gì về bài viết này?"
-																rows="4"></textarea>
+																name="content" rows="4"></textarea>
 														</div>
 														<div class="share-actions">
-															<button class="btn-send">
-																<i class="fas fa-arrow-right"></i> Chia sẻ
-															</button>
+															<form action="/user/post/share" method="post">
+																<p id="share-postid" name="postId" style="display: none;"></p>
+																<input type="hidden" name="postId"
+																	id="share-postid-input">
+																<button class="btn-send">
+																	<i class="fas fa-arrow-right"></i> Chia sẻ
+																</button>
+															</form>
+
 															<button class="btn-cancel"
-																onclick="toggleSharePopup()">Hủy</button>
+																onclick="toggleSharePopup(this)">Hủy</button>
 														</div>
 													</div>
 												</div>
@@ -471,12 +499,6 @@
 										</div>
 									</div>
 								</div>
-
-
-
-
-
-
 							</div>
 						</div>
 					</div> <!-- home center wrapper end -->

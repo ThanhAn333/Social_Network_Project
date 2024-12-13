@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import Zabook.models.Image;
@@ -70,8 +71,8 @@ public class PostController {
 	}
 
 	@PostMapping("/create")
-	public ModelAndView createPost(@RequestParam String content, @RequestParam("images") MultipartFile[] images,
-			@RequestParam("videos") MultipartFile[] videos, ModelMap modelMap, Principal principal) {
+	public String createPost(@RequestParam String content, @RequestParam("images") MultipartFile[] images,
+			@RequestParam("videos") MultipartFile[] videos,  Principal principal) {
 
 		// Tạo đối tượng Post mới
 		Post newpost = new Post();
@@ -88,29 +89,26 @@ public class PostController {
 
 		// Xác định đường dẫn đầy đủ đến thư mục static
 		String staticDir = new File("src/main/resources/static").getAbsolutePath();
-		String imageDir = staticDir + "/uploads/images/";
-		String videoDir = staticDir + "/uploads/videos/";
-
+		String imageDir =staticDir+ "/uploads/images/";
+		String videoDir =staticDir+ "/uploads/videos/";
 		
-		//createDirectory(imageDir);
-		//createDirectory(videoDir);
 
 		// Lưu ảnh
 		List<Image> imageList = new ArrayList<>();
 		for (MultipartFile image : images) {
 			if (image != null && !image.isEmpty()) {
-			String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-			Path path = Paths.get(imageDir + fileName);
-			try {
-				Files.write(path, image.getBytes()); // Lưu tệp
-				Image img = new Image();
-				img.setLinkImage(fileName); // Đường dẫn ảnh
-				img.setTypeImage(image.getContentType()); // Loại ảnh
-				Image savedImage = imageService.addImage(img);
-				imageList.add(savedImage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+				String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+				Path path = Paths.get(imageDir + fileName);
+				try {
+					Files.write(path, image.getBytes()); // Lưu tệp
+					Image img = new Image();
+					img.setLinkImage(fileName); // Đường dẫn ảnh
+					img.setTypeImage(image.getContentType()); // Loại ảnh
+					Image savedImage = imageService.addImage(img);
+					imageList.add(savedImage);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		newpost.setImage(imageList); // Gán danh sách ảnh vào bài viết
@@ -119,60 +117,37 @@ public class PostController {
 		List<Video> videoList = new ArrayList<>();
 		for (MultipartFile video : videos) {
 			if (video != null && !video.isEmpty()) {
-			String fileName = UUID.randomUUID() + "_" + video.getOriginalFilename();
-			Path path = Paths.get(videoDir + fileName);
-			try {
-				Files.write(path, video.getBytes()); // Lưu tệp
-				Video vid = new Video();
-				vid.setLinkVideo(fileName); // Đường dẫn video
-				vid.setTypeVideo(video.getContentType()); // Loại video
-				Video savedVideo = videoService.addVideo(vid);
-				videoList.add(savedVideo);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}}
+				String fileName = UUID.randomUUID() + "_" + video.getOriginalFilename();
+				Path path = Paths.get(videoDir + fileName);
+				try {
+					Files.write(path, video.getBytes()); // Lưu tệp
+					Video vid = new Video();
+					vid.setLinkVideo(fileName); // Đường dẫn video
+					vid.setTypeVideo(video.getContentType()); // Loại video
+					Video savedVideo = videoService.addVideo(vid);
+					videoList.add(savedVideo);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		newpost.setVideo(videoList); // Gán danh sách video vào bài viết
 		newpost.setLikeCount(0);
-		newpost.setLikedUsers(null);
-		
+		newpost.setLikedUsers(new ArrayList<>());
 		// Lưu Post vào database
 		Post savedPost = postService.createPost(newpost);
 
 		if (savedPost != null) {
-			modelMap.addAttribute("post", savedPost);
+			
 		} else {
-			modelMap.addAttribute("message", "Lỗi");
+			
 		}
 
 		// Chuyển hướng sau khi tạo post
-		return new ModelAndView("redirect:/user/", modelMap);
+		return "redirect:/user/";
 	}
 
-	// Hàm tạo thư mục
-	private void createDirectory(String dirPath) {
-		File dir = new File(dirPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-	}
-
-	// Hàm lưu file
-	private String saveFile(MultipartFile file, String uploadDir) {
-		try {
-			if (!file.isEmpty()) {
-				// Đặt tên tệp mới và tạo đường dẫn
-				String originalFilename = file.getOriginalFilename();
-				String filePath = uploadDir + UUID.randomUUID() + "_" + originalFilename;
-				File dest = new File(filePath);
-				file.transferTo(dest); // Lưu tệp vào thư mục
-				return filePath; // Trả về đường dẫn của tệp đã lưu
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	
 
 	@DeleteMapping("/delete/{id}")
 	public ModelAndView deletePost(@PathVariable ObjectId id, ModelMap modelMap) {
@@ -212,68 +187,100 @@ public class PostController {
 		return new ModelAndView("index", modelMap);
 	}
 
-	@PostMapping("/{originalPostId}/share")
-	public ResponseEntity<String> sharePost(@PathVariable ObjectId originalPostId, @RequestParam ObjectId userId) {
-		Post sharedPost = postService.sharePost(userId, originalPostId);
-		return ResponseEntity.ok("Share success!!");
+	@PostMapping("/share")
+	public String sharePost(@RequestParam String postId, @RequestParam String content) {
+		ObjectId postid = new ObjectId(postId);
+		User user = userService.getCurrentUser();
+		Post sharedPost = postService.sharePost(user.getUserID(), postid,content);
+		return "redirect:/user/";
 	}
-
 
 	@PostMapping("/like/")
 	public ResponseEntity<?> likePost(@RequestBody ObjectId postId) {
-	    try {
-	        // Tìm bài viết theo postId
-	        Post post = postService.findById(postId)
-	                .orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
+		try {
+			// Tìm bài viết theo postId
+			Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
 
-	        post.incrementLikeCount();
+			post.incrementLikeCount();
 
-	      
-	        postService.createPost(post);
+			postService.createPost(post);
 
-	        return ResponseEntity.ok("Cảm xúc đã được gửi!");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra.");
-	    }
+			return ResponseEntity.ok("Cảm xúc đã được gửi!");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra.");
+		}
 	}
-	
+
 	@GetMapping("/likeList")
-    public List<User> getLikeList(@RequestParam ObjectId postId) {
-        // Gọi service để lấy danh sách người đã like bài viết
-        return postService.getUsersWhoLiked(postId);
-    }
+	public List<User> getLikeList(@RequestParam ObjectId postId) {
+		// Gọi service để lấy danh sách người đã like bài viết
+		return postService.getUsersWhoLiked(postId);
+	}
 
-	
-
-	
-	
 	@PostMapping("/like")
 	public String likePost2(@RequestParam ObjectId postId) {
+		try {
+			// Tìm bài viết theo postId
+			Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
+
+			// Tìm người dùng (ví dụ: lấy từ SecurityContextHolder nếu bạn dùng Spring
+			// Security)
+			User currentUser = userService.getCurrentUser();
+
+			// Kiểm tra xem người dùng đã "like" bài viết này chưa
+			// if (post.getLikedUsers().contains(currentUser)) {
+			// return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bạn đã thích bài
+			// viết này.");
+			// }
+
+			// Tăng số lượng like
+			post.incrementLikeCount();
+
+			// Thêm người dùng vào danh sách người thích
+			// post.addLikedUser(currentUser);
+
+			// Lưu lại bài viết
+			postService.createPost(post);
+
+			return "redirect:/user/";
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@PostMapping("/updateReaction")
+	@ResponseBody
+	public ResponseEntity<?> updateReaction(@RequestParam ObjectId postId, @RequestParam String reaction) {
 	    try {
 	        // Tìm bài viết theo postId
 	        Post post = postService.findById(postId)
 	                .orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
 
-	        // Tìm người dùng (ví dụ: lấy từ SecurityContextHolder nếu bạn dùng Spring Security)
+	        // Tìm người dùng hiện tại (ví dụ nếu dùng Spring Security)
 	        User currentUser = userService.getCurrentUser();
 
-	        // Kiểm tra xem người dùng đã "like" bài viết này chưa
-	       // if (post.getLikedUsers().contains(currentUser)) {
-	      //      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bạn đã thích bài viết này.");
-	       // }
+	        // Kiểm tra xem người dùng đã thích bài viết này chưa
+	        if (post.getLikedUsers().contains(currentUser)) {
+	            // Trả về thông báo rằng đã thích bài viết
+	            return ResponseEntity.status(HttpStatus.CONFLICT)
+	                    .body("Bạn đã thích bài viết này rồi.");
+	        }
 
 	        // Tăng số lượng like
 	        post.incrementLikeCount();
 
 	        // Thêm người dùng vào danh sách người thích
-	      //  post.addLikedUser(currentUser);
+	        post.addLikedUser(currentUser);
 
 	        // Lưu lại bài viết
 	        postService.createPost(post);
 
-	        return "redirect:/user/";
+	        int updatedLikeCount = post.getLikeCount();
+	        return ResponseEntity.ok(updatedLikeCount);
 	    } catch (Exception e) {
-	        return null;
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Đã xảy ra lỗi: " + e.getMessage());
 	    }
 	}
+
 }

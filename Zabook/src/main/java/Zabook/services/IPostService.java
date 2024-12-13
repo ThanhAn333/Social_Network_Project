@@ -24,8 +24,10 @@ public interface IPostService {
 
 	List<Post> findByUserId(ObjectId userId);
 	
-	public Post sharePost(ObjectId userId, ObjectId originalPostId);
+	public Post sharePost(ObjectId userId, ObjectId originalPostId , String contentShare);
 	
 	List<User> getUsersWhoLiked(ObjectId postId);
-	
+
+	public int updateReaction(ObjectId postId, String reaction);
+
 }
