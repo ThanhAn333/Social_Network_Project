@@ -167,6 +167,37 @@
 
 
         </div>
+        <!-- tab danh sách bạn bè -->
+        <div class="profile-tabs">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn" onclick="toggleTab(event, 'friends')">Danh sách bạn bè</button>
+                <button class="tab-btn" onclick="toggleTab(event, 'media')">Danh sách hình ảnh & video</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="friends" class="tab-content">
+                <h3>Danh sách bạn bè</h3>
+                <ul>
+                    <li>Nguyễn Văn A</li>
+                    <li>Trần Thị B</li>
+                    <li>Phạm Văn C</li>
+                </ul>
+            </div>
+
+            <div id="media" class="tab-content">
+                <h3>Danh sách hình ảnh & video</h3>
+                <ul>
+                    <li><img src="https://via.placeholder.com/150" alt="Hình ảnh 1"></li>
+                    <li><img src="https://via.placeholder.com/150" alt="Hình ảnh 2"></li>
+                    <li><video controls width="150">
+                            <source src="sample-video.mp4" type="video/mp4">
+                            Trình duyệt của bạn không hỗ trợ video.
+                        </video></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /tab danh sách bạn bè -->
 
 
 
@@ -189,318 +220,6 @@
 
 
 
-                <script>
-
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const genderDisplay = document.getElementById("genderDisplay");
-                        const genderEdit = document.getElementById("genderEdit");
-                        const addressDisplay = document.getElementById("addressDisplay");
-                        const addressEdit = document.getElementById("addressEdit");
-
-                        const editProfileBtn = document.getElementById("editProfileBtn");
-                        const saveProfileBtn = document.getElementById("saveProfileBtn");
-
-                        editProfileBtn.addEventListener("click", function () {
-                            genderDisplay.style.display = "none";
-                            genderEdit.style.display = "block";
-
-                            addressDisplay.style.display = "none";
-                            addressEdit.style.display = "block";
-
-                            editProfileBtn.style.display = "none";
-                            saveProfileBtn.style.display = "inline-block";
-                        });
-
-                        saveProfileBtn.addEventListener("click", function () {
-                            const updatedGender = genderEdit.value;
-                            const updatedAddress = addressEdit.value;
-
-                            // Gửi dữ liệu về server
-                            fetch('/user/profile/update_profile', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ gender: updatedGender, address: updatedAddress }),
-                            })
-                                .then(response => {
-                                    if (response.ok) {
-                                        genderDisplay.textContent = updatedGender || "Chưa chọn giới tính";
-                                        addressDisplay.textContent = updatedAddress || "Chưa nhập địa chỉ";
-
-                                        genderDisplay.style.display = "block";
-                                        genderEdit.style.display = "none";
-
-                                        addressDisplay.style.display = "block";
-                                        addressEdit.style.display = "none";
-
-                                        editProfileBtn.style.display = "inline-block";
-                                        saveProfileBtn.style.display = "none";
-                                    } else {
-                                        alert("Cập nhật thông tin thất bại!");
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    alert("Đã xảy ra lỗi khi cập nhật!");
-                                });
-                        });
-                    });
-
-                    const fileInput = document.getElementById('post-image');
-                    const filePreviewContainer = document.getElementById('file-preview');
-
-                    // Hàm kiểm tra xem file đã được thêm vào chưa
-                    function isFileAlreadyAdded(file) {
-                        const previews = filePreviewContainer.getElementsByClassName('file-preview-item');
-                        for (let i = 0; i < previews.length; i++) {
-                            const preview = previews[i];
-                            const previewFile = preview.querySelector('img, video');
-                            if (previewFile && previewFile.src === URL.createObjectURL(file)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    fileInput.addEventListener('change', function () {
-                        const files = fileInput.files;
-
-                        // Duyệt qua các file đã chọn
-                        for (let i = 0; i < files.length; i++) {
-                            const file = files[i];
-
-                            // Kiểm tra xem file đã được thêm chưa
-                            if (isFileAlreadyAdded(file)) {
-                                continue; // Nếu đã thêm, bỏ qua và không thêm file này
-                            }
-
-                            // Tạo một div cho mỗi preview
-                            const previewWrapper = document.createElement('div');
-                            previewWrapper.classList.add('file-preview-item');
-                            previewWrapper.style.position = 'relative';
-
-                            // Kiểm tra loại file là hình ảnh hay video và hiển thị tương ứng
-                            const fileReader = new FileReader();
-
-                            fileReader.onload = function (e) {
-                                const fileUrl = e.target.result;
-
-                                if (file.type.startsWith('image')) {
-                                    // Hiển thị hình ảnh mà không hiển thị tên file
-                                    const img = document.createElement('img');
-                                    img.src = fileUrl;
-                                    img.classList.add('img-fluid');
-                                    img.style.maxHeight = '200px';
-                                    previewWrapper.appendChild(img);
-                                } else if (file.type.startsWith('video')) {
-                                    // Hiển thị video mà không hiển thị tên file
-                                    const video = document.createElement('video');
-                                    video.src = fileUrl;
-                                    video.controls = true;
-                                    video.style.maxWidth = '200px';
-                                    previewWrapper.appendChild(video);
-                                }
-
-                                // Thêm nút "x" để xóa
-                                const removeButton = document.createElement('button');
-                                removeButton.innerHTML = '×';
-                                removeButton.classList.add('remove-btn');
-                                removeButton.style.position = 'absolute';
-                                removeButton.style.top = '5px';
-                                removeButton.style.right = '5px';
-                                removeButton.style.background = 'rgba(0, 0, 0, 0.5)';
-                                removeButton.style.color = 'white';
-                                removeButton.style.border = 'none';
-                                removeButton.style.borderRadius = '50%';
-                                removeButton.style.padding = '5px';
-                                removeButton.style.cursor = 'pointer';
-
-                                // Xử lý sự kiện xóa tệp
-                                removeButton.addEventListener('click', function () {
-                                    previewWrapper.remove();
-                                });
-
-                                previewWrapper.appendChild(removeButton);
-                                filePreviewContainer.appendChild(previewWrapper);
-                            };
-
-                            fileReader.readAsDataURL(file);
-                        }
-
-                        // Hiển thị phần preview sau khi có file được chọn
-                        filePreviewContainer.style.display = 'block';
-                    });
-
-
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const bioDisplay = document.getElementById("bioDisplay");
-                        const bioEdit = document.getElementById("bioEdit");
-                        const editBioBtn = document.getElementById("editBioBtn");
-                        const saveBioBtn = document.getElementById("saveBioBtn");
-
-                        // Khi nhấn vào nút "Chỉnh sửa"
-                        editBioBtn.addEventListener("click", function () {
-                            bioDisplay.style.display = "none";
-                            bioEdit.style.display = "block";
-                            saveBioBtn.style.display = "inline-block";
-                            editBioBtn.style.display = "none";
-                        });
-
-                        // Khi nhấn vào nút "Lưu"
-                        saveBioBtn.addEventListener("click", function () {
-                            const updatedBio = bioEdit.value;
-
-                            // Gửi dữ liệu về server bằng Fetch API
-                            fetch('/user/profile/update_bio', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ bio: updatedBio }),
-                            })
-                                .then(response => {
-                                    if (response.ok) {
-                                        bioDisplay.textContent = updatedBio; // Cập nhật bio hiển thị
-                                        bioDisplay.style.display = "block";
-                                        bioEdit.style.display = "none";
-                                        saveBioBtn.style.display = "none";
-                                        editBioBtn.style.display = "inline-block";
-                                    } else {
-                                        alert("Cập nhật tiểu sử thất bại!");
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    alert("Đã xảy ra lỗi khi cập nhật!");
-                                });
-                        });
-                    });
-                </script>
-
-                <style>
-                    /* Hiệu ứng bo góc và mượt mà cho card */
-                    .post-section {
-                        border-radius: 15px;
-                        /* Bo góc cho card */
-                        background-color: white;
-                        transition: box-shadow 0.3s ease-in-out;
-                        /* Thêm hiệu ứng khi thay đổi box-shadow */
-                    }
-
-                    /* Thêm hiệu ứng khi hover vào card */
-                    .post-section:hover {
-                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                        /* Hiệu ứng đổ bóng khi hover */
-                    }
-
-                    /* Đổi màu nền cho textarea khi hover */
-                    .post-input:focus {
-                        border-color: #007bff;
-                        /* Màu viền khi focus */
-                        box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
-                        /* Hiệu ứng ánh sáng xung quanh khi focus */
-                    }
-
-                    #bioEdit {
-                        width: 100%;
-                        resize: none;
-                    }
-
-                    .fas.fa-edit,
-                    .fas.fa-save {
-                        margin-left: 8px;
-                    }
-
-                    /* Tùy chỉnh nút x */
-                    .remove-btn {
-                        font-size: 18px;
-                        font-weight: bold;
-                        width: 22px;
-                        height: 22px;
-                        text-align: center;
-                        line-height: 16px;
-                        color: white;
-                        background-color: #007bff;
-                        /* Màu nền xanh biển */
-                        border-radius: 50%;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease;
-                        /* Hiệu ứng chuyển màu nền */
-                    }
-
-                    /* Hiệu ứng hover cho nút x */
-                    .remove-btn:hover {
-                        background-color: #0056b3;
-                        /* Màu nền khi hover */
-                    }
-
-                    /* Tùy chỉnh phần preview ảnh/video */
-                    .file-preview-item {
-                        display: inline-block;
-                        margin-right: 10px;
-                        margin-bottom: 10px;
-                        position: relative;
-                        border-radius: 10px;
-                        /* Bo góc cho preview */
-                        overflow: hidden;
-                        transition: transform 0.3s ease;
-                        /* Hiệu ứng khi di chuột vào */
-                    }
-
-                    /* Hiệu ứng khi hover vào preview ảnh/video */
-                    .file-preview-item:hover {
-                        transform: scale(1.05);
-                        /* Phóng to nhẹ khi hover */
-                    }
-
-                    /* Nút post */
-                    .btn-primary {
-                        background-color: #007bff;
-                        /* Màu nền xanh biển */
-                        border: none;
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        border-radius: 5px;
-                        transition: background-color 0.3s ease;
-                        /* Hiệu ứng chuyển màu nền */
-                    }
-
-                    /* Hiệu ứng hover cho nút post */
-                    .btn-primary:hover {
-                        background-color: #0056b3;
-                        /* Màu nền khi hover */
-                    }
-
-                    /* Chỉnh sửa phần preview file */
-                    #file-preview {
-                        display: flex;
-                        flex-wrap: wrap;
-                    }
-
-                    /* Tùy chỉnh cho container của file preview */
-                    .file-preview-item img,
-                    .file-preview-item video {
-                        max-width: 150px;
-                        border-radius: 10px;
-                    }
-
-                    .profile-pic,
-                    #avatarPreview {
-                        border-radius: 50%;
-                        /* Tạo hình tròn */
-                        object-fit: cover;
-                        /* Đảm bảo hình ảnh không bị méo */
-                        width: 150px;
-                        /* Kích thước hình ảnh (điều chỉnh tùy ý) */
-                        height: 150px;
-                        /* Kích thước hình ảnh */
-                        display: block;
-                        margin: 0 auto;
-                        /* Canh giữa */
-                    }
-                </style>
-
                 <div class="text-end">
                     <button class="btn btn-primary">Post</button>
                 </div>
@@ -508,6 +227,373 @@
         </div>
 
 
+        <!-- script -->
+
+        <script>
+            function toggleTab(event, tabId) {
+                const tabContent = document.getElementById(tabId);
+                const allTabContents = document.querySelectorAll('.tab-content');
+                const allTabButtons = document.querySelectorAll('.tab-btn');
+
+                // Nếu tab đã được mở (class active), ẩn nó đi
+                if (tabContent.classList.contains('active')) {
+                    tabContent.classList.remove('active');
+                    event.currentTarget.classList.remove('active');
+                } else {
+                    // Ẩn tất cả các tab khác
+                    allTabContents.forEach(content => content.classList.remove('active'));
+                    allTabButtons.forEach(button => button.classList.remove('active'));
+
+                    // Hiển thị tab được chọn và đánh dấu button là active
+                    tabContent.classList.add('active');
+                    event.currentTarget.classList.add('active');
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const genderDisplay = document.getElementById("genderDisplay");
+                const genderEdit = document.getElementById("genderEdit");
+                const addressDisplay = document.getElementById("addressDisplay");
+                const addressEdit = document.getElementById("addressEdit");
+
+                const editProfileBtn = document.getElementById("editProfileBtn");
+                const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+                editProfileBtn.addEventListener("click", function () {
+                    genderDisplay.style.display = "none";
+                    genderEdit.style.display = "block";
+
+                    addressDisplay.style.display = "none";
+                    addressEdit.style.display = "block";
+
+                    editProfileBtn.style.display = "none";
+                    saveProfileBtn.style.display = "inline-block";
+                });
+
+                saveProfileBtn.addEventListener("click", function () {
+                    const updatedGender = genderEdit.value;
+                    const updatedAddress = addressEdit.value;
+
+                    // Gửi dữ liệu về server
+                    fetch('/user/profile/update_profile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ gender: updatedGender, address: updatedAddress }),
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                genderDisplay.textContent = updatedGender || "Chưa chọn giới tính";
+                                addressDisplay.textContent = updatedAddress || "Chưa nhập địa chỉ";
+
+                                genderDisplay.style.display = "block";
+                                genderEdit.style.display = "none";
+
+                                addressDisplay.style.display = "block";
+                                addressEdit.style.display = "none";
+
+                                editProfileBtn.style.display = "inline-block";
+                                saveProfileBtn.style.display = "none";
+                            } else {
+                                alert("Cập nhật thông tin thất bại!");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("Đã xảy ra lỗi khi cập nhật!");
+                        });
+                });
+            });
+
+            const fileInput = document.getElementById('post-image');
+            const filePreviewContainer = document.getElementById('file-preview');
+
+            // Hàm kiểm tra xem file đã được thêm vào chưa
+            function isFileAlreadyAdded(file) {
+                const previews = filePreviewContainer.getElementsByClassName('file-preview-item');
+                for (let i = 0; i < previews.length; i++) {
+                    const preview = previews[i];
+                    const previewFile = preview.querySelector('img, video');
+                    if (previewFile && previewFile.src === URL.createObjectURL(file)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            fileInput.addEventListener('change', function () {
+                const files = fileInput.files;
+
+                // Duyệt qua các file đã chọn
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    // Kiểm tra xem file đã được thêm chưa
+                    if (isFileAlreadyAdded(file)) {
+                        continue; // Nếu đã thêm, bỏ qua và không thêm file này
+                    }
+
+                    // Tạo một div cho mỗi preview
+                    const previewWrapper = document.createElement('div');
+                    previewWrapper.classList.add('file-preview-item');
+                    previewWrapper.style.position = 'relative';
+
+                    // Kiểm tra loại file là hình ảnh hay video và hiển thị tương ứng
+                    const fileReader = new FileReader();
+
+                    fileReader.onload = function (e) {
+                        const fileUrl = e.target.result;
+
+                        if (file.type.startsWith('image')) {
+                            // Hiển thị hình ảnh mà không hiển thị tên file
+                            const img = document.createElement('img');
+                            img.src = fileUrl;
+                            img.classList.add('img-fluid');
+                            img.style.maxHeight = '200px';
+                            previewWrapper.appendChild(img);
+                        } else if (file.type.startsWith('video')) {
+                            // Hiển thị video mà không hiển thị tên file
+                            const video = document.createElement('video');
+                            video.src = fileUrl;
+                            video.controls = true;
+                            video.style.maxWidth = '200px';
+                            previewWrapper.appendChild(video);
+                        }
+
+                        // Thêm nút "x" để xóa
+                        const removeButton = document.createElement('button');
+                        removeButton.innerHTML = '×';
+                        removeButton.classList.add('remove-btn');
+                        removeButton.style.position = 'absolute';
+                        removeButton.style.top = '5px';
+                        removeButton.style.right = '5px';
+                        removeButton.style.background = 'rgba(0, 0, 0, 0.5)';
+                        removeButton.style.color = 'white';
+                        removeButton.style.border = 'none';
+                        removeButton.style.borderRadius = '50%';
+                        removeButton.style.padding = '5px';
+                        removeButton.style.cursor = 'pointer';
+
+                        // Xử lý sự kiện xóa tệp
+                        removeButton.addEventListener('click', function () {
+                            previewWrapper.remove();
+                        });
+
+                        previewWrapper.appendChild(removeButton);
+                        filePreviewContainer.appendChild(previewWrapper);
+                    };
+
+                    fileReader.readAsDataURL(file);
+                }
+
+                // Hiển thị phần preview sau khi có file được chọn
+                filePreviewContainer.style.display = 'block';
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const bioDisplay = document.getElementById("bioDisplay");
+                const bioEdit = document.getElementById("bioEdit");
+                const editBioBtn = document.getElementById("editBioBtn");
+                const saveBioBtn = document.getElementById("saveBioBtn");
+
+                // Khi nhấn vào nút "Chỉnh sửa"
+                editBioBtn.addEventListener("click", function () {
+                    bioDisplay.style.display = "none";
+                    bioEdit.style.display = "block";
+                    saveBioBtn.style.display = "inline-block";
+                    editBioBtn.style.display = "none";
+                });
+
+                // Khi nhấn vào nút "Lưu"
+                saveBioBtn.addEventListener("click", function () {
+                    const updatedBio = bioEdit.value;
+
+                    // Gửi dữ liệu về server bằng Fetch API
+                    fetch('/user/profile/update_bio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ bio: updatedBio }),
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                bioDisplay.textContent = updatedBio; // Cập nhật bio hiển thị
+                                bioDisplay.style.display = "block";
+                                bioEdit.style.display = "none";
+                                saveBioBtn.style.display = "none";
+                                editBioBtn.style.display = "inline-block";
+                            } else {
+                                alert("Cập nhật tiểu sử thất bại!");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("Đã xảy ra lỗi khi cập nhật!");
+                        });
+                });
+            });
+
+        </script>
+        <!-- /script -->
+
+        <!-- style -->
+        <style>
+            /* Tabs */
+            .tabs {
+                display: flex;
+                margin-bottom: 10px;
+            }
+
+            .tab-btn {
+                flex: 1;
+                padding: 10px;
+                cursor: pointer;
+                border: 1px solid #ddd;
+                background-color: #f1f1f1;
+                text-align: center;
+            }
+
+            .tab-btn.active {
+                background-color: #ccc;
+                font-weight: bold;
+            }
+
+            /* Tab Content */
+            .tab-content {
+                display: none;
+                /* Ban đầu tất cả tab được ẩn */
+            }
+
+            .tab-content.active {
+                display: block;
+                /* Hiển thị tab khi có class active */
+            }
+
+            /* Hiệu ứng bo góc và mượt mà cho card */
+            .post-section {
+                border-radius: 15px;
+                /* Bo góc cho card */
+                background-color: white;
+                transition: box-shadow 0.3s ease-in-out;
+                /* Thêm hiệu ứng khi thay đổi box-shadow */
+            }
+
+            /* Thêm hiệu ứng khi hover vào card */
+            .post-section:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                /* Hiệu ứng đổ bóng khi hover */
+            }
+
+            /* Đổi màu nền cho textarea khi hover */
+            .post-input:focus {
+                border-color: #007bff;
+                /* Màu viền khi focus */
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+                /* Hiệu ứng ánh sáng xung quanh khi focus */
+            }
+
+            #bioEdit {
+                width: 100%;
+                resize: none;
+            }
+
+            .fas.fa-edit,
+            .fas.fa-save {
+                margin-left: 8px;
+            }
+
+            /* Tùy chỉnh nút x */
+            .remove-btn {
+                font-size: 18px;
+                font-weight: bold;
+                width: 22px;
+                height: 22px;
+                text-align: center;
+                line-height: 16px;
+                color: white;
+                background-color: #007bff;
+                /* Màu nền xanh biển */
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                /* Hiệu ứng chuyển màu nền */
+            }
+
+            /* Hiệu ứng hover cho nút x */
+            .remove-btn:hover {
+                background-color: #0056b3;
+                /* Màu nền khi hover */
+            }
+
+            /* Tùy chỉnh phần preview ảnh/video */
+            .file-preview-item {
+                display: inline-block;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                position: relative;
+                border-radius: 10px;
+                /* Bo góc cho preview */
+                overflow: hidden;
+                transition: transform 0.3s ease;
+                /* Hiệu ứng khi di chuột vào */
+            }
+
+            /* Hiệu ứng khi hover vào preview ảnh/video */
+            .file-preview-item:hover {
+                transform: scale(1.05);
+                /* Phóng to nhẹ khi hover */
+            }
+
+            /* Nút post */
+            .btn-primary {
+                background-color: #007bff;
+                /* Màu nền xanh biển */
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+                /* Hiệu ứng chuyển màu nền */
+            }
+
+            /* Hiệu ứng hover cho nút post */
+            .btn-primary:hover {
+                background-color: #0056b3;
+                /* Màu nền khi hover */
+            }
+
+            /* Chỉnh sửa phần preview file */
+            #file-preview {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            /* Tùy chỉnh cho container của file preview */
+            .file-preview-item img,
+            .file-preview-item video {
+                max-width: 150px;
+                border-radius: 10px;
+            }
+
+            .profile-pic,
+            #avatarPreview {
+                border-radius: 50%;
+                /* Tạo hình tròn */
+                object-fit: cover;
+                /* Đảm bảo hình ảnh không bị méo */
+                width: 150px;
+                /* Kích thước hình ảnh (điều chỉnh tùy ý) */
+                height: 150px;
+                /* Kích thước hình ảnh */
+                display: block;
+                margin: 0 auto;
+                /* Canh giữa */
+            }
+        </style>
+        <!-- /style -->
 
 
         <!-- Feed Section -->
