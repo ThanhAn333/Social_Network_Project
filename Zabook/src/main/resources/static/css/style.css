@@ -96,7 +96,8 @@ button:focus {
 
 img {
 	height: auto;
-	max-width: 100%;
+	width: 20px;
+	
 }
 
 .overlap {
@@ -13562,12 +13563,13 @@ aside.sidebar .friend-box .frnd-meta {
 }
 
 .post-title>span {
-	border: 1px solid #8c8c8c;
+	
 	border-radius: 4px;
 	font-size: 11px;
 	padding: 2px 8px;
 	text-transform: capitalize;
-	color: #dcdcdc;
+	color: rgb(0, 0, 0);
+	font-size: 13px;
 	vertical-align: middle;
 }
 
@@ -21166,6 +21168,8 @@ header {
 
 .post-text img {
 	width: 40px;
+	height: 40px;
+	object-fit: cover;
 	border-radius: 50px;
 	position: absolute;
 	left: 10px;
@@ -21295,41 +21299,21 @@ header {
 }
 
 .post-images1 {
-	width: 60%;
+	width: 100%;
 	overflow: hidden;
 }
 
 
 
-.post-images1 img:nth-child(1) {
+.post-images1 img {
 	width: 100%;
 	margin-bottom: 10px;
-	height: 200px;
+	height: 400px;
 	object-fit: cover;
 	border-radius: 15px;
 }
 
-.post-images1 img:nth-child(2) {
-	width: 47%;
-	margin-right: 4%;
-	height: 120px;
-	object-fit: cover;
-	border-radius: 15px;
-}
 
-.post-images1 img:nth-child(3) {
-	width: 47%;
-	height: 120px;
-	object-fit: cover;
-	border-radius: 15px;
-}
-
-.post-images2 img {
-	width: 100%;
-	height: 335px;
-	border-radius: 15px;
-	object-fit: cover;
-}
 
 .like-comment {
 	width: 100%;
@@ -21355,7 +21339,7 @@ header {
 
 .like-comment ul li span {
 	color: var(--gray);
-	margin-left: 10px;
+	
 	font-size: 14px;
 }
 
@@ -21707,19 +21691,6 @@ header {
 	color: #1877f2;
 }
 
-.emoji-icons {
-	position: absolute;
-	display: none;
-	top: -50px;
-	left: 130px;
-	transform: translateX(-50%);
-	padding-right: 10px;
-	border-radius: 20px;
-	justify-content: space-evenly;
-	width: 280px;
-	height: 65px;
-	z-index: 1;
-}
 
 .post-actions .btn-like:hover .emoji-icons {
 	display: flex;
@@ -21736,40 +21707,6 @@ header {
 	transform: scale(1.2);
 }
 
-.like {
-	color: #4267b2;
-}
-
-.love {
-	color: #f02849;
-}
-
-.haha {
-	color: #f7b731;
-}
-
-.wow {
-	color: #f1c40f;
-}
-
-.sad {
-	color: #f39c12;
-}
-
-.angry {
-	color: #e74c3c;
-}
-
-.btn-like.selected {
-	color: #1877f2;
-}
-
-/*doi mau like khi chọn*/
-.btn-like.selected.like-color {
-	color: #3498db;
-	/* Màu xanh dương cho Thích */
-	
-}
 
 .btn-like.selected.love-color {
 	color: #e74c3c;
@@ -21777,29 +21714,6 @@ header {
 	
 }
 
-.btn-like.selected.haha-color {
-	color: #f1c40f;
-	/* Màu vàng cho Haha */
-	
-}
-
-.btn-like.selected.wow-color {
-	color: #f1c40f;
-	/* Màu tím cho Wow */
-	
-}
-
-.btn-like.selected.sad-color {
-	color: #ebb20c;
-	/* Màu xám cho Buồn */
-	
-}
-
-.btn-like.selected.angry-color {
-	color: #e67e22;
-	/* Màu cam cho Phẫn nộ */
-	
-}
 
 
 
@@ -21852,6 +21766,7 @@ header {
 .avatar {
 	width: 40px;
 	height: 40px;
+	object-fit: cover;
 	border-radius: 50%;
 	margin-right: 10px;
 }
@@ -22410,6 +22325,63 @@ textarea.form-control {
 }
 
 .story-nav.right {
+    right: 10px;
+}
+
+.gach {
+  display: block;
+    width: 100%;
+    border-bottom: 2px solid #888; /* Đường kẻ dưới, có thể thay đổi độ dày và màu sắc */
+    margin: 5px 0; /* Màu nền đường kẻ */
+}
+
+
+
+.modal1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content1 {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
+}
+
+.close1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#prevBtn1, #nextBtn1 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+#prevBtn1 {
+    left: 10px;
+}
+
+#nextBtn1 {
     right: 10px;
 }
 

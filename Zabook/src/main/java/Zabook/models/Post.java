@@ -76,6 +76,7 @@ public class Post {
     }
 
 	public void incrementLikeCount() { this.likeCount++; }
+	public void decrementLikeCount() { this.likeCount--; }
 	public Post() {
 		this.createdAt = LocalDateTime.now();
 	}
