@@ -236,7 +236,9 @@
 
 								<h3 class="mini-headign">Create Post</h3>
 								<div class="post-text">
-									<img src="/images/user.jpg" alt="user">
+									<label>
+										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
+								alt="user-avatar">
 									<input type="text-area" placeholder="What's on your mind, zahidul" name="content">
 								</div>
 
