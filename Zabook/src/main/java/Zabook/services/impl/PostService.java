@@ -1,5 +1,6 @@
 package Zabook.services.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class PostService implements IPostService {
 	}
 
 	@Override
-	public Post sharePost(ObjectId userId, ObjectId originalPostId) {
+	public Post sharePost(ObjectId userId, ObjectId originalPostId, String contentShare) {
 		// Tìm bài viết gốc
 		Post originalPost = postRepository.findById(originalPostId)
 				.orElseThrow(() -> new RuntimeException("Post not found"));
@@ -87,6 +88,7 @@ public class PostService implements IPostService {
 		sharedPost.setUser(user);
 
 		sharedPost.setOriginalPostId(originalPostId);
+		sharedPost.setContentShare(contentShare);
 		sharedPost.setContent(originalPost.getContent()); // Copy nội dung (hoặc thay đổi tùy ý)
 		sharedPost.setCreatedAt(LocalDateTime.now());
 		sharedPost.setImage(originalPost.getImage());
@@ -112,6 +114,18 @@ public class PostService implements IPostService {
 		}
 
 		return null;
+	}
+	@Override
+	public int updateReaction(ObjectId postId, String reaction) {
+	    Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+	    // Kiểm tra xem người dùng đã bày tỏ cảm xúc chưa
+	    if (reaction.equals("none")) {
+	        post.setLikeCount(post.getLikeCount() - 1); // Bỏ cảm xúc
+	    } else {
+	        post.setLikeCount(post.getLikeCount() + 1); // Thêm cảm xúc
+	    }
+	    postRepository.save(post);
+	    return post.getLikeCount();
 	}
 
 }
