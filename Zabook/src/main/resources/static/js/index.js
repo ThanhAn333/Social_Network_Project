@@ -37,119 +37,67 @@ document.getElementById("sendCommentBtn").addEventListener("click", function() {
 		});
 });
 
-function toggleLike(event, button) {
-	const hasSelectedReaction = button.classList.contains('selected');
-	if (hasSelectedReaction) {
-		// Nếu đã chọn cảm xúc, ấn thêm lần nữa để hủy thích
-		button.classList.remove('selected', 'like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
-		button.innerHTML = `
-            <i class="fas fa-thumbs-up"></i> Thích
-            <div class="emoji-icons">
-                <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
-                <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
-                <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
-                <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
-                <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
-                <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-            </div>
-        `;
-	}
-}
 
+function toggleLike(button) {
+    const heart = button.querySelector('.love');  // Lấy phần tử trái tim bên trong nút bấm
+    const likeText = button.querySelector('#like-text');  // Lấy văn bản "Thích" bên trong nút bấm
 
-function selectReaction(event, icon, reactionText) {
-    event.stopPropagation();
-
-    // Tìm nút cha
-    const button = icon.closest('.btn-like');
-
-    // Kiểm tra trạng thái hiện tại
-    const currentReaction = button.getAttribute('data-reaction');
-
-    // Nếu cảm xúc được chọn trùng với cảm xúc mới => Bỏ chọn
-    if (currentReaction === reactionText) {
-        // Xóa các class màu và trạng thái "selected"
-        button.classList.remove('selected', 'like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
-        button.setAttribute('data-reaction', ''); // Xóa trạng thái cảm xúc
-        button.innerHTML = `
-            <i class="fas fa-thumbs-up"></i> Thích
-            <div class="emoji-icons">
-                <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
-                <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
-                <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
-                <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
-                <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
-                <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-            </div>
-        `;
-
-        // Gửi yêu cầu cập nhật bỏ chọn cảm xúc về server
-       // const postId = document.getElementById("postId1").value;
-	const postId = button.getAttribute('data-postId');
-        fetch('/user/post/updateReaction', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `postId=${postId}&reaction=`
-        })
-            .then(response => response.json())
-            .then(updatedLikeCount => {
-                // Cập nhật số lượng likeCount trên giao diện
-                const likeCountElement = document.querySelector(".like-comment span");
-                likeCountElement.textContent = updatedLikeCount;
-            })
-            .catch(error => console.error('Error:', error));
-        
-        return; // Dừng hàm vì đã xử lý bỏ chọn
+    // Kiểm tra trạng thái của trái tim và thay đổi màu sắc
+    let reactionText = '';
+    if (heart.classList.contains('liked')) {
+        heart.classList.remove('liked');
+        likeText.style.color = 'black';
+        likeText.textContent = 'Thích';
+        reactionText = 'unlike';  // Xác định hành động "Hủy thích"
+    } else {
+        heart.classList.add('liked');
+        likeText.style.color = 'red';
+        likeText.textContent = 'Đã thích';
+        reactionText = 'like';  // Xác định hành động "Thích"
     }
 
-    // Xóa các class màu cũ
-    button.classList.remove('like-color', 'love-color', 'haha-color', 'wow-color', 'sad-color', 'angry-color');
+    const postId = button.getAttribute('data-postId');
+    const updateLikeSelector = button.getAttribute('data-updateLike');
 
-    // Thêm class màu dựa trên loại cảm xúc
-    if (icon.classList.contains('like')) button.classList.add('like-color');
-    else if (icon.classList.contains('love')) button.classList.add('love-color');
-    else if (icon.classList.contains('haha')) button.classList.add('haha-color');
-    else if (icon.classList.contains('wow')) button.classList.add('wow-color');
-    else if (icon.classList.contains('sad')) button.classList.add('sad-color');
-    else if (icon.classList.contains('angry')) button.classList.add('angry-color');
+    // Kiểm tra nếu không có giá trị `data-updateLike`
+    if (!updateLikeSelector) {
+        console.error('data-updateLike attribute is missing on button.');
+        return;
+    }
 
-    // Cập nhật trạng thái mới
-    button.classList.add('selected');
-    button.setAttribute('data-reaction', reactionText); // Lưu cảm xúc đã chọn
-    button.innerHTML = `
-        <i class="${icon.className}"></i> ${reactionText}
-        <div class="emoji-icons">
-            <i class="fas fa-thumbs-up like" onclick="selectReaction(event, this, 'Thích')"></i>
-            <i class="fas fa-heart love" onclick="selectReaction(event, this, 'Yêu thích')"></i>
-            <i class="fas fa-laugh-squint haha" onclick="selectReaction(event, this, 'Haha')"></i>
-            <i class="fas fa-surprise wow" onclick="selectReaction(event, this, 'Wow')"></i>
-            <i class="fas fa-sad-tear sad" onclick="selectReaction(event, this, 'Buồn')"></i>
-            <i class="fas fa-angry angry" onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-        </div>
-    `;
-
-   // const postId = document.getElementById("postId1").value;
-   // const postContainer = icon.closest('.fb-post1-container');
-    //const postId = postContainer.querySelector('input[name="postId1"]').value;
-	const postId = button.getAttribute('data-postId');
-
+    // Gửi yêu cầu đến API
     fetch('/user/post/updateReaction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `postId=${postId}&reaction=${reactionText}`
+        body: `postId=${postId}&reaction=${reactionText}`  // Gửi cả postId và reaction (like/unlike)
     })
-        .then(response => response.json())
-        .then(updatedLikeCount => {
-            // Cập nhật số lượng likeCount trên giao diện
-            const likeCountElement = document.getElementById(`likeCountSpan_${postId}`);
-            likeCountElement.textContent = updatedLikeCount;
-        })
-        .catch(error => console.error('Error:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();  // Trả về dữ liệu số lượng like mới
+    })
+    .then(updatedLikeCount => {
+        console.log("Updated Like Count:", updatedLikeCount); // Debug giá trị trả về từ server
+
+        // Tìm phần tử HTML chứa số lượng like của bài viết
+        const likeCountElement = document.querySelector(updateLikeSelector);
+        if (likeCountElement) {
+            likeCountElement.textContent = updatedLikeCount;  // Cập nhật số lượng like
+        } else {
+            console.error(`Element with selector "${updateLikeSelector}" not found.`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
+
+
+
+
+
+
 
 
 
@@ -170,15 +118,15 @@ function toggleCommentForm(button) {
 
 function toggleSharePopup(button) {
 	const sharePopup = document.querySelector('.share-popup');
-	
-	const postId = button.getAttribute('data-postid');
-	
-    const sharePostElement = document.querySelector('#share-postid');
-    sharePostElement.textContent = postId;
-    
-    var postIdValue = document.getElementById("share-postid").innerText;
 
-// Gán giá trị vào trường input có id="share-postid-input"
+	const postId = button.getAttribute('data-postid');
+
+	const sharePostElement = document.querySelector('#share-postid');
+	sharePostElement.textContent = postId;
+
+	var postIdValue = document.getElementById("share-postid").innerText;
+
+	// Gán giá trị vào trường input có id="share-postid-input"
 	document.getElementById("share-postid-input").value = postIdValue;
 
 	if (sharePopup.style.display === 'none' || sharePopup.style.display === '') {
@@ -290,121 +238,246 @@ function closeLikesModal() {
 function fetchLikes() {
 	const postId = document.getElementById("postId").value; // Giả sử bạn có postId trong HTML
 
-    fetch(`/user/post/likeList?postId=${postId}`) // API của bạn
-      .then(response => response.json())
-      .then(data => {
-        // Điền danh sách người vào modal
-        const likesList = document.getElementById("likesList");
-        likesList.innerHTML = ""; // Xóa dữ liệu cũ
-        data.forEach(user => {
-          const listItem = document.createElement("li");
-          listItem.textContent = user.username; // Dữ liệu trả về chứa tên người dùng
-          likesList.appendChild(listItem);
-        });
-      })
-      .catch(error => console.error("Error fetching likes:", error));
-  }
+	fetch(`/user/post/likeList?postId=${postId}`) // API của bạn
+		.then(response => response.json())
+		.then(data => {
+			// Điền danh sách người vào modal
+			const likesList = document.getElementById("likesList");
+			likesList.innerHTML = ""; // Xóa dữ liệu cũ
+			data.forEach(user => {
+				const listItem = document.createElement("li");
+				listItem.textContent = user.username; // Dữ liệu trả về chứa tên người dùng
+				likesList.appendChild(listItem);
+			});
+		})
+		.catch(error => console.error("Error fetching likes:", error));
+}
 
-  function openStory(index) {
-    if (index >= 0 && index < stories.length) {
-        currentStoryIndex = index;
-        const story = stories[index];
+function openStory(index) {
+	if (index >= 0 && index < stories.length) {
+		currentStoryIndex = index;
+		const story = stories[index];
 
-        const modal = document.getElementById('storyModal');
-        modal.style.display = 'flex';
+		const modal = document.getElementById('storyModal');
+		modal.style.display = 'flex';
 
-        document.getElementById('modalAvatar').src = story.avatar;
-        document.getElementById('modalUserName').textContent = story.userName;
-        document.getElementById('modalTime').textContent = story.time;
+		document.getElementById('modalAvatar').src = story.avatar;
+		document.getElementById('modalUserName').textContent = story.userName;
+		document.getElementById('modalTime').textContent = story.time;
 
-        const modalImage = document.getElementById('modalImage');
-        const modalVideo = document.getElementById('modalVideo');
+		const modalImage = document.getElementById('modalImage');
+		const modalVideo = document.getElementById('modalVideo');
 
-        if (story.image) {
-            modalImage.src = story.image;
-            modalImage.style.display = 'block';
-            modalVideo.style.display = 'none';
-        } else if (story.video) {
-            modalVideo.src = story.video;
-            modalVideo.style.display = 'block';
-            modalImage.style.display = 'none';
-        }
+		if (story.image) {
+			modalImage.src = story.image;
+			modalImage.style.display = 'block';
+			modalVideo.style.display = 'none';
+		} else if (story.video) {
+			modalVideo.src = story.video;
+			modalVideo.style.display = 'block';
+			modalImage.style.display = 'none';
+		}
 
-        document.getElementById('modalText').textContent = story.textContent || '';
-    }
+		document.getElementById('modalText').textContent = story.textContent || '';
+	}
 }
 
 function prevStory() {
-    if (currentStoryIndex > 0) {
-        openStory(currentStoryIndex - 1);
-    }
+	if (currentStoryIndex > 0) {
+		openStory(currentStoryIndex - 1);
+	}
 }
 
 // Hàm chuyển đến câu chuyện tiếp theo
 function nextStory() {
-    if (currentStoryIndex < stories.length - 1) {
-        openStory(currentStoryIndex + 1);
-    }
+	if (currentStoryIndex < stories.length - 1) {
+		openStory(currentStoryIndex + 1);
+	}
 }
 
 // Hàm đóng modal khi người dùng nhấn vào nút đóng
 function closeStory() {
-    const modal = document.getElementById('storyModal');
-    modal.style.display = 'none';
+	const modal = document.getElementById('storyModal');
+	modal.style.display = 'none';
 
-    // Reset lại nội dung trong modal
-    document.getElementById('modalImage').src = '';
-    document.getElementById('modalVideo').src = '';
+	// Reset lại nội dung trong modal
+	document.getElementById('modalImage').src = '';
+	document.getElementById('modalVideo').src = '';
 }
 
 
 function showPopup() {
-    document.getElementById('popupOverlay').style.display = 'block';
+	document.getElementById('popupOverlay').style.display = 'block';
 }
 
 function hidePopup() {
-    document.getElementById('popupOverlay').style.display = 'none';
+	document.getElementById('popupOverlay').style.display = 'none';
 }
 
 function toggleStoryType() {
-    const textStory = document.getElementById('textStory');
-    const mediaStory = document.getElementById('mediaStory');
-    const storyType = document.querySelector('input[name="storyType"]:checked').value;
+	const textStory = document.getElementById('textStory');
+	const mediaStory = document.getElementById('mediaStory');
+	const storyType = document.querySelector('input[name="storyType"]:checked').value;
 
-    if (storyType === 'text') {
-        textStory.style.display = 'block';
-        mediaStory.style.display = 'none';
-    } else if (storyType === 'media') {
-        textStory.style.display = 'none';
-        mediaStory.style.display = 'block';
-    }
+	if (storyType === 'text') {
+		textStory.style.display = 'block';
+		mediaStory.style.display = 'none';
+	} else if (storyType === 'media') {
+		textStory.style.display = 'none';
+		mediaStory.style.display = 'block';
+	}
 }
 
 function previewMedia(event) {
-    const file = event.target.files[0];
-    const previewContainer = document.getElementById('previewContainer');
-    const imagePreview = document.getElementById('imagePreview');
-    const videoPreview = document.getElementById('videoPreview');
+	const file = event.target.files[0];
+	const previewContainer = document.getElementById('previewContainer');
+	const imagePreview = document.getElementById('imagePreview');
+	const videoPreview = document.getElementById('videoPreview');
 
-    imagePreview.style.display = 'none';
-    videoPreview.style.display = 'none';
+	imagePreview.style.display = 'none';
+	videoPreview.style.display = 'none';
 
-    if (file) {
-        const fileType = file.type;
+	if (file) {
+		const fileType = file.type;
 
-        const fileURL = URL.createObjectURL(file);
+		const fileURL = URL.createObjectURL(file);
 
-        if (fileType.startsWith('image')) {
-            imagePreview.src = fileURL;
-            imagePreview.style.display = 'block';
-        } else if (fileType.startsWith('video')) {
-            videoPreview.src = fileURL;
-            videoPreview.style.display = 'block';
-        } else {
-            alert('File không hợp lệ. Vui lòng chọn hình ảnh hoặc video.');
-            event.target.value = '';
-        }
-    }
+		if (fileType.startsWith('image')) {
+			imagePreview.src = fileURL;
+			imagePreview.style.display = 'block';
+		} else if (fileType.startsWith('video')) {
+			videoPreview.src = fileURL;
+			videoPreview.style.display = 'block';
+		} else {
+			alert('File không hợp lệ. Vui lòng chọn hình ảnh hoặc video.');
+			event.target.value = '';
+		}
+	}
 }
 
 
+
+// Hiển thị popup
+function showPopupuser(popupId) {
+	const popup = document.getElementById(popupId);
+	popup.style.display = 'block';
+}
+
+// Đóng popup
+function closePopupuser(popupId) {
+	const popup = document.getElementById(popupId);
+	popup.style.display = 'none';
+}
+
+// Hàm để thêm danh sách người thích vào popup
+// Hàm gọi API và hiển thị danh sách người thích
+async function loadLikeListFromController(button) {
+	const postId = button.getAttribute('data-id'); // Lấy postId từ data-id của nút
+	try {
+		// Gửi request tới controller với postId làm tham số trong body
+		const response = await fetch('/user/post/likeList', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `postId=${encodeURIComponent(postId)}`  // Gửi postId trong dạng x-www-form-urlencoded
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const users = await response.json();  // Phân tích response JSON
+		console.log("Users who liked the post:", users);
+
+		// Xóa danh sách cũ nếu có
+		const likeListElement = document.getElementById('like-list');
+		likeListElement.innerHTML = '';
+
+		// Thêm từng người vào danh sách
+		users.forEach(user => {
+			const listItem = document.createElement('li');
+			
+			// Ảnh đại diện
+			const avatar = document.createElement('img');
+			avatar.src = user.avatar || '/images/default-avatar.png'; // URL ảnh đại diện
+			avatar.alt = user.name;
+			
+
+			// Tên người dùng
+			const name = document.createElement('span');
+			name.textContent = user.firstName + ' ' + user.lastName;
+
+			// Gắn các phần tử vào danh sách
+			listItem.appendChild(avatar);
+			listItem.appendChild(name);
+			likeListElement.appendChild(listItem);
+		});
+
+		// Cập nhật số lượng người thích trong tiêu đề
+		document.querySelector('#popup-like-list h3').innerHTML = `<img src="/images/love.png" alt="like"> ${users.length}`;
+
+		// Hiển thị popup
+		document.getElementById('popup-like-list').style.display = 'block';
+
+	} catch (error) {
+		console.error('Error loading like list:', error.message);
+		alert(error.message);
+	}
+}
+
+
+
+
+//modell hiển thị ảnh post
+let mediaList1 = [];
+let currentIndex1 = 0;
+
+function openModalNew(element) {
+    const modal = document.getElementById("mediaModal1");
+    const image = document.getElementById("modalImage1");
+    const video = document.getElementById("modalVideo1");
+
+    const mediaType = element.getAttribute("data-type");
+    const mediaSource = element.getAttribute("data-source");
+    currentIndex1 = parseInt(element.getAttribute("data-index"), 10);
+
+    if (mediaType === "img") {
+        image.src = mediaSource;
+        image.style.display = "block";
+        video.style.display = "none";
+    } else if (mediaType === "video") {
+        video.src = mediaSource;
+        video.style.display = "block";
+        image.style.display = "none";
+    }
+
+    modal.style.display = "flex";
+}
+
+function closeModalNew() {
+    const modal = document.getElementById("mediaModal1");
+    const image = document.getElementById("modalImage1");
+    const video = document.getElementById("modalVideo1");
+
+    modal.style.display = "none";
+    image.src = "";
+    video.src = "";
+}
+
+function navigateModalNew(direction) {
+    currentIndex1 = (currentIndex1 + direction + mediaList1.length) % mediaList1.length;
+
+    const { type, source } = mediaList1[currentIndex1];
+    openModalNew({ getAttribute: attr => attr === "data-type" ? type : source });
+}
+
+// Populate mediaList1 dynamically
+document.addEventListener("DOMContentLoaded", () => {
+    const mediaElements = document.querySelectorAll(".image-item1 img, .video-item1 video");
+    mediaList1 = Array.from(mediaElements).map(media => ({
+        type: media.tagName.toLowerCase() === "img" ? "img" : "video",
+        source: media.getAttribute("data-source"),
+        index: parseInt(media.getAttribute("data-index"), 10)
+    }));
+});

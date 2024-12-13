@@ -1,6 +1,7 @@
 package Zabook.services.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class CommentService implements ICommentService {
 	    // Tạo comment mới
 	    Comment comment = new Comment();
 	    comment.setContent(content);
-	    comment.setCreateTime(LocalDate.now());
+	    comment.setCreateTime(LocalDateTime.now());
 	    comment.setRate(rate);
 	    comment.setPost(post);
 	    comment.setUserComment(user);
