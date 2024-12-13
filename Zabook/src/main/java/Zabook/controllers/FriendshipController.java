@@ -45,6 +45,17 @@ public class FriendshipController {
 		}
 	}
 
+	// API từ chối lời mời kết bạn
+	@PutMapping("/reject/{friendshipId}")
+	public ResponseEntity<?> rejectFriendRequest(@PathVariable ObjectId friendshipId) {
+		try {
+			FriendShip friendship = friendshipService.rejectFriendRequest(friendshipId);
+			return ResponseEntity.ok(friendship);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
 	// API lấy danh sách bạn bè
 	@GetMapping("/friends/{userId}")
 	public ResponseEntity<List<User>> getFriendList(@PathVariable ObjectId userId) {
@@ -73,5 +84,44 @@ public class FriendshipController {
 		}
 		
 		return "Friends"; // Trả về tên file Friends.html
+	}
+
+	// API tìm kiếm người dùng
+	@GetMapping("/search")
+	public ResponseEntity<List<User>> searchUsers(
+			@RequestParam(required = false) String firstName,
+			@RequestParam(required = false) String lastName) {
+		try {
+			List<User> users = friendshipService.searchUsers(firstName, lastName);
+			return ResponseEntity.ok(users);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+
+	// API tìm kiếm với một từ khóa chung
+	@GetMapping("/search/keyword")
+	public ResponseEntity<List<User>> searchByKeyword(@RequestParam String keyword) {
+		try {
+			// Sử dụng cùng một từ khóa cho cả firstName và lastName
+			List<User> users = friendshipService.searchUsers(keyword, keyword);
+			return ResponseEntity.ok(users);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+
+	// API hiển thị trang tìm kiếm
+	@GetMapping("/search-page")
+	public String showSearchPage(
+			Model model,
+			@RequestParam(required = false) String keyword) {
+		
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			List<User> searchResults = friendshipService.searchUsers(keyword, keyword);
+			model.addAttribute("searchResults", searchResults);
+			model.addAttribute("keyword", keyword);
+		}
+		return "UserSearch";
 	}
 }
