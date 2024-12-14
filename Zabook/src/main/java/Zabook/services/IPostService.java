@@ -29,5 +29,7 @@ public interface IPostService {
 	List<User> getUsersWhoLiked(ObjectId postId);
 
 	public int updateReaction(ObjectId postId, String reaction);
+	
+	public Optional<Post> getPostByCommentId(ObjectId commentId);
 
 }

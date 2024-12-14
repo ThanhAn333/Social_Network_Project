@@ -128,4 +128,9 @@ public class PostService implements IPostService {
 	    return post.getLikeCount();
 	}
 
+	@Override
+	public Optional<Post> getPostByCommentId(ObjectId commentId) {
+        return postRepository.findByCommentId(commentId);
+    }
+
 }
