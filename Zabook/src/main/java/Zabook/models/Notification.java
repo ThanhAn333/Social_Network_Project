@@ -1,82 +1,69 @@
 package Zabook.models;
 
-import org.springframework.data.annotation.Id;
+import java.time.LocalDateTime;
+
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Id;
 
 @Document(collection = "notifications")
 public class Notification {
-
     @Id
-    private String id;
-    private String userId;
-    private String type;
-    private String message;
-    private boolean isRead;
-    private LocalDateTime timestamp;
-
+    private ObjectId id;
     
-    public String getId() {
-        return id;
+    private NotificationType type; // LIKE, COMMENT, SHARE, FRIEND_REQUEST
+    private String senderName;     // Tên người gửi thông báo
+    private String content;        // Nội dung thông báo
+    private String targetId;       // ID của bài viết hoặc lời mời kết bạn
+    private LocalDateTime time;
+
+    public Notification(NotificationType type, String senderName, String content, String targetId) {
+        this.type = type;
+        this.senderName = senderName;
+        this.content = content;
+        this.targetId = targetId;
+        this.time = LocalDateTime.now();
     }
 
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
-    public String getUserId() {
-        return userId;
-    }
-
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-
-    public String getType() {
+    // Getters và Setters
+    public NotificationType getType() {
         return type;
     }
 
-
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 
-
-    public String getMessage() {
-        return message;
+    public String getSenderName() {
+        return senderName;
     }
 
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
-
-    public boolean isRead() {
-        return isRead;
+    public String getContent() {
+        return content;
     }
 
-
-    public void setRead(boolean isRead) {
-        this.isRead = isRead;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getTargetId() {
+        return targetId;
     }
 
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
+    public LocalDateTime getTime() {
+        return time;
+    }
 
-    public Notification() {}
-    // Getters và Setters
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 }

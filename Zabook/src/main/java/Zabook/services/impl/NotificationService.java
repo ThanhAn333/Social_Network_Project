@@ -1,13 +1,13 @@
 package Zabook.services.impl;
 
 
-import java.time.LocalDateTime;
 
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import Zabook.models.Notification;
+import Zabook.models.NotificationType;
 import Zabook.repository.NotificationRepository;
 import Zabook.services.INotificationService;
 
@@ -21,19 +21,31 @@ public class NotificationService implements INotificationService {
     private SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void sendNotification(String userId, String type, String message) {
-        Notification notification = new Notification();
-        notification.setUserId(userId);
-        notification.setMessage(message);
-        notification.setRead(false);
-        notification.setTimestamp(LocalDateTime.now());
+    public void sendNotification(String userId, NotificationType type, String senderName, String targetId) {
+        String content = "";
 
-        // Lưu thông báo vào MongoDB
+        // Xử lý nội dung thông báo theo từng loại
+        switch (type) {
+            case LIKE:
+                content = "đã thích bài viết của bạn.";
+                break;
+            case COMMENT:
+                content = "đã bình luận về bài viết của bạn.";
+                break;
+            case SHARE:
+                content = "đã chia sẻ bài viết của bạn.";
+                break;
+            case FRIEND_REQUEST:
+                content = "đã gửi cho bạn một lời mời kết bạn.";
+                break;
+        }
+
+        // Tạo đối tượng Notification
+        Notification notification = new Notification(type, senderName, content, targetId);
         notificationRepository.save(notification);
 
-        // Đẩy thông báo thời gian thực đến client qua WebSocket
-        messagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
-        
+        // Gửi thông báo đến user
+        messagingTemplate.convertAndSendToUser(userId, "/queue/notifications", notification);
     }
 
    
