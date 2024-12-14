@@ -1,6 +1,7 @@
 package Zabook.controllers;
 
 
+import java.awt.Image;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +13,6 @@ import java.util.Map;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
+import Zabook.models.Video;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
@@ -85,7 +86,6 @@ public class UserController {
     	List<Post> posts = postService.getAllPost();
         User user = userService.getCurrentUser();
         model.addAttribute("currentuser", user);
-
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
@@ -99,7 +99,13 @@ public class UserController {
 
         User user = userService.getCurrentUser();
         List<Post> posts = postService.findByUserId(user.getUserID());
+        List<User> FriendList = userService.getFriendList(user);
+        List<Zabook.models.Image> images = userService.getImages(user);
+        List<Video> videos = userService.getVideos(user);
 
+        model.addAttribute("images", images);
+        model.addAttribute("videos", videos);
+        model.addAttribute("friendList", FriendList);
         model.addAttribute("posts", posts );
         model.addAttribute("currentuser", user);
         

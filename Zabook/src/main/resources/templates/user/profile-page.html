@@ -178,25 +178,27 @@
             <!-- Tab Content -->
             <div id="friends" class="tab-content">
                 <h3>Danh sách bạn bè</h3>
-                <ul>
-                    <li>Nguyễn Văn A</li>
-                    <li>Trần Thị B</li>
-                    <li>Phạm Văn C</li>
-                </ul>
+                <div class="friends-list">
+                    <div th:each="user : ${friendList}">
+                        <div class="friend" th:text="${user.firstName + ' ' + user.lastName}"></div>
+                    </div>
+
+                </div>
             </div>
 
             <div id="media" class="tab-content">
                 <h3>Danh sách hình ảnh & video</h3>
-                <ul>
-                    <li><img src="https://via.placeholder.com/150" alt="Hình ảnh 1"></li>
-                    <li><img src="https://via.placeholder.com/150" alt="Hình ảnh 2"></li>
-                    <li><video controls width="150">
-                            <source src="sample-video.mp4" type="video/mp4">
-                            Trình duyệt của bạn không hỗ trợ video.
-                        </video></li>
-                </ul>
+                <div class="media-list">
+                    <div th:each="image : ${images}" class="media-item">
+                        <img th:src="@{'/uploads/images/' + ${image.linkImage}}" >
+                    </div>
+                    <div th:each="video : ${videos}" class="media-item">
+                        <video th:src="@{'/uploads/images/' + ${image.linkVideo}}" >
+                    </div>
+                </div>
             </div>
         </div>
+
         <!-- /tab danh sách bạn bè -->
 
 
@@ -230,6 +232,75 @@
         <!-- script -->
 
         <script>
+            // Khi modal mở, lấy đối tượng post từ thuộc tính data-post và hiển thị nội dung
+            $('#editModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);  // Nút được nhấn
+                var post = JSON.parse(button.data('post'));  // Lấy đối tượng post từ data-post và chuyển thành đối tượng JavaScript
+
+                // Cập nhật nội dung bài viết vào modal
+                $('#content').val(post.content);
+
+                // Hiển thị hình ảnh hiện tại
+                var imageList = $('#imageList');
+                imageList.empty();  // Xóa danh sách hình ảnh cũ
+                post.images.forEach(function (image, index) {
+                    var imageElement = `
+            <div class="image-container">
+                <img src="${image}" alt="image ${index + 1}" class="img-fluid" style="max-width: 100%;"/>
+                <button type="button" class="btn btn-danger btn-sm delete-media" data-media-id="${index}">Xóa</button>
+            </div>
+        `;
+                    imageList.append(imageElement);
+                });
+
+                // Lưu đối tượng post vào modal để sử dụng sau khi chỉnh sửa
+                $('#editModal').data('post', post);
+            });
+
+            // Xử lý xóa hình ảnh khi nhấn nút "Xóa"
+            $(document).on('click', '.delete-media', function () {
+                var mediaId = $(this).data('media-id');  // Lấy media-id của hình ảnh
+                var post = $('#editModal').data('post');  // Lấy đối tượng post từ modal
+
+                // Xóa hình ảnh khỏi danh sách trong đối tượng post
+                post.images.splice(mediaId, 1);
+
+                // Cập nhật lại danh sách hình ảnh trong modal
+                var imageList = $('#imageList');
+                imageList.empty();
+                post.images.forEach(function (image, index) {
+                    var imageElement = `
+            <div class="image-container">
+                <img src="${image}" alt="image ${index + 1}" class="img-fluid" style="max-width: 100%;"/>
+                <button type="button" class="btn btn-danger btn-sm delete-media" data-media-id="${index}">Xóa</button>
+            </div>
+        `;
+                    imageList.append(imageElement);
+                });
+
+                // Cập nhật lại đối tượng post trong modal
+                $('#editModal').data('post', post);
+            });
+
+            // Lưu thay đổi khi nhấn nút "Lưu thay đổi"
+            $('#saveChanges').on('click', function () {
+                var post = $('#editModal').data('post');  // Lấy đối tượng post từ modal
+                post.content = $('#content').val();  // Lấy nội dung bài viết từ textarea
+
+                var media = $('#media')[0].files[0];  // Lấy file hình ảnh/video mới nếu có
+                if (media) {
+                    console.log('Thêm hình ảnh/video mới:', media.name);
+                }
+
+                // Gửi đối tượng post lên server (có thể sử dụng AJAX)
+                console.log('Đối tượng post sau khi chỉnh sửa:', post);
+
+                // Đóng modal sau khi lưu
+                $('#editModal').modal('hide');
+            });
+
+
+
             function toggleTab(event, tabId) {
                 const tabContent = document.getElementById(tabId);
                 const allTabContents = document.querySelectorAll('.tab-content');
@@ -472,6 +543,37 @@
                 /* Hiển thị tab khi có class active */
             }
 
+            /* Friends List */
+            .friends-list {
+                display: flex;
+                /* Sắp xếp bạn bè theo chiều ngang */
+                gap: 10px;
+                /* Khoảng cách giữa các mục */
+            }
+
+            .friend {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                text-align: center;
+            }
+
+            /* Media List */
+            .media-list {
+                display: flex;
+                /* Sắp xếp hình ảnh và video theo chiều ngang */
+                gap: 10px;
+                /* Khoảng cách giữa các mục */
+            }
+
+            .media-item {
+                padding: 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
             /* Hiệu ứng bo góc và mượt mà cho card */
             .post-section {
                 border-radius: 15px;
@@ -608,11 +710,21 @@
                         <p class="username" th:text="${currentuser.firstName + ' '+ currentuser.lastName}"></p>
                         <p class="time" th:text="${post.timeAgo}"></p>
                     </div>
-                    <form action="/user/profile/deletepost/{id}(id=${post.id})" method="post"></form>
-                    <button onclick="return confirmDelete();"
-                        style="position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer;">
-                        <i class="fas fa-trash"></i>
+                    <form th:action="@{/user/profile/deletepost/{id}(id=${post.id})}" method="post">
+                        <button onclick="return confirmDelete();"
+                            style="position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                    <button type="button"
+                        style="position: absolute; top: 5px; right: 40px; background: none; border: none; cursor: pointer;"
+                        title="Chỉnh sửa bài viết" data-toggle="modal" data-target="#editModal" data-id="${post.id}"
+                        data-post='{"id": " ${post.id}", "content": "post.content", "images : ${post.image}}'>
+                        <!-- Truyền đối tượng post -->
+                        >
+                        <i class="fas fa-edit"></i>
                     </button>
+
 
                 </div>
                 <div class="post-content">
@@ -622,12 +734,52 @@
                             alt="Post Image" class="post-image">
                     </div>
                 </div>
+                <div class="post-actions">
+                    <button><i class="fas fa-thumbs-up"></i> Thích</button>
+                    <button><i class="fas fa-comment-alt"></i> Bình luận</button>
+                    <button><i class="fas fa-share"></i> Chia sẻ</button>
+                </div>
             </div>
+
 
         </div>
     </div>
+    <!-- Modal để chỉnh sửa bài viết -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Chỉnh sửa bài viết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form chỉnh sửa nội dung bài viết -->
+                    <div class="form-group">
+                        <label for="content">Nội dung bài viết</label>
+                        <textarea class="form-control" id="content" rows="4"></textarea>
+                    </div>
 
+                    <!-- Hình ảnh hiện tại -->
+                    <div id="currentMedia">
+                        <p><strong>Hình ảnh hiện tại:</strong></p>
+                        <div id="imageList"></div>
+                    </div>
 
+                    <!-- Thêm hình ảnh hoặc video -->
+                    <div class="form-group">
+                        <label for="media">Chọn hình ảnh hoặc video</label>
+                        <input type="file" class="form-control-file" id="media" accept="image/*,video/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- modal thay đổi avatar -->
     <div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="avatarModalLabel"
         aria-hidden="true">
