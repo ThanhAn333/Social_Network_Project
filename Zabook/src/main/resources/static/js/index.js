@@ -410,7 +410,15 @@ async function loadLikeListFromController(button) {
 		// Xóa danh sách cũ nếu có
 		const likeListElement = document.getElementById('like-list');
 		likeListElement.innerHTML = '';
-
+		
+		if(!users || users.length === 0){
+			const thongbao = document.createElement('li');
+			const thongbao2 =document.createElement('span');
+			thongbao2.textContent = 'Chưa có lượt thích nào';
+			thongbao.appendChild(thongbao2);
+			likeListElement.appendChild(thongbao);
+		}
+		
 		// Thêm từng người vào danh sách
 		users.forEach(user => {
 			const listItem = document.createElement('li');
@@ -433,7 +441,7 @@ async function loadLikeListFromController(button) {
 
 		// Cập nhật số lượng người thích trong tiêu đề
 		document.querySelector('#popup-like-list h3').innerHTML = `<img src="/images/love.png" alt="like"> ${users.length}`;
-
+		
 		// Hiển thị popup
 		document.getElementById('popup-like-list').style.display = 'block';
 
@@ -497,4 +505,142 @@ document.addEventListener("DOMContentLoaded", () => {
         source: media.getAttribute("data-source"),
         index: parseInt(media.getAttribute("data-index"), 10)
     }));
+});
+
+
+
+//menu bình luận
+function toggleMenu1(button) {
+    // Tìm phần tử menu chứa trong cùng cấp của button vừa bấm
+    const menu1 = button.closest('.menu-container1').querySelector('.menu-options1');
+    
+    // Kiểm tra trạng thái hiển thị của menu và chuyển đổi
+    if (menu1.style.display === "block") {
+        menu1.style.display = "none";
+    } else {
+        menu1.style.display = "block";
+    }
+
+    // Đóng menu khi bấm ra ngoài
+    document.addEventListener('click', function(event) {
+        if (!button.closest('.menu-container1').contains(event.target)) {
+            menu1.style.display = "none";  // Ẩn menu nếu bấm ra ngoài
+        }
+    });
+}
+
+
+
+
+
+function handleDelete1(button) {
+    // Hiển thị hộp thoại xác nhận
+    const confirmDelete = confirm("Bạn có chắc chắn muốn xóa không?");
+    
+    if (confirmDelete) {
+        // Nếu người dùng chọn "OK", thực hiện hành động xóa
+        const commentId = button.id;
+        console.log("Đang xóa comment với id:", commentId);
+        
+        // Gửi yêu cầu DELETE đến server
+        fetch(`/user/comments/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // Thêm bất kỳ header nào cần thiết (ví dụ, Authorization)
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();  // Hoặc response.json() nếu trả về JSON
+            } else {
+                throw new Error('Failed to delete the comment');
+            }
+        })
+        .then(message => {
+            console.log(message);  // In ra thông báo thành công
+            alert("Bình luận đã được xóa!");
+            // Load lại trang
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Có lỗi xảy ra khi xóa bình luận!");
+        });
+    } else {
+        // Nếu người dùng chọn "Cancel", không làm gì cả
+        console.log("Hành động xóa bị hủy bỏ");
+    }
+}
+
+function handleEdit1(button) {
+    // Lấy thẻ cha gần nhất (comment-box) từ nút chỉnh sửa
+    const commentBox = button.closest(".comment-form-container");
+
+    // Lấy ID của bình luận cần chỉnh sửa
+    const commentId = button.id;
+
+    // Lấy nội dung của bình luận từ thẻ comment-content
+    const commentContent = commentBox.querySelector(".comment-content p:nth-child(2)").textContent;
+
+    // Đổ nội dung vào input
+    const contentInput = commentBox.querySelector("#contentInput");
+    contentInput.value = commentContent;
+
+    // Gắn ID bình luận vào input ẩn
+    const commentIdInput = commentBox.querySelector("#commentId");
+    commentIdInput.value = commentId;
+    
+    const menu = button.closest(".menu-options1");
+    if (menu) {
+        menu.style.display = "none"; // Hoặc sử dụng class để ẩn
+    }
+
+    // Cuộn xuống và focus vào ô nhập liệu (nếu cần)
+    contentInput.focus();
+}
+
+// Thay đổi hành động của form dựa trên việc chỉnh sửa
+document.getElementById("comment-form").addEventListener("submit", function (event) {
+    const commentId = document.getElementById("commentId").value;
+
+    if (commentId) {
+        // Nếu có ID bình luận, thực hiện chỉnh sửa
+        event.preventDefault(); // Ngăn form gửi request mặc định
+
+        const postId = document.getElementById("postId").value;
+        const content = document.getElementById("contentInput").value;
+
+        fetch(`/user/comments/${commentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                // Thêm header Authorization nếu cần
+            },
+            body: `content=${content}`,
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text(); // Hoặc response.json()
+            } else {
+                throw new Error('Failed to update comment');
+            }
+        })
+        .then(message => {
+            console.log(message); // Log kết quả trả về
+            alert("Bình luận đã được chỉnh sửa!");
+
+            // Cập nhật nội dung bình luận trực tiếp trên giao diện mà không cần load lại trang
+            const commentBox = document.querySelector(`button[id="${commentId}"]`).closest(".comment-box");
+            commentBox.querySelector(".comment-content p:nth-child(2)").textContent = content;
+
+            // Xóa giá trị input và reset input ẩn
+            document.getElementById("contentInput").value = "";
+            document.getElementById("commentId").value = "";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Có lỗi xảy ra khi chỉnh sửa bình luận!");
+        });
+    }
 });
