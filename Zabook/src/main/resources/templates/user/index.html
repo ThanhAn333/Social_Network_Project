@@ -68,6 +68,125 @@
 			cursor: pointer;
 			z-index: 1001;
 		}
+
+		.love {
+			color: black;
+			cursor: pointer;
+		}
+
+		.love.liked {
+			color: red;
+		}
+
+		#like-text {
+			cursor: pointer;
+		}
+
+
+
+
+		/* Popup container */
+		.popup-user {
+			display: none;
+			/* Ẩn popup mặc định */
+			position: fixed;
+			z-index: 1000;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 400px;
+			/* Chiều rộng cố định */
+			max-width: 90%;
+			/* Tối ưu cho màn hình nhỏ */
+			background-color: white;
+			/* Nền trắng */
+			border-radius: 10px;
+			/* Bo góc */
+			box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+			/* Đổ bóng */
+			overflow: hidden;
+			/* Ẩn phần dư thừa */
+			max-height: 80%;
+			/* Chiều cao tối đa của popup */
+			border-color: black;
+		}
+
+		/* Nội dung bên trong popup */
+		.popup-content {
+			padding: 20px;
+			/* Khoảng cách bên trong */
+			position: relative;
+			text-align: center;
+			border: #cccccc8f 1px solid;
+		}
+
+		/* Nút đóng popup */
+		#close-user-list {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 30px;
+			font-weight: bold;
+			color: #333;
+			/* Màu chữ */
+			cursor: pointer;
+			background: none;
+			border: none;
+			z-index: 1001;
+		}
+
+		/* Danh sách người thích */
+		#like-list {
+			list-style: none;
+			/* Xóa dấu đầu dòng */
+			padding: 0;
+			margin: 20px 0 0;
+			max-height: 300px;
+			/* Chiều cao tối đa cho danh sách */
+			overflow-y: auto;
+			/* Thêm thanh cuộn dọc khi nội dung quá dài */
+		}
+
+		/* Các mục trong danh sách */
+		#like-list li {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			/* Căn trái nội dung */
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+			/* Đường kẻ chia các mục */
+		}
+
+		/* Ảnh đại diện */
+		#like-list li img {
+			width: 40px;
+			/* Kích thước ảnh đại diện */
+			height: 40px;
+			object-fit: cover;
+			border-radius: 50%;
+			/* Bo tròn ảnh */
+			margin-right: 10px;
+		}
+
+		/* Tên người dùng */
+		#like-list li span {
+			flex-grow: 1;
+			text-align: left;
+			/* Căn trái tên người dùng */
+		}
+
+		/* Nút show-user-like */
+		#show-user-like {
+			background: none;
+			border-color: transparent;
+			width: 30px;
+		}
+
+		/* Đảm bảo ảnh trong popup có kích thước phù hợp */
+		.popup-user #img {
+			width: 40px;
+		}
 	</style>
 </head>
 
@@ -97,7 +216,7 @@
 				<!-- User Options -->
 				<div class="iconBox2">
 					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
-					<a href="#"><i class="fa-brands fa-facebook-messenger"></i></a>
+					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
 					<a href="#"><i class="fa-solid fa-bell"></i></a>
 					<label><img src="/images/user.jpg" alt="user"></label>
 					<a href="#"><i class="fa-solid fa-caret-down"></i></a>
@@ -130,10 +249,12 @@
 
 					<div class="pages">
 						<h4 class="mini-headign">Pages</h4>
-						<label>
-							<img src="/images/messenger.png" alt="messenger">
-							<span>messenger</span>
-						</label>
+						<a href="/user/messenger">
+                            <label style="cursor: pointer;">
+                                <img src="/images/messenger.png" alt="messenger">
+                                <span>messenger</span>
+                            </label>
+                        </a>
 						<label>
 							<img src="/images/instagram.png" alt="instagram">
 							<span>instagram</span>
@@ -200,12 +321,14 @@
 
 								<div class="single-stories" onclick="showPopup()">
 									<label>
+
 										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
 								alt="user-avatar">
 									</label>
 									<div>
 										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
 								alt="user-avatar">
+
 										<i class="fa-solid fa-circle-plus"></i>
 										<b>Create Stories</b>
 									</div>
@@ -222,7 +345,7 @@
 											alt="story-image">
 										<p th:if="${story.textContent != null}" th:text="${story.textContent}"></p>
 										<b
-											th:text="${story.user != null ? story.getUser().getLastName() + ' ' + story.getUser().getFirstName() : 'Unknown User'}">User
+											th:text="${story.user != null ? story.getUser().getFirstName() + ' ' + story.getUser().getLastName() : 'Unknown User'}">User
 											Name</b>
 									</div>
 								</div>
@@ -236,9 +359,11 @@
 
 								<h3 class="mini-headign">Create Post</h3>
 								<div class="post-text">
-									<label>
+
+									
 										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
 								alt="user-avatar">
+
 									<input type="text-area" placeholder="What's on your mind, zahidul" name="content">
 								</div>
 
@@ -284,39 +409,37 @@
 							<div class="fb-post1">
 								<div class="fb-post1-container" data-post-id="${post.id}">
 									<div class="fb-post1-header">
-										<!-- <ul>
-											<li class="active">popular</li>
 
-											<li>recent</li>
-											<li>most view</li>
-										</ul> -->
 									</div>
 									<div class="fb-p1-main">
 										<div class="post-title">
 											<img th:src="${post.user.avatar}" alt="user picture">
 											<ul>
 												<li>
-													<h3 th:text="${post.getUser() != null ? post.getUser().getFirstName() + ' ' + post.getUser().getLastName() : 'Unknown User'}">
-    <span th:if="${post.isShared}" style="display: inline;"> - Chia sẻ bài viết</span>
-</h3>
-
-													
+													<h3>
+														<h4 style="display: inline;"
+															th:text="${post.getUser() != null ? post.getUser().getFirstName() + ' ' + post.getUser().getLastName() : 'Unknown User'}">
+														</h4>
+														<h4 style="display: inline;" th:if="${post.isShared}"> - Đã chia
+															sẻ bài viết</h4>
+													</h3>
 												</li>
+
 												<li><span th:text="${post.timeAgo}"></span></li>
 											</ul>
 
-										
-											<p th:if="${post.contentShare == null || post.contentShare.isEmpty()}" th:text="${post.content}"></p>
-<p th:if="${post.contentShare != null && !post.contentShare.isEmpty()}">
-    <span th:text="${post.contentShare}"></span>
-   
-    <span th:text="${post.content}"></span>
-</p>
 
-												
-										
-											
+											<p>
+												<span
+													th:if="${post.contentShare != null && !post.contentShare.isEmpty()}"
+													th:text="${post.contentShare}"></span><br>
+											<div class="fb-post1-header">
 
+											</div>
+											<span th:if="${post.contentShare != null && !post.contentShare.isEmpty()}"
+												class="gach"></span>
+											<span th:text="${post.content}"></span>
+											</p>
 
 										</div>
 
@@ -324,7 +447,7 @@
 											<div class="post-images1">
 												<ul>
 													<!-- Duyệt qua danh sách images và hiển thị -->
-													<li th:if="${post.image != null}"
+												<li th:if="${post.image != null}"
 														th:each="image : ${post.getImage()}">
 														<div class="image-item">
 															<!-- Kiểm tra nếu linkImage khác null -->
@@ -348,21 +471,26 @@
 													</li>
 												</ul>
 											</div>
-											<div class="post-images2">
 
-
-											</div>
 
 										</div>
 
 										<div class="like-comment">
 											<ul>
 												<li>
-													<img src="/images/love.png" alt="love">
-													<img src="/images/like.png" alt="like">
-													<!-- Số lượt like, khi bấm vào sẽ mở cửa sổ modal -->
-													<span th:text="${post.likeCount}"
-														id="likeCountSpan_${post.id}"></span>
+													<!-- Nút để mở popup -->
+
+													<button id="show-user-like" th:data-id="${post.id}"
+														onclick="loadLikeListFromController(this)">
+														<img src="/images/love.png" alt="love">
+<img src="/images/love.png" alt="love">
+													</button>
+
+													<span class="like-count" id="like-count-${post.id}"
+														data-postId="${post.id}"
+														></span>
+
+
 
 
 
@@ -376,28 +504,19 @@
 
 											<div class="post-actions">
 
-
-
-
-												<button class="btn-like" th:data-postId="${post.id}">
-
-
-													<i class="fas fa-thumbs-up"></i> Thích
-													<div class="emoji-icons">
-														<i class="fas fa-thumbs-up like"
-															onclick="selectReaction(event, this, 'Thích')"></i>
-														<i class="fas fa-heart love"
-															onclick="selectReaction(event, this, 'Yêu thích')"></i>
-														<i class="fas fa-laugh-squint haha"
-															onclick="selectReaction(event, this, 'Haha')"></i>
-														<i class="fas fa-surprise wow"
-															onclick="selectReaction(event, this, 'Wow')"></i>
-														<i class="fas fa-sad-tear sad"
-															onclick="selectReaction(event, this, 'Buồn')"></i>
-														<i class="fas fa-angry angry"
-															onclick="selectReaction(event, this, 'Phẫn nộ')"></i>
-													</div>
+												<button th:if="${post.likedUsers.contains(user)}"
+													data-updateLike="#like-count-${post.id}" class="btn-like"
+													th:data-postId="${post.id}" onclick="toggleLike(this)">
+													<i class="fas fa-heart love liked"></i>
+													<span id="like-text" style="color: red;"> Đã Thích</span>
 												</button>
+												<button th:if="${!post.likedUsers.contains(user)}"
+													data-updateLike="#like-count-${post.id}" class="btn-like"
+													th:data-postId="${post.id}" onclick="toggleLike(this)">
+													<i class="fas fa-heart love"></i>
+													<span id="like-text">Thích</span>
+												</button>
+
 
 												<button class="btn-comment" onclick="toggleCommentForm(this)"><i
 														class="fas fa-comment-alt"></i> Bình
@@ -433,7 +552,8 @@
 														</div>
 														<div class="share-actions">
 															<form action="/user/post/share" method="post">
-																<p id="share-postid" name="postId" style="display: none;"></p>
+																<p id="share-postid" name="postId"
+																	style="display: none;"></p>
 																<input type="hidden" name="postId"
 																	id="share-postid-input">
 																<button class="btn-send">
@@ -464,11 +584,10 @@
 																<p><strong
 																		th:text="${comment.userComment.firstName + ' ' + comment.userComment.lastName}"></strong>
 																</p>
-																<p th:text="${comment.content}">Miền cực lạc đâu</p>
+																<p th:text="${comment.content}"></p>
 																<div class="comment-actions">
-																	<span id="commentTime"
-																		th:text="${comment.createTime}"></span>
-																	<span id="elapsedTime"></span>
+																	<span th:text="${comment.getTimeAgo()}"></span>
+
 
 																	<button class="buttoncomment">Thích</button>
 																</div>
@@ -501,9 +620,27 @@
 								</div>
 							</div>
 						</div>
+
+
+
+
 					</div> <!-- home center wrapper end -->
 				</div> <!-- home center end -->
 
+
+				<!-- Popup hiển thị danh sách người thích -->
+				<div id="popup-like-list" class="popup-user">
+					<div class="popup-content">
+						<span class="close-user-list" id="close-user-list"
+							onclick="closePopupuser('popup-like-list')">×</span>
+						<h3 style="text-align: center;">
+							<img src="" id="img" alt="like">
+						</h3>
+						<ul id="like-list">
+							<!-- Danh sách người thích sẽ được thêm vào đây bằng JavaScript -->
+						</ul>
+					</div>
+				</div>
 				<div class="home-right">
 					<div class="home-right-wrapper">
 
@@ -583,6 +720,17 @@
 				</div><!-- home right end -->
 
 
+<!-- form hiển thị ảnh -->
+<!-- Modal -->
+<div id="mediaModal1" class="modal1" style="display: none;">
+    <span class="close1" onclick="closeModalNew()">&times;</span>
+    <div class="modal-content1">
+        <img id="modalImage1" src="" alt="" style="display: none; max-width: 100%;">
+        <video id="modalVideo1" controls style="display: none; max-width: 100%;"></video>
+    </div>
+    <button id="prevBtn1" onclick="navigateModalNew(-1)">&#10094;</button>
+    <button id="nextBtn1" onclick="navigateModalNew(1)">&#10095;</button>
+</div>
 
 
 

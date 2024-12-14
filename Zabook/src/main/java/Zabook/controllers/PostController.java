@@ -192,89 +192,68 @@ public class PostController {
 		return "redirect:/user/";
 	}
 
-	@PostMapping("/like/")
-	public ResponseEntity<?> likePost(@RequestBody ObjectId postId) {
-		try {
-			// Tìm bài viết theo postId
-			Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
+	
 
-			post.incrementLikeCount();
-
-			postService.createPost(post);
-
-			return ResponseEntity.ok("Cảm xúc đã được gửi!");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra.");
-		}
-	}
-
-	@GetMapping("/likeList")
-	public List<User> getLikeList(@RequestParam ObjectId postId) {
+	@PostMapping("/likeList")
+	public ResponseEntity<?> getLikeList(@RequestParam String postId) {
 		// Gọi service để lấy danh sách người đã like bài viết
-		return postService.getUsersWhoLiked(postId);
+		ObjectId objectId = new ObjectId(postId);
+		List<User> users= postService.getUsersWhoLiked(objectId);
+		
+		return ResponseEntity.ok(users);
 	}
 
-	@PostMapping("/like")
-	public String likePost2(@RequestParam ObjectId postId) {
-		try {
-			// Tìm bài viết theo postId
-			Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
-
-			// Tìm người dùng (ví dụ: lấy từ SecurityContextHolder nếu bạn dùng Spring
-			// Security)
-			User currentUser = userService.getCurrentUser();
-
-			// Kiểm tra xem người dùng đã "like" bài viết này chưa
-			// if (post.getLikedUsers().contains(currentUser)) {
-			// return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bạn đã thích bài
-			// viết này.");
-			// }
-
-			// Tăng số lượng like
-			post.incrementLikeCount();
-
-			// Thêm người dùng vào danh sách người thích
-			// post.addLikedUser(currentUser);
-
-			// Lưu lại bài viết
-			postService.createPost(post);
-
-			return "redirect:/user/";
-		} catch (Exception e) {
-			return null;
-		}
-	}
 
 	@PostMapping("/updateReaction")
 	@ResponseBody
-	public ResponseEntity<?> updateReaction(@RequestParam ObjectId postId, @RequestParam String reaction) {
+	public ResponseEntity<?> updateReaction(@RequestParam String postId, @RequestParam String reaction) {
 	    try {
+	        // Convert postId từ String sang ObjectId
+	        ObjectId objectId = new ObjectId(postId);
+	        
 	        // Tìm bài viết theo postId
-	        Post post = postService.findById(postId)
+	        Post post = postService.findById(objectId)
 	                .orElseThrow(() -> new RuntimeException("Bài viết không tồn tại"));
 
 	        // Tìm người dùng hiện tại (ví dụ nếu dùng Spring Security)
 	        User currentUser = userService.getCurrentUser();
 
 	        // Kiểm tra xem người dùng đã thích bài viết này chưa
-	        if (post.getLikedUsers().contains(currentUser)) {
-	            // Trả về thông báo rằng đã thích bài viết
-	            return ResponseEntity.status(HttpStatus.CONFLICT)
-	                    .body("Bạn đã thích bài viết này rồi.");
+	        if(post.getLikedUsers()!=null) {
+	        	 if ("like".equals(reaction) && post.getLikedUsers().contains(currentUser)) {
+	 	            // Trả về thông báo rằng đã thích bài viết
+	 	            return ResponseEntity.status(HttpStatus.CONFLICT)
+	 	            		.body(Map.of(
+	                                "message", "Bạn đã thích bài viết này rồi.",
+	                                "likeCount", post.getLikeCount()
+	                        ));
+	 	        }
+	        }
+	       
+
+	        if ("like".equals(reaction)) {
+	            post.incrementLikeCount(); // Tăng số lượng like
+	            post.addLikedUser(currentUser); // Thêm người dùng vào danh sách likedUsers
+	        } else if ("unlike".equals(reaction)) {
+	            post.removeLikedUser(currentUser); // Xóa người dùng khỏi danh sách likedUsers
+	            if(post.getLikeCount()>0) {
+	            	post.decrementLikeCount(); // Giảm số lượng like
+	            }
+	            
+	        } else {
+	        	System.out.println("Lỗi like");
+	            return ResponseEntity.badRequest().body("Hành động không hợp lệ");
 	        }
 
-	        // Tăng số lượng like
-	        post.incrementLikeCount();
-
-	        // Thêm người dùng vào danh sách người thích
-	        post.addLikedUser(currentUser);
-
-	        // Lưu lại bài viết
-	        postService.createPost(post);
+	        // Lưu lại bài viết đã được cập nhật
+	        postService.createPost(post); // Đảm bảo sử dụng phương thức save hoặc update thay vì createPost
 
 	        int updatedLikeCount = post.getLikeCount();
-	        return ResponseEntity.ok(updatedLikeCount);
+	        System.out.println(updatedLikeCount);
+	        return ResponseEntity.ok(updatedLikeCount); 
+	        // Trả về số lượng like sau khi cập nhật
 	    } catch (Exception e) {
+	    	System.out.println(e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                .body("Đã xảy ra lỗi: " + e.getMessage());
 	    }
