@@ -3,6 +3,7 @@ package Zabook.services.impl;
 
 import java.security.Principal;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Random;
 
 import org.bson.types.ObjectId;
@@ -268,6 +269,11 @@ public class UserService implements IUserService {
 	    
 	    return user.getUserID();
  	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
     
 
 }

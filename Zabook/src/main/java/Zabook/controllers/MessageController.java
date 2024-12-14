@@ -29,7 +29,8 @@ public class MessageController {
 	@GetMapping("")
     public String showMessenger() {
         // Thêm logic xử lý dữ liệu nếu cần
-        return "user/messenger.html"; // Trả về trang messenger.html
+        //return "user/messenger.html"; // Trả về trang messenger.html
+		return "user/as.html"; // Trả về trang as.html
     }
 	// API gửi tin nhắn thông qua WebSocket
 	@MessageMapping("/chat")
