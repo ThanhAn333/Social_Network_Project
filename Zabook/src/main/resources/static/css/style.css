@@ -22108,6 +22108,7 @@ textarea.form-control {
     justify-content: space-between; /* Tạo khoảng cách đều giữa các mục */
     flex-wrap: wrap; /* Để các mục xuống hàng nếu không đủ chỗ */
     gap: 10px; /* Khoảng cách giữa các mục */
+    margin-top: 10px;
 }
 
 /* Căn chỉnh nút Đăng ở góc phải */
@@ -22393,4 +22394,48 @@ textarea.form-control {
     font-size: 20px;
     color: #333;
     cursor: pointer;
+}
+
+
+
+/*menu bình luận*/
+
+.menu-container1 {
+    position: relative;
+}
+
+.menu-options1 {
+    display: none;
+    position: absolute;
+    top: 35px; /* Điều chỉnh tùy theo kích thước nút */
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.menu-options1 button {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.menu-options1 button:hover {
+    background-color: #f0f0f0;
+}
+
+#popup-like-list #span2 {
+    font-size: 16px; /* Kích thước chữ */
+    color: #555; /* Màu chữ */
+    font-weight: bold; /* In đậm */
+    font-family: Arial, sans-serif;
+    text-align: center; /* Font chữ */
+       position: absolute;
+    top: 60px;
+    right: 100px;
 }

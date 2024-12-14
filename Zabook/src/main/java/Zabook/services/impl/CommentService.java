@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,23 +59,23 @@ public class CommentService implements ICommentService {
 	}
 	@Override
 	public void editComment(ObjectId commentId, ObjectId userId, String content) {
-		Comment comment = commentRepo.findById(commentId)
-	            .orElseThrow(() -> new RuntimeException("Comment not found"));
+	    // Tìm bình luận theo ID
+	    Comment comment = commentRepo.findById(commentId)
+	        .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 	    // Kiểm tra quyền của người dùng
 	    if (!comment.getUserComment().getUserID().equals(userId)) {
 	        throw new RuntimeException("You do not have permission to edit this comment");
-	    }else {
-	    	 throw new RuntimeException(userId.toString()+" - "+comment.getUserComment().getUserID() );
 	    }
 
-	    // Cập nhật nội dung và đánh giá
-	   // comment.setContent(content);
-	   // comment.setCreateTime(LocalDate.now()); // Cập nhật lại thời gian sửa
+	    // Cập nhật nội dung và thời gian chỉnh sửa
+	    comment.setContent(content);
+	    comment.setCreateTime(LocalDateTime.now());
 
-	    // Lưu lại thay đổi
-	   // commentRepo.save(comment);
+	    // Lưu thay đổi vào cơ sở dữ liệu
+	    commentRepo.save(comment);
 	}
+
 	@Override
 	public void deleteComment(ObjectId commentId, ObjectId userId) {
 		// Kiểm tra xem commentId có tồn tại trong cơ sở dữ liệu không
@@ -82,10 +83,14 @@ public class CommentService implements ICommentService {
 		    .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 		if (!comment.getUserComment().getUserID().equals(userId)) {
+			
 		    throw new RuntimeException(userId.toString()+" - "+comment.getUserComment().getUserID() );
 		}
-
-
+		Optional<Post> post1 = postRepo.findByCommentId(comment.getId());
+		Post post = post1.get();
+		post.getComment().remove(comment);
+		postRepo.save(post);
+		System.out.print(comment.getUserComment().getUserID()+" "+ userId);
 		// Xóa bình luận trong cơ sở dữ liệu
 		commentRepo.delete(comment);
 

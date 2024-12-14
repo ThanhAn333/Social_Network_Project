@@ -250,11 +250,11 @@
 					<div class="pages">
 						<h4 class="mini-headign">Pages</h4>
 						<a href="/user/messenger">
-                            <label style="cursor: pointer;">
-                                <img src="/images/messenger.png" alt="messenger">
-                                <span>messenger</span>
-                            </label>
-                        </a>
+							<label style="cursor: pointer;">
+								<img src="/images/messenger.png" alt="messenger">
+								<span>messenger</span>
+							</label>
+						</a>
 						<label>
 							<img src="/images/instagram.png" alt="instagram">
 							<span>instagram</span>
@@ -323,11 +323,11 @@
 									<label>
 
 										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
-								alt="user-avatar">
+											alt="user-avatar">
 									</label>
 									<div>
 										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
-								alt="user-avatar">
+											alt="user-avatar">
 
 										<i class="fa-solid fa-circle-plus"></i>
 										<b>Create Stories</b>
@@ -360,11 +360,11 @@
 								<h3 class="mini-headign">Create Post</h3>
 								<div class="post-text">
 
-									
-										<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
-								alt="user-avatar">
 
-									<input type="text-area" placeholder="What's on your mind, zahidul" name="content">
+									<img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/avatar.jpg'"
+										alt="user-avatar">
+
+									<input type="text-area" placeholder="Bạn đang nghĩ gì thế?" name="content">
 								</div>
 
 								<!-- Previews -->
@@ -403,224 +403,241 @@
 
 							</form>
 						</div>
+						<div id="post-container">
+							<!-- Vòng lặp hiển thị các bài viết (chỉ lấy 5 bài đầu tiên ban đầu) -->
+							<div th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 7}">
+								<div class="fb-post1">
 
-						<div th:each="post : ${posts}">
+									<div class="fb-post1-container" data-post-id="${post.id}">
+										<div class="fb-post1-header">
 
-							<div class="fb-post1">
-								<div class="fb-post1-container" data-post-id="${post.id}">
-									<div class="fb-post1-header">
+										</div>
+										<div class="fb-p1-main">
+											<div class="post-title">
+												<img th:src="${post.user.avatar}" alt="user picture">
+												<ul>
+													<li>
+														<h3>
+															<h4 style="display: inline;"
+																th:text="${post.getUser() != null ? post.getUser().getFirstName() + ' ' + post.getUser().getLastName() : 'Unknown User'}">
+															</h4>
+															<h4 style="display: inline;" th:if="${post.isShared}"> - Đã
+																chia
+																sẻ bài viết</h4>
+														</h3>
+													</li>
 
-									</div>
-									<div class="fb-p1-main">
-										<div class="post-title">
-											<img th:src="${post.user.avatar}" alt="user picture">
-											<ul>
-												<li>
-													<h3>
-														<h4 style="display: inline;"
-															th:text="${post.getUser() != null ? post.getUser().getFirstName() + ' ' + post.getUser().getLastName() : 'Unknown User'}">
-														</h4>
-														<h4 style="display: inline;" th:if="${post.isShared}"> - Đã chia
-															sẻ bài viết</h4>
-													</h3>
-												</li>
-
-												<li><span th:text="${post.timeAgo}"></span></li>
-											</ul>
+													<li><span th:text="${post.timeAgo}"></span></li>
+												</ul>
 
 
-											<p>
+												<p>
+													<span
+														th:if="${post.contentShare != null && !post.contentShare.isEmpty()}"
+														th:text="${post.contentShare}"></span><br>
+												<div class="fb-post1-header">
+
+												</div>
 												<span
 													th:if="${post.contentShare != null && !post.contentShare.isEmpty()}"
-													th:text="${post.contentShare}"></span><br>
-											<div class="fb-post1-header">
+													class="gach"></span>
+												<span th:text="${post.content}"></span>
+												</p>
 
 											</div>
-											<span th:if="${post.contentShare != null && !post.contentShare.isEmpty()}"
-												class="gach"></span>
-											<span th:text="${post.content}"></span>
-											</p>
 
-										</div>
+											<div class="post-images">
+												<div class="post-images1">
+													<ul>
+														<!-- Duyệt qua danh sách images và hiển thị -->
+														<li th:if="${post.image != null}"
+															th:each="image : ${post.getImage()}">
+															<div class="image-item">
+																<!-- Kiểm tra nếu linkImage khác null -->
 
-										<div class="post-images">
-											<div class="post-images1">
+																<img th:if="${image != null and image.linkImage != null}"
+																	th:src="@{'/uploads/images/' + ${image.linkImage}}" />
+															</div>
+														</li>
+
+
+														<li th:each="video : ${post.video}">
+															<div class="video-item">
+																<!-- Kiểm tra nếu linkVideo khác null -->
+																<video th:if="${video.linkVideo != null}"
+																	th:src="@{'/uploads/videos/' + ${video.linkVideo}}"
+																	controls width="100%" style="border-radius: 10px">
+																	Trình duyệt của bạn không hỗ trợ thẻ video.
+																</video>
+
+															</div>
+														</li>
+													</ul>
+												</div>
+
+
+											</div>
+
+											<div class="like-comment">
 												<ul>
-													<!-- Duyệt qua danh sách images và hiển thị -->
-												<li th:if="${post.image != null}"
-														th:each="image : ${post.getImage()}">
-														<div class="image-item">
-															<!-- Kiểm tra nếu linkImage khác null -->
+													<li>
+														<!-- Nút để mở popup -->
 
-															<img th:if="${image != null and image.linkImage != null}"
-																th:src="@{'/uploads/images/' + ${image.linkImage}}" />
-														</div>
+														<button id="show-user-like" th:data-id="${post.id}"
+															onclick="loadLikeListFromController(this)">
+															<img src="/images/love.png" alt="love">
+
+														</button>
+
+														<span class="like-count" id="like-count-${post.id}"
+															data-postId="${post.id}"></span>
+
+
+
+
+
 													</li>
-
-
-													<li th:each="video : ${post.video}">
-														<div class="video-item">
-															<!-- Kiểm tra nếu linkVideo khác null -->
-															<video th:if="${video.linkVideo != null}"
-																th:src="@{'/uploads/videos/' + ${video.linkVideo}}"
-																controls width="100%" style="border-radius: 10px">
-																Trình duyệt của bạn không hỗ trợ thẻ video.
-															</video>
-
-														</div>
-													</li>
+													<li> <span th:text="${post.getCommentCount()}"></span>bình luận</li>
+													<li> <span th:text="${post.shareCount}"></span>chia sẻ</li>
 												</ul>
-											</div>
+												<!--listUser-->
 
+												<!--like comment-->
 
-										</div>
+												<div class="post-actions">
 
-										<div class="like-comment">
-											<ul>
-												<li>
-													<!-- Nút để mở popup -->
-
-													<button id="show-user-like" th:data-id="${post.id}"
-														onclick="loadLikeListFromController(this)">
-														<img src="/images/love.png" alt="love">
-<img src="/images/love.png" alt="love">
+													<button th:if="${post.likedUsers.contains(user)}"
+														data-updateLike="#like-count-${post.id}" class="btn-like"
+														th:data-postId="${post.id}" onclick="toggleLike(this)">
+														<i class="fas fa-heart love liked"></i>
+														<span id="like-text" style="color: red;"> Đã Thích</span>
+													</button>
+													<button th:if="${!post.likedUsers.contains(user)}"
+														data-updateLike="#like-count-${post.id}" class="btn-like"
+														th:data-postId="${post.id}" onclick="toggleLike(this)">
+														<i class="fas fa-heart love"></i>
+														<span id="like-text">Thích</span>
 													</button>
 
-													<span class="like-count" id="like-count-${post.id}"
-														data-postId="${post.id}"
-														></span>
+
+													<button class="btn-comment" onclick="toggleCommentForm(this)"><i
+															class="fas fa-comment-alt"></i> Bình
+														luận</button>
+
+
+													<button class="btn-share" onclick="toggleSharePopup(this)"
+														th:data-user="${post.user.firstName+' '+post.user.lastName}"
+														th:data-postid="${post.id}">
+														<i class="fa-solid fa-share-from-square"></i> Chia sẻ
+													</button>
 
 
 
+													<!-- Form chia sẻ dạng Popup -->
+													<div class="share-popup" style="display: none;">
+														<div class="popup-content">
+															<span class="popup-close"
+																onclick="toggleSharePopup(this)">&times;</span>
+															<h3>Chia sẻ bài viết</h3>
+
+															<div class="share-header">
+																<img th:src="${user.avatar}" alt="User Avatar"
+																	class="user-avatar">
+																<h4 th:text="${user.firstName+' '+user.lastName}">
+																</h4>
 
 
-												</li>
-												<li> <span th:text="${post.getCommentCount()}"></span>bình luận</li>
-												<li> <span th:text="${post.shareCount}"></span>chia sẻ</li>
-											</ul>
-											<!--listUser-->
+															</div>
+															<div class="share-textarea">
+																<textarea placeholder="Bạn nghĩ gì về bài viết này?"
+																	name="content" rows="4"></textarea>
+															</div>
+															<div class="share-actions">
+																<form action="/user/post/share" method="post">
+																	<p id="share-postid" name="postId"
+																		style="display: none;"></p>
+																	<input type="hidden" name="postId"
+																		id="share-postid-input">
+																	<button class="btn-send">
+																		<i class="fas fa-arrow-right"></i> Chia sẻ
+																	</button>
+																</form>
 
-											<!--like comment-->
-
-											<div class="post-actions">
-
-												<button th:if="${post.likedUsers.contains(user)}"
-													data-updateLike="#like-count-${post.id}" class="btn-like"
-													th:data-postId="${post.id}" onclick="toggleLike(this)">
-													<i class="fas fa-heart love liked"></i>
-													<span id="like-text" style="color: red;"> Đã Thích</span>
-												</button>
-												<button th:if="${!post.likedUsers.contains(user)}"
-													data-updateLike="#like-count-${post.id}" class="btn-like"
-													th:data-postId="${post.id}" onclick="toggleLike(this)">
-													<i class="fas fa-heart love"></i>
-													<span id="like-text">Thích</span>
-												</button>
-
-
-												<button class="btn-comment" onclick="toggleCommentForm(this)"><i
-														class="fas fa-comment-alt"></i> Bình
-													luận</button>
-
-
-												<button class="btn-share" onclick="toggleSharePopup(this)"
-													th:data-user="${post.user.firstName+' '+post.user.lastName}"
-													th:data-postid="${post.id}">
-													<i class="fa-solid fa-share-from-square"></i> Chia sẻ
-												</button>
-
-
-
-												<!-- Form chia sẻ dạng Popup -->
-												<div class="share-popup" style="display: none;">
-													<div class="popup-content">
-														<span class="popup-close"
-															onclick="toggleSharePopup(this)">&times;</span>
-														<h3>Chia sẻ bài viết</h3>
-
-														<div class="share-header">
-															<img th:src="${user.avatar}" alt="User Avatar"
-																class="user-avatar">
-															<h4 th:text="${user.firstName+' '+user.lastName}">
-															</h4>
-
-
-														</div>
-														<div class="share-textarea">
-															<textarea placeholder="Bạn nghĩ gì về bài viết này?"
-																name="content" rows="4"></textarea>
-														</div>
-														<div class="share-actions">
-															<form action="/user/post/share" method="post">
-																<p id="share-postid" name="postId"
-																	style="display: none;"></p>
-																<input type="hidden" name="postId"
-																	id="share-postid-input">
-																<button class="btn-send">
-																	<i class="fas fa-arrow-right"></i> Chia sẻ
-																</button>
-															</form>
-
-															<button class="btn-cancel"
-																onclick="toggleSharePopup(this)">Hủy</button>
-														</div>
-													</div>
-												</div>
-
-											</div>
-											<!-- Form bình luận ẩn mặc định -->
-											<div class="comment-form-container" style="display: none;">
-												<div>
-													<li th:if="${#lists.isEmpty(post.comment)}">
-														<label>Chưa có bình luận nào!</label>
-													</li>
-													<li th:if="${!#lists.isEmpty(post.comment)}"
-														th:each="comment : ${post.comment}">
-														<div class="comment-box">
-															<img class="avatar"
-																th:if="${comment.userComment.avatar}!=null"
-																th:src="${comment.userComment.avatar}" alt="Avatar">
-															<div class="comment-content">
-																<p><strong
-																		th:text="${comment.userComment.firstName + ' ' + comment.userComment.lastName}"></strong>
-																</p>
-																<p th:text="${comment.content}"></p>
-																<div class="comment-actions">
-																	<span th:text="${comment.getTimeAgo()}"></span>
-
-
-																	<button class="buttoncomment">Thích</button>
-																</div>
+																<button class="btn-cancel"
+																	onclick="toggleSharePopup(this)">Hủy</button>
 															</div>
 														</div>
-													</li>
+													</div>
 
 												</div>
+												<!-- Form bình luận ẩn mặc định -->
+												<div class="comment-form-container" style="display: none;">
+													<div>
+														<li th:if="${#lists.isEmpty(post.comment)}">
+															<label>Chưa có bình luận nào!</label>
+														</li>
+														<li th:if="${!#lists.isEmpty(post.comment)}"
+															th:each="comment : ${post.comment}">
+															<div class="comment-box">
+																<img class="avatar"
+																	th:if="${comment.userComment.avatar}!=null"
+																	th:src="${comment.userComment.avatar}" alt="Avatar">
+																<div class="comment-content">
+																	<p><strong
+																			th:text="${comment.userComment.firstName + ' ' + comment.userComment.lastName}"></strong>
+																	</p>
+																	<p th:text="${comment.content}"></p>
+																	<div class="comment-actions">
+																		<span th:text="${comment.getTimeAgo()}"></span>
 
 
-												<div class="comment-bar">
-													<form action="/user/comments/add" method="post" id="comment-form">
-														<input type="hidden" id="postId" name="postId"
-															th:value="${post.id}">
-														<input type="text" id="contentInput" name="content"
-															placeholder="Viết bình luận...">
-														<button id="isendCommentBtn" type="submit">
-															<img class="img-send-comment" width="24" height="24"
-																src="https://img.icons8.com/material-rounded/24/sent.png"
-																alt="sent" />
-														</button>
-													</form>
+																		<div class="menu-container1">
+																			<button class="buttoncomment1"
+																				onclick="toggleMenu1(this)">
+																				<img width="67" height="67"
+																					src="https://img.icons8.com/external-others-inmotus-design/67/external-Menu-atm-others-inmotus-design-2.png"
+																					alt="menu" />
+																			</button>
+																			<div class="menu-options1" id="menu1">
+																				<button th:id="${comment.id}"
+																					onclick="handleEdit1(this)">Chỉnh
+																					sửa</button>
+																				<button th:id="${comment.id}"
+																					onclick="handleDelete1(this)">Xóa</button>
+																			</div>
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+														</li>
+
+													</div>
+
+
+													<div class="comment-bar">
+    <form action="/user/comments/addOrEdit" method="post" id="comment-form">
+    <input type="hidden" id="postId" name="postId" th:value="${post.id}">
+    <!-- Nếu có commentId, sử dụng giá trị của nó, nếu không để trống -->
+    <input type="hidden" id="commentId" name="commentId" th:value="${comment != null ? comment.id : ''}">
+    <input type="text" id="contentInput" name="content" th:value="${comment != null ? comment.content : ''}" placeholder="Viết bình luận...">
+    <button id="isendCommentBtn" type="submit">
+        <img class="img-send-comment" width="24" height="24"
+            src="https://img.icons8.com/material-rounded/24/sent.png" alt="sent" />
+    </button>
+</form>
+
+</div>
 
 												</div>
 
 											</div>
-
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
+						</div>
 
 
 
@@ -637,8 +654,10 @@
 							<img src="" id="img" alt="like">
 						</h3>
 						<ul id="like-list">
+
 							<!-- Danh sách người thích sẽ được thêm vào đây bằng JavaScript -->
 						</ul>
+
 					</div>
 				</div>
 				<div class="home-right">
@@ -720,17 +739,17 @@
 				</div><!-- home right end -->
 
 
-<!-- form hiển thị ảnh -->
-<!-- Modal -->
-<div id="mediaModal1" class="modal1" style="display: none;">
-    <span class="close1" onclick="closeModalNew()">&times;</span>
-    <div class="modal-content1">
-        <img id="modalImage1" src="" alt="" style="display: none; max-width: 100%;">
-        <video id="modalVideo1" controls style="display: none; max-width: 100%;"></video>
-    </div>
-    <button id="prevBtn1" onclick="navigateModalNew(-1)">&#10094;</button>
-    <button id="nextBtn1" onclick="navigateModalNew(1)">&#10095;</button>
-</div>
+				<!-- form hiển thị ảnh -->
+				<!-- Modal -->
+				<div id="mediaModal1" class="modal1" style="display: none;">
+					<span class="close1" onclick="closeModalNew()">&times;</span>
+					<div class="modal-content1">
+						<img id="modalImage1" src="" alt="" style="display: none; max-width: 100%;">
+						<video id="modalVideo1" controls style="display: none; max-width: 100%;"></video>
+					</div>
+					<button id="prevBtn1" onclick="navigateModalNew(-1)">&#10094;</button>
+					<button id="nextBtn1" onclick="navigateModalNew(1)">&#10095;</button>
+				</div>
 
 
 
@@ -764,7 +783,8 @@
 				<!-- Phần nhập nội dung văn bản -->
 				<div id="textStory" style="margin-top: 10px;">
 					<label for="textContent">Nội dung Story:</label>
-					<textarea id="textContent" name="textContent" rows="4" placeholder="Nhập nội dung..." required></textarea>
+					<textarea id="textContent" name="textContent" rows="4" placeholder="Nhập nội dung..."
+						required></textarea>
 				</div>
 
 				<!-- Phần tải lên hình ảnh hoặc video -->
@@ -829,6 +849,12 @@
 					modal.style.display = 'none'; // Ẩn modal khi trang load xong
 				}
 			});
+
+
+
+			//tải thêm post
+
+
 		</script>
 		<script src="/js/index.js"></script>
 

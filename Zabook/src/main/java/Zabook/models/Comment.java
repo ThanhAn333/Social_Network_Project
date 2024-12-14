@@ -2,6 +2,7 @@ package Zabook.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -106,5 +107,19 @@ public class Comment {
 	public String getTimeAgo() {
 	       return TimeUntil.timeAgo(createTime);
 	    }
+
+	
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o) return true;
+	    if (o == null || getClass() != o.getClass()) return false;
+	    Comment comment = (Comment) o;
+	    return id.equals(comment.id); // So sánh dựa trên id
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(id);
+	}
 
 }
