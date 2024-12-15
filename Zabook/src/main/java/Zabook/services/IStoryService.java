@@ -14,4 +14,5 @@ public interface IStoryService {
 
     public List<Story> getUserStories(ObjectId userId);
     
+    public void updateStoryStatusIfExpired();
 }

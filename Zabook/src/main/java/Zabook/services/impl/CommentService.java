@@ -50,6 +50,9 @@ public class CommentService implements ICommentService {
 	    // Lưu comment vào cơ sở dữ liệu
 	    commentRepo.save(comment);
 	   
+	    if (post.getComment() == null) {
+            post.setComment(new ArrayList<>());
+        }
 	    post.getComment().add(comment);
 	   
 
@@ -58,14 +61,14 @@ public class CommentService implements ICommentService {
 
 	}
 	@Override
-	public void editComment(ObjectId commentId, ObjectId userId, String content) {
+	public String editComment(ObjectId commentId, ObjectId userId, String content) {
 	    // Tìm bình luận theo ID
 	    Comment comment = commentRepo.findById(commentId)
 	        .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 	    // Kiểm tra quyền của người dùng
 	    if (!comment.getUserComment().getUserID().equals(userId)) {
-	        throw new RuntimeException("You do not have permission to edit this comment");
+	        return "Bạn ko thể chỉnh sửa bình luận này!";
 	    }
 
 	    // Cập nhật nội dung và thời gian chỉnh sửa
@@ -74,17 +77,18 @@ public class CommentService implements ICommentService {
 
 	    // Lưu thay đổi vào cơ sở dữ liệu
 	    commentRepo.save(comment);
+	    return "Chỉnh sửa bình luận thành công!";
 	}
 
 	@Override
-	public void deleteComment(ObjectId commentId, ObjectId userId) {
+	public String deleteComment(ObjectId commentId, ObjectId userId) {
 		// Kiểm tra xem commentId có tồn tại trong cơ sở dữ liệu không
 		Comment comment = commentRepo.findById(commentId)
 		    .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 		if (!comment.getUserComment().getUserID().equals(userId)) {
 			
-		    throw new RuntimeException(userId.toString()+" - "+comment.getUserComment().getUserID() );
+		    return "Bạn không thể xóa bình luận này!";
 		}
 		Optional<Post> post1 = postRepo.findByCommentId(comment.getId());
 		Post post = post1.get();
@@ -93,6 +97,7 @@ public class CommentService implements ICommentService {
 		System.out.print(comment.getUserComment().getUserID()+" "+ userId);
 		// Xóa bình luận trong cơ sở dữ liệu
 		commentRepo.delete(comment);
+		return "Xóa bình luận thành công!";
 
 	}
 	@Override

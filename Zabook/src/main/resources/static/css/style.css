@@ -20911,7 +20911,7 @@ header {
 	height: 60px;
 	overflow: hidden;
 	border-radius: 10px;
-	display: flex;
+	
 	align-items: center;
 	margin-bottom: 30px;
 	cursor: pointer;
@@ -20930,6 +20930,7 @@ header {
 	font-size: 16px;
 	color: var(--black);
 	text-transform: capitalize;
+	margin-top: 10px;
 }
 
 .pages,
@@ -21972,6 +21973,7 @@ textarea.form-control {
 .user-avatar {
     width: 40px;
     height: 40px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 15px;
     margin-top: 0;
@@ -22240,30 +22242,43 @@ textarea.form-control {
 	color: #000;
 }
 
+.close-btn4 {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: black;
+    font-size: 18px;
+    cursor: pointer;
+}
+
 /* CSS cho modal với vị trí góc trên bên trái */
 .story-modal {
-    position: fixed; /* Giữ modal cố định ở vị trí trên màn hình */
-    top: 20px; /* Khoảng cách từ trên xuống */
-    left: 20px; /* Khoảng cách từ trái qua */
-    width: 300px; /* Chiều rộng của modal */
-    height: auto; /* Chiều cao tự động theo nội dung */
-    background: rgba(0, 0, 0, 0.8); /* Màu nền đen mờ */
-    border-radius: 10px; /* Bo góc */
+    position: fixed; /* Cố định modal trên màn hình */
+    top: 50%; /* Dịch xuống giữa màn hình */
+    left: 50%; /* Dịch ngang vào giữa màn hình */
+    transform: translate(-50%, -50%); /* Canh giữa hoàn hảo */
+    width: 50vw; /* Chiếm 50% chiều rộng màn hình */
+    height: 70vh; /* Chiếm 70% chiều cao màn hình */
+    background: rgba(0, 0, 0, 0.9); /* Nền đen mờ */
+    border-radius: 10px; /* Bo góc nhẹ */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
-    color: #fff; /* Màu chữ trắng */
+    color: #fff; /* Chữ trắng */
     z-index: 1000; /* Hiển thị trên các phần tử khác */
     display: none; /* Ẩn mặc định */
-    flex-direction: column; /* Hiển thị theo chiều dọc */
-    overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
-    padding: 10px;
+    flex-direction: column; /* Xếp dọc nội dung */
+    justify-content: center; /* Canh giữa theo chiều dọc */
+    align-items: center; /* Canh giữa theo chiều ngang */
+    overflow: hidden; /* Ẩn phần tràn */
+    padding: 0;
 }
+
 
 /* Cấu trúc phần đầu của story (gồm avatar, tên người dùng, và thời gian) */
 .story-header {
     display: flex;
     align-items:  flex-start;
     margin-bottom: 10px; /* Khoảng cách dưới phần avatar */
-    color: black;
+    color: white;
     position: absolute;
     top: 10px; /* Đưa lên phía trên */
     left: 10px; /* 	 sang trái */
@@ -22301,7 +22316,7 @@ textarea.form-control {
 }
 
 /* Nút đóng modal */
-.close-btn {
+.close-btn3 {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -22441,3 +22456,101 @@ textarea.form-control {
     top: 60px;
     right: 100px;
 }
+
+
+/* Wrapper chứa thông báo */
+/* Wrapper chứa thông báo */
+.notification-wrapper {
+    position: fixed; /* Đảm bảo cố định vị trí của nút chuông */
+    top: 10px; /* Khoảng cách từ trên cùng của màn hình */
+    right: 2px; /* Khoảng cách từ bên phải của màn hình */
+    z-index: 1000; /* Đảm bảo nó luôn ở trên các phần tử khác */
+}
+
+/* Nút thông báo */
+.notification-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Dropdown thông báo */
+.notification-dropdown {
+    display: none; /* Mặc định ẩn */
+    position: fixed; /* Cố định dropdown trên màn hình */
+    top: 40px; /* Khoảng cách từ trên */
+    right: 10px; /* Căn phải */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 300px;
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Hiển thị thanh cuộn nếu nội dung quá dài */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Luôn nằm trên các phần tử khác */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển đổi */
+    transform: translateY(-10px); /* Hiệu ứng khi ẩn */
+    opacity: 0; /* Ẩn bằng cách giảm độ trong suốt */
+}
+
+/* Hiển thị dropdown khi thêm class "show" */
+.notification-dropdown.show {
+    transform: translateY(0); /* Hiển thị vị trí đúng */
+    opacity: 1; /* Đặt độ trong suốt về 1 để hiển thị */
+    display: block; /* Bật hiển thị */
+	margin: 60px;
+}
+
+/* Danh sách thông báo */
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Mỗi thông báo */
+.notification-dropdown li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f9f9f9; /* Đổi màu nền khi hover */
+}
+
+
+/* Khu vực xem trước */
+#previewContainer {
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung */
+    align-items: center; /* Căn giữa dọc */
+    margin-top: 10px;
+    width: 100%; /* Đảm bảo chiều rộng 100% */
+    max-height: 300px; /* Giới hạn chiều cao */
+    overflow: hidden; /* Ẩn phần vượt quá */
+    border: 1px solid #ccc; /* Thêm viền nếu cần */
+    background-color: #f9f9f9; /* Nền sáng để dễ nhìn */
+}
+
+/* Hình ảnh xem trước */
+#imagePreview {
+    display: none; /* Ẩn mặc định */
+    max-width: 100%; /* Chiều rộng tối đa bằng container */
+    max-height: 300px; /* Chiều cao tối đa */
+    height: auto; /* Tự động điều chỉnh chiều cao theo tỷ lệ */
+    width: auto; /* Tự động điều chỉnh chiều rộng theo tỷ lệ */
+    object-fit: contain; /* Đảm bảo giữ nguyên tỷ lệ hình ảnh */
+}
+
+/* Video xem trước */
+#videoPreview {
+    display: none; /* Ẩn mặc định */
+    max-width: 100%; /* Chiều rộng tối đa bằng container */
+    max-height: 300px; /* Giới hạn chiều cao */
+    object-fit: contain; /* Giữ tỷ lệ video */
+}
+
+

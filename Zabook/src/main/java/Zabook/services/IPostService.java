@@ -12,6 +12,8 @@ public interface IPostService {
 	Post createPost(Post post) ;
     
     List<Post> getAllPost();
+    
+    public List<Post> getAllPostSortedByTime();
 	
     Post updatePost(Post post);
 	
@@ -28,7 +30,6 @@ public interface IPostService {
 	
 	List<User> getUsersWhoLiked(ObjectId postId);
 
-	public int updateReaction(ObjectId postId, String reaction);
 	
 	public Optional<Post> getPostByCommentId(ObjectId commentId);
 

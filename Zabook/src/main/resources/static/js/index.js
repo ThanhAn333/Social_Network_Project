@@ -41,7 +41,7 @@ document.getElementById("sendCommentBtn").addEventListener("click", function() {
 function toggleLike(button) {
     const heart = button.querySelector('.love');  // Lấy phần tử trái tim bên trong nút bấm
     const likeText = button.querySelector('#like-text');  // Lấy văn bản "Thích" bên trong nút bấm
-
+	const likeBox = button.closest(".like-comment");
     // Kiểm tra trạng thái của trái tim và thay đổi màu sắc
     let reactionText = '';
     if (heart.classList.contains('liked')) {
@@ -57,13 +57,9 @@ function toggleLike(button) {
     }
 
     const postId = button.getAttribute('data-postId');
-    const updateLikeSelector = button.getAttribute('data-updateLike');
 
     // Kiểm tra nếu không có giá trị `data-updateLike`
-    if (!updateLikeSelector) {
-        console.error('data-updateLike attribute is missing on button.');
-        return;
-    }
+   
 
     // Gửi yêu cầu đến API
     fetch('/user/post/updateReaction', {
@@ -83,11 +79,11 @@ function toggleLike(button) {
         console.log("Updated Like Count:", updatedLikeCount); // Debug giá trị trả về từ server
 
         // Tìm phần tử HTML chứa số lượng like của bài viết
-        const likeCountElement = document.querySelector(updateLikeSelector);
+        const likeCountElement = likeBox.querySelector('.like-count');
         if (likeCountElement) {
             likeCountElement.textContent = updatedLikeCount;  // Cập nhật số lượng like
         } else {
-            console.error(`Element with selector "${updateLikeSelector}" not found.`);
+            console.error(`err`);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -559,7 +555,7 @@ function handleDelete1(button) {
         })
         .then(message => {
             console.log(message);  // In ra thông báo thành công
-            alert("Bình luận đã được xóa!");
+           // alert(message);
             // Load lại trang
             window.location.reload();
         })
@@ -578,10 +574,10 @@ function handleEdit1(button) {
     const commentBox = button.closest(".comment-form-container");
 
     // Lấy ID của bình luận cần chỉnh sửa
-    const commentId = button.id;
+    const commentId = button.getAttribute('id');
 
     // Lấy nội dung của bình luận từ thẻ comment-content
-    const commentContent = commentBox.querySelector(".comment-content p:nth-child(2)").textContent;
+    const commentContent = button.getAttribute('data-content');
 
     // Đổ nội dung vào input
     const contentInput = commentBox.querySelector("#contentInput");
@@ -600,47 +596,121 @@ function handleEdit1(button) {
     contentInput.focus();
 }
 
-// Thay đổi hành động của form dựa trên việc chỉnh sửa
-document.getElementById("comment-form").addEventListener("submit", function (event) {
-    const commentId = document.getElementById("commentId").value;
 
-    if (commentId) {
-        // Nếu có ID bình luận, thực hiện chỉnh sửa
-        event.preventDefault(); // Ngăn form gửi request mặc định
 
-        const postId = document.getElementById("postId").value;
-        const content = document.getElementById("contentInput").value;
 
-        fetch(`/user/comments/${commentId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                // Thêm header Authorization nếu cần
-            },
-            body: `content=${content}`,
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); // Hoặc response.json()
-            } else {
-                throw new Error('Failed to update comment');
-            }
-        })
-        .then(message => {
-            console.log(message); // Log kết quả trả về
-            alert("Bình luận đã được chỉnh sửa!");
 
-            // Cập nhật nội dung bình luận trực tiếp trên giao diện mà không cần load lại trang
-            const commentBox = document.querySelector(`button[id="${commentId}"]`).closest(".comment-box");
-            commentBox.querySelector(".comment-content p:nth-child(2)").textContent = content;
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationDropdown = document.getElementById("notificationDropdown");
+    const notificationList = document.getElementById("notificationList");
+    let stompClient;
 
-            // Xóa giá trị input và reset input ẩn
-            document.getElementById("contentInput").value = "";
-            document.getElementById("commentId").value = "";
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Có lỗi xảy ra khi chỉnh sửa bình luận!");
+    // Kết nối WebSocket
+    function connect() {
+        const socket = new SockJS('/ws'); // Đường dẫn WebSocket
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('WebSocket Connected: ' + frame);
+
+            // Đăng ký kênh thông báo cá nhân
+            stompClient.subscribe('/user/queue/notifications', function (notification) {
+                showNotification(JSON.parse(notification.body));
+            });
         });
     }
+
+    // Hiển thị thông báo mới
+    function showNotification(notification) {
+        const newElement = document.createElement("li");
+        newElement.innerHTML = `
+            <strong>${notification.senderName}</strong> ${notification.content} 
+            <span style="font-size: 12px; color: gray;">(${notification.time})</span>
+        `;
+        notificationList.prepend(newElement); // Thêm vào đầu danh sách
+    }
+    notificationBell.addEventListener("click", function (event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        notificationDropdown.classList.toggle("show"); // Toggle class 'show'
+    });
+
+    // Ẩn dropdown khi click ra ngoài
+    document.addEventListener("click", function (event) {
+        if (!notificationDropdown.contains(event.target) &&
+            !notificationBell.contains(event.target)) {
+            notificationDropdown.classList.remove("show");
+        }
+    });
+
+    // Kết nối WebSocket
+    connect();
 });
+
+
+document.getElementById('mediaFile').addEventListener('change', function () {
+    document.getElementById('mediaStory').style.display = 'block';
+});
+
+// Hàm xem trước hình ảnh hoặc video khi chọn file
+function previewMedia(event) {
+    var file = event.target.files[0];
+    var previewImage = document.getElementById('imagePreview');
+    var previewVideo = document.getElementById('videoPreview');
+
+    // Reset preview
+    previewImage.style.display = 'none';
+    previewVideo.style.display = 'none';
+    
+    if (file) {
+        var reader = new FileReader();
+        if (file.type.startsWith('image/')) {
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else if (file.type.startsWith('video/')) {
+            var url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewVideo.style.display = 'block';
+        }
+    }
+}
+
+// Hàm kiểm tra form trước khi gửi
+function validateStoryForm(event) {
+    var textContent = document.getElementById('textContent').value.trim();
+    var mediaFile = document.getElementById('mediaFile').files[0];
+
+    // Nếu có chọn tệp hình ảnh hoặc video thì không cần kiểm tra nội dung
+    if (!mediaFile && textContent === "") {
+        alert("Vui lòng nhập nội dung story hoặc tải lên hình ảnh/video!");
+        event.preventDefault();  // Ngừng gửi form nếu không có nội dung hoặc tệp
+        return false;
+    }
+    
+    return true;
+}
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const showFormButton = document.getElementById("showFormButton5");
+    const formContainer = document.getElementById("formContainer5");
+    const closeFormButton = document.getElementById("closeFormButton5");
+
+    // Hiển thị form khi bấm vào thẻ A
+    showFormButton.addEventListener("click", () => {
+        formContainer.style.display = "block";
+    });
+
+    // Ẩn form khi bấm nút Đóng
+    closeFormButton.addEventListener("click", () => {
+        formContainer.style.display = "none";
+    });
+});
+

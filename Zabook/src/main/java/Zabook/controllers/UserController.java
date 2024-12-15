@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import Zabook.dto.FriendshipStatus;
+import Zabook.models.Notification;
 import Zabook.dto.UserDTO;
 import Zabook.models.FriendShip;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
+import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
@@ -52,6 +53,9 @@ public class UserController {
     
     @Autowired
 	private FriendshipService friendshipService;
+
+    @Autowired
+    private INotificationService notificationService;
 
 	// Inject service thông qua constructor
 	public UserController(CommentService commentService, UserService userService,IPostService postService) {
@@ -91,14 +95,19 @@ public class UserController {
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
     	User user = userService.getCurrentUser();
-    	List<Post> posts = postService.getAllPost();
+    	List<Post> posts = postService.getAllPostSortedByTime();
         model.addAttribute("currentuser", user);
 
+        storyService.updateStoryStatusIfExpired();
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
     	model.addAttribute("user",user);
+
+
+        List<Notification> notifications = notificationService.getNotifications(userId.toString()); 
+        model.addAttribute("notifications", notifications);
         return "user/index";
     }
 

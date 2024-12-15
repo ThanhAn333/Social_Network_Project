@@ -1,10 +1,8 @@
 package Zabook.controllers;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.nio.file.Files;
@@ -35,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import Zabook.models.Image;
+import Zabook.models.Notification;
+import Zabook.models.NotificationType;
 import Zabook.models.Post;
 import Zabook.models.User;
 import Zabook.models.Video;
@@ -42,6 +42,7 @@ import Zabook.services.IPostService;
 import Zabook.services.IUserService;
 import Zabook.services.IVideoService;
 import Zabook.services.IImageService;
+import Zabook.services.INotificationService;
 
 @Controller
 @RequestMapping("/user/post")
@@ -56,6 +57,9 @@ public class PostController {
 	IImageService imageService;
 	@Autowired
 	IVideoService videoService;
+
+	@Autowired
+	INotificationService  notificationService;
 
 	@GetMapping("")
 	public String index() {
@@ -132,7 +136,7 @@ public class PostController {
 			}
 		}
 		newpost.setVideo(videoList); // Gán danh sách video vào bài viết
-		newpost.setLikeCount(0);
+		//newpost.setLikeCount(0);
 		newpost.setLikedUsers(new ArrayList<>());
 		// Lưu Post vào database
 		Post savedPost = postService.createPost(newpost);
@@ -230,20 +234,28 @@ public class PostController {
 	 	            return ResponseEntity.status(HttpStatus.CONFLICT)
 	 	            		.body(Map.of(
 	                                "message", "Bạn đã thích bài viết này rồi.",
-	                                "likeCount", post.getLikeCount()
+	                                "likeCount", post.getLikedUsers()
 	                        ));
 	 	        }
 	        }
 	       
 
 	        if ("like".equals(reaction)) {
-	            post.incrementLikeCount(); // Tăng số lượng like
+	            //post.incrementLikeCount(); // Tăng số lượng like
 	            post.addLikedUser(currentUser); // Thêm người dùng vào danh sách likedUsers
+				notificationService.sendNotification(
+    				post.getUser().getUserID().toString(),
+    				NotificationType.LIKE,
+    				currentUser.getLastName(),
+    				postId,
+					post.getUser().getUserID().toString()
+
+				);
 	        } else if ("unlike".equals(reaction)) {
 	            post.removeLikedUser(currentUser); // Xóa người dùng khỏi danh sách likedUsers
-	            if(post.getLikeCount()>0) {
-	            	post.decrementLikeCount(); // Giảm số lượng like
-	            }
+	            
+	            //post.decrementLikeCount(); // Giảm số lượng like
+	            
 	            
 	        } else {
 	        	System.out.println("Lỗi like");
@@ -251,9 +263,9 @@ public class PostController {
 	        }
 
 	        // Lưu lại bài viết đã được cập nhật
-	        postService.createPost(post); // Đảm bảo sử dụng phương thức save hoặc update thay vì createPost
+	        Post post2 = postService.createPost(post); // Đảm bảo sử dụng phương thức save hoặc update thay vì createPost
 
-	        int updatedLikeCount = post.getLikeCount();
+	        int updatedLikeCount = post2.getLikedUsers().size();
 	        System.out.println(updatedLikeCount);
 	        return ResponseEntity.ok(updatedLikeCount); 
 	        // Trả về số lượng like sau khi cập nhật
