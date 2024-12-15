@@ -50,8 +50,8 @@
     <script th:inline="javascript">
         
         /* Dữ liệu từ backend */
-        const senderId = /*[[${currentuser}]]*/ "";
-        const recipientId = /*[[${recipient}]]*/ "";
+        const senderId = /*[[${currentuser.userID}]]*/ "";
+        const recipientId = /*[[${recipient.userID}]]*/ "";
         console.log(senderId, recipientId);
 
         // Kết nối tới WebSocket Server
@@ -78,6 +78,7 @@
                     recipientId: recipientId,
                     content: messageText
                 };
+                
                 // Gửi tin nhắn tới backend qua WebSocket
                 stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
                 displayMessage({ content: messageText, sent: true });

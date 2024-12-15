@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.dto.UserRequest;
@@ -41,6 +42,9 @@ public interface IUserService {
 	
 	List<User> getAllUsers();
 	
+	 @PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<User> getAllUsersWithRoleUser();
 
-	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public void lockUser(String id);
 }

@@ -42,7 +42,7 @@ public class User {
 
     private boolean accounNonLocked;
 
-    private boolean enabled = false;
+    private boolean enabled;
 
     private String verificationCode;
 

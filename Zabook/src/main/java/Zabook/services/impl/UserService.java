@@ -274,6 +274,20 @@ public class UserService implements IUserService {
 	public List<User> getAllUsers() {
 		return userRepo.findAll();
 	}
+
+    @Override
+    public List<User> getAllUsersWithRoleUser() {
+        return userRepo.findByRole("USER");
+    }
+
+    @Override
+    public void lockUser(String id) {
+        User user = userRepo.findById(new ObjectId(id)).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setAccounNonLocked(false);
+
+        userRepo.save(user);
+    }
     
 
 }

@@ -2,9 +2,9 @@ package Zabook.controllers;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +44,7 @@ public class MessageController {
         return "user/messenger";
     }
     @MessageMapping("/sendMessage")
+	@SendTo("/topic/messages")
     public void handleMessage(@Payload Message message) {
         // Lưu tin nhắn vào cơ sở dữ liệu
 		if (message.getSender() == null || message.getReceiver() == null) {

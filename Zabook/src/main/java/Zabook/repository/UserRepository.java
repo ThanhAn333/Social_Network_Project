@@ -27,4 +27,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
 	// Tìm kiếm người dùng theo tên hoặc họ
 	List<User> findByFirstNameContainingOrLastNameContainingIgnoreCase(String firstName, String lastName);
+
+	List<User> findByRole(String role);
 }

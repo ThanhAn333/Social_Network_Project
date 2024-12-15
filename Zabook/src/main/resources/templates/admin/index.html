@@ -1,151 +1,168 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media - Facebook Style</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Quản trị mạng xã hội</title>
     <style>
         body {
-            background-color: #f0f2f5;
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0px;
+            padding: 0;
+            background-color: #f4f4f4;
         }
-
-        .post-container {
-            max-width: 600px;
-            margin: 0 auto;
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
         }
-
-        .post {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+        nav {
+            background-color: #444;
+            color: #fff;
             padding: 15px;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .post-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .post-header .user-details {
-            flex-grow: 1;
-        }
-
-        .post-header .username {
-            font-weight: bold;
-            margin: 0;
-            font-size: 0.95rem;
-            color: #050505;
-        }
-
-        .post-header .time {
-            font-size: 0.85rem;
-            color: #65676b;
-            margin: 0;
-        }
-
-        .post-content {
-            font-size: 0.95rem;
-            color: #050505;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .post-content img {
-            width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .post-actions {
             display: flex;
             justify-content: space-around;
-            border-top: 1px solid #e4e6eb;
-            padding-top: 10px;
-            margin-top: 10px;
         }
-
-        .post-actions button {
-            background: none;
-            border: none;
-            color: #65676b;
-            font-size: 0.9rem;
+        nav a {
+            color: #fff;
+            text-decoration: none;
             font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f4f4f4;
+        }
+        .btn {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
             cursor: pointer;
-            display: flex;
-            align-items: center;
         }
-
-        .post-actions button i {
-            margin-right: 5px;
+        .btn-danger {
+            background-color: #dc3545;
         }
-
-        .post-actions button:hover {
-            color: #1877f2;
+        .btn:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
-
-<iframe src="/user/header" style="width: 100%; "></iframe>
-
 <body>
-    <div class="post-container">
-        <!-- Bài viết 1 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">John Doe</p>
-                    <p class="time">10 phút trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Hôm nay là một ngày tuyệt vời! 🌞 Hãy cùng chia sẻ khoảnh khắc này.
-                <img src="https://via.placeholder.com/600x300" alt="Post Image">
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
+    <header>
+        <h1>Bảng điều khiển Quản trị viên</h1>
+    </header>
+    <nav>
+        <a href="#users">Quản lý người dùng</a>
+        <a href="#posts">Quản lý bài viết</a>
+        <a href="#reports">Báo cáo vi phạm</a>
+    </nav>
+    <div class="container">
+        <!-- Quản lý người dùng -->
+        <section id="users">
+            <h2>Người dùng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.getUserID()}"></td>
+                        <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.accounNonLocked ? 'Hoạt động' : 'Khóa'}"></td>
+                        <td>
+                            <form th:action="@{/admin/lockUser/{id}(id=${user.getUserID()})}" method="post">
+                                <button type="submit" class="btn">Khóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+               
+            </table>
+        </section>
 
-        <!-- Bài viết 2 -->
-        <div class="post">
-            <div class="post-header">
-                <img src="https://via.placeholder.com/40" alt="User Avatar">
-                <div class="user-details">
-                    <p class="username">Jane Smith</p>
-                    <p class="time">1 giờ trước</p>
-                </div>
-            </div>
-            <div class="post-content">
-                Đã đến lúc nghỉ ngơi và thư giãn. 💆‍♀️
-            </div>
-            <div class="post-actions">
-                <button><i class="fas fa-thumbs-up"></i> Thích</button>
-                <button><i class="fas fa-comment-alt"></i> Bình luận</button>
-                <button><i class="fas fa-share"></i> Chia sẻ</button>
-            </div>
-        </div>
+        <!-- Quản lý bài viết -->
+        <section id="posts">
+            <h2>Bài viết</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Người dùng</th>
+                        <th>Nội dung</th>
+                        <th>Ngày đăng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="post : ${posts}">
+                        <td th:text="${post.getId()}"></td>
+                        <td th:text="${post.user.firstName + ' ' + post.user.lastName}"></td>
+                        <td th:text="${post.content}"></td>
+                        <td>
+                            <img th:src="${post.image}" alt="Ảnh bài viết" style="max-width: 100px; max-height: 100px;">
+                        </td>
+                        <td th:text="${post.createdAt}"></td>
+                        
+                        <td>
+                            <button class="btn">Xóa</button>
+                        </td>
+                    </tr>
+                    <!-- Dữ liệu sẽ được load từ backend -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Báo cáo vi phạm -->
+        <section id="reports">
+            <h2>Báo cáo vi phạm</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Loại vi phạm</th>
+                        <th>Người báo cáo</th>
+                        <th>Chi tiết</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>5001</td>
+                        <td>Nội dung không phù hợp</td>
+                        <td>Nguyễn Văn B</td>
+                        <td>Người dùng đăng nội dung xúc phạm</td>
+                        <td>
+                            <button class="btn">Xem</button>
+                            <button class="btn btn-danger">Xóa</button>
+                        </td>
+                    </tr>
+                    <!-- Dữ liệu sẽ được load từ backend -->
+                </tbody>
+            </table>
+        </section>
     </div>
-
-    <!-- Bootstrap & FontAwesome -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
-
 </html>
