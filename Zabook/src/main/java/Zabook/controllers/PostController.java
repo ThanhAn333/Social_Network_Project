@@ -196,8 +196,17 @@ public class PostController {
 	@PostMapping("/share")
 	public String sharePost(@RequestParam String postId, @RequestParam String content) {
 		ObjectId postid = new ObjectId(postId);
+		Post post = postService.findById(postid).orElse(null);
 		User user = userService.getCurrentUser();
 		Post sharedPost = postService.sharePost(user.getUserID(), postid,content);
+		notificationService.sendNotification(
+    				post.getUser().getUserID().toString(),
+    				NotificationType.SHARE,
+    				user.getLastName(),
+    				postId,
+					post.getUser().getUserID().toString()
+
+				);
 		return "redirect:/user/";
 	}
 

@@ -28,4 +28,9 @@ public interface MessageRepository extends MongoRepository<Message, ObjectId>{
     @Query(value = "{$or: [{'sender': ?0}, {'receiver': ?0}]}", 
            sort = "{'timestamp': -1}")
     List<Message> findMessagesByUser(User user);
+
+    // Truy vấn lấy tất cả tin nhắn giữa người gửi và người nhận
+    List<Message> findBySenderIdAndRecipientIdOrderByTimestampAsc(String senderId, String recipientId);
+
+    
 }

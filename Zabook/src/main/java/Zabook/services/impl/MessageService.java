@@ -93,4 +93,21 @@ public class MessageService implements IMessageService {
 		return messageRepository.findFirstLatestMessageBetweenUsers(user1, user2);
 	}
 
+
+	@Override
+	public Message sendMessage(String senderId, String recipientId, String content) {
+        Message message = new Message();
+        message.setSender(new User(new ObjectId(senderId)));
+        message.setReceiver(new User(new ObjectId(recipientId)));
+        message.setContent(content);
+        message.setTimestamp(LocalDateTime.now());
+        message.setRead(false);  
+
+        return messageRepository.save(message);
+    }
+	@Override
+	public List<Message> getMessagesBetweenUsers(String senderId, String recipientId) {
+        return messageRepository.findBySenderIdAndRecipientIdOrderByTimestampAsc(senderId, recipientId);
+    }
+
 }
