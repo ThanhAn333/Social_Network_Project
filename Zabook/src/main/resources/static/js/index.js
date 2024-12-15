@@ -644,3 +644,53 @@ document.getElementById("comment-form").addEventListener("submit", function (eve
         });
     }
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationDropdown = document.getElementById("notificationDropdown");
+    const notificationList = document.getElementById("notificationList");
+    let stompClient;
+
+    // Kết nối WebSocket
+    function connect() {
+        const socket = new SockJS('/ws'); // Đường dẫn WebSocket
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('WebSocket Connected: ' + frame);
+
+            // Đăng ký kênh thông báo cá nhân
+            stompClient.subscribe('/user/queue/notifications', function (notification) {
+                showNotification(JSON.parse(notification.body));
+            });
+        });
+    }
+
+    // Hiển thị thông báo mới
+    function showNotification(notification) {
+        const newElement = document.createElement("li");
+        newElement.innerHTML = `
+            <strong>${notification.senderName}</strong> ${notification.content} 
+            <span style="font-size: 12px; color: gray;">(${notification.time})</span>
+        `;
+        notificationList.prepend(newElement); // Thêm vào đầu danh sách
+    }
+
+	function toggleNotificationDropdown() {
+        notificationDropdown.style.display = notificationDropdown.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Ẩn dropdown khi click ra ngoài
+    document.addEventListener("click", function (event) {
+        if (!notificationDropdown.contains(event.target) &&
+            !notificationBell.contains(event.target)) {
+            notificationDropdown.classList.remove("show");
+        }
+    });
+
+    // Kết nối WebSocket
+    connect();
+});
+

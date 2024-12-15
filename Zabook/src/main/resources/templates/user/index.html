@@ -188,6 +188,9 @@
 			width: 40px;
 		}
 	</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.4/stomp.min.js"></script>
 </head>
 
 <body>
@@ -217,7 +220,26 @@
 				<div class="iconBox2">
 					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
 					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
-					<a href="#"><i class="fa-solid fa-bell"></i></a>
+				
+					<div class="notification-wrapper">
+						<a href="javascript:void(0);" >
+							<i class="fa-solid fa-bell" id="notificationBell"></i>
+						</a>
+						<!-- Dropdown để hiển thị thông báo -->
+						<div id="notificationDropdown" class="notification-dropdown">
+							<ul id="notificationList">
+								<th:block th:each="notification : ${notifications}">
+									<li>
+										<span th:text="${notification.senderName}">Tên người gửi</span>
+										<span th:text="${notification.content}">Nội dung thông báo</span>
+										<span th:text="${notification.time}">Thời gian</span>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+					
+				
 					<label><img src="/images/user.jpg" alt="user"></label>
 					<a href="#"><i class="fa-solid fa-caret-down"></i></a>
 				</div>
@@ -764,7 +786,7 @@
 	<!-- home section end -->
 	<div id="popupOverlay" class="popup-overlay">
 		<div class="popup-form">
-			<span class="close-btn1" onclick="hidePopup()">&times;</span>
+			<span class="close-btn3" onclick="hidePopup()">&times;</span>
 			<h3>Tạo Story mới</h3>
 
 			<!-- Lựa chọn loại Story -->
@@ -807,7 +829,7 @@
 	</div>
 	<div>
 		<div id="storyModal" class="story-modal">
-			<span class="close-btn" onclick="closeStory()">×</span>
+			<span class="close-btn3" onclick="closeStory()">×</span>
 			<div class="story-content">
 				<!-- Thông tin người dùng: Avatar và thời gian -->
 				<div class="story-header">

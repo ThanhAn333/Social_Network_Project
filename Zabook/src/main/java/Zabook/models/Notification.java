@@ -16,13 +16,15 @@ public class Notification {
     private String senderName;     // Tên người gửi thông báo
     private String content;        // Nội dung thông báo
     private String targetId;       // ID của bài viết hoặc lời mời kết bạn
+    private String receiverId; 
     private LocalDateTime time;
 
-    public Notification(NotificationType type, String senderName, String content, String targetId) {
+    public Notification(NotificationType type, String senderName, String content, String targetId, String receiverId) {
         this.type = type;
         this.senderName = senderName;
         this.content = content;
         this.targetId = targetId;
+        this.receiverId = receiverId;
         this.time = LocalDateTime.now();
     }
 
@@ -65,5 +67,13 @@ public class Notification {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 }

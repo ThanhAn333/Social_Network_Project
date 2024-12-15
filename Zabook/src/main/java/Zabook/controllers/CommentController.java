@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import Zabook.models.Comment;
-import Zabook.models.Post;
 import Zabook.models.User;
 import Zabook.services.IPostService;
 import Zabook.services.impl.CommentService;

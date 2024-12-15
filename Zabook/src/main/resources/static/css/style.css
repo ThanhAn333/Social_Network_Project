@@ -22242,28 +22242,32 @@ textarea.form-control {
 
 /* CSS cho modal với vị trí góc trên bên trái */
 .story-modal {
-    position: fixed; /* Giữ modal cố định ở vị trí trên màn hình */
-    top: 20px; /* Khoảng cách từ trên xuống */
-    left: 20px; /* Khoảng cách từ trái qua */
-    width: 300px; /* Chiều rộng của modal */
-    height: auto; /* Chiều cao tự động theo nội dung */
-    background: rgba(0, 0, 0, 0.8); /* Màu nền đen mờ */
-    border-radius: 10px; /* Bo góc */
+    position: fixed; /* Cố định modal trên màn hình */
+    top: 50%; /* Dịch xuống giữa màn hình */
+    left: 50%; /* Dịch ngang vào giữa màn hình */
+    transform: translate(-50%, -50%); /* Canh giữa hoàn hảo */
+    width: 50vw; /* Chiếm 50% chiều rộng màn hình */
+    height: 70vh; /* Chiếm 70% chiều cao màn hình */
+    background: rgba(0, 0, 0, 0.9); /* Nền đen mờ */
+    border-radius: 10px; /* Bo góc nhẹ */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
-    color: #fff; /* Màu chữ trắng */
+    color: #fff; /* Chữ trắng */
     z-index: 1000; /* Hiển thị trên các phần tử khác */
     display: none; /* Ẩn mặc định */
-    flex-direction: column; /* Hiển thị theo chiều dọc */
-    overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
-    padding: 10px;
+    flex-direction: column; /* Xếp dọc nội dung */
+    justify-content: center; /* Canh giữa theo chiều dọc */
+    align-items: center; /* Canh giữa theo chiều ngang */
+    overflow: hidden; /* Ẩn phần tràn */
+    padding: 0;
 }
+
 
 /* Cấu trúc phần đầu của story (gồm avatar, tên người dùng, và thời gian) */
 .story-header {
     display: flex;
     align-items:  flex-start;
     margin-bottom: 10px; /* Khoảng cách dưới phần avatar */
-    color: black;
+    color: white;
     position: absolute;
     top: 10px; /* Đưa lên phía trên */
     left: 10px; /* 	 sang trái */
@@ -22301,7 +22305,7 @@ textarea.form-control {
 }
 
 /* Nút đóng modal */
-.close-btn {
+.close-btn3 {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -22438,4 +22442,50 @@ textarea.form-control {
        position: absolute;
     top: 60px;
     right: 100px;
+}
+
+
+/* Wrapper chứa thông báo */
+.notification-wrapper {
+    position: relative; /* Giữ vị trí cho dropdown */
+    display: inline-block; /* Hiển thị theo dạng inline */
+    z-index: 999999; /* Ưu tiên cao hơn */
+}
+/* Ẩn dropdown khi chưa được click */
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 99999;
+}
+
+/* Hiển thị dropdown khi click chuông thông báo */
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
+}
+
+.notification-dropdown li strong {
+    font-weight: bold;
 }

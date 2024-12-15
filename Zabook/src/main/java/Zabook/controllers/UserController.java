@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import Zabook.models.Notification;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
+import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
@@ -43,6 +45,9 @@ public class UserController {
 
     @Autowired
     private IStoryService storyService; 
+
+    @Autowired
+    private INotificationService notificationService;
 
 	// Inject service thông qua constructor
 	public UserController(CommentService commentService, UserService userService,IPostService postService) {
@@ -90,6 +95,9 @@ public class UserController {
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
     	model.addAttribute("user",user);
+
+        List<Notification> notifications = notificationService.getNotifications(userId.toString()); 
+        model.addAttribute("notifications", notifications);
         return "user/index";
     }
 
