@@ -22299,6 +22299,7 @@ textarea.form-control {
 }
 
 #modalUserName {
+	color: white;
     font-weight: bold;
     font-size: 14px; /* Kích thước chữ người dùng */
 }

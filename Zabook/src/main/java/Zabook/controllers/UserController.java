@@ -105,6 +105,25 @@ public class UserController {
         return "user/index";
     }
 
+    @GetMapping("/profile/{userId}")
+    public String viewProfile(@PathVariable ObjectId userId, Model model) {
+        // Lấy thông tin người dùng từ cơ sở dữ liệu
+    	User user1 = userService.getCurrentUser();
+        model.addAttribute("currentuser", user1);
+
+
+        List<Notification> notifications = notificationService.getNotifications(user1.toString()); 
+        model.addAttribute("notifications", notifications);
+
+        User user = userService.getUserById(userId.toString());
+        if (user == null) {
+            return "redirect:/error";  
+        }
+
+        model.addAttribute("user", user);
+        return "user/ProfileUser"; 
+    }
+
     //lâm
     @GetMapping("/profile")
     public String profile(Model model) {

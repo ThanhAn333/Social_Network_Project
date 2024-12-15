@@ -1,5 +1,7 @@
 package Zabook.controllers;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,45 +15,68 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import Zabook.models.ChatMessage;
 import Zabook.models.Message;
 import Zabook.models.User;
 import Zabook.services.IMessageService;
 import Zabook.services.IUserService;
 
-import java.util.List;
 
 @Controller
-@RequestMapping("/user/messenger")
-@CrossOrigin(origins = "*")
+@RequestMapping("/user")
 public class MessageController {
+
+	@Autowired
+	IUserService userService;
+
 	@Autowired
 	private IMessageService messageService;
-	@Autowired
-	private IUserService userService;
+	
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
-	@GetMapping("")
-	public String message(Model model) {
+
+	@GetMapping("/messenger/{userId}")
+    public String getChatPage(@PathVariable String userId, Model model) {
 		User user = userService.getCurrentUser();
-		model.addAttribute("user",user);
-		return "/user/test";
-	}
+		
+        // Lấy thông tin người nhận từ userId
+        User recipient = userService.getUserById(userId);
+		System.out.println(recipient);	
+        if (recipient == null) {
+            return "redirect:/error";
+        }
+        List<Message> messages=messageService.getMessagesBetweenUsers(user.getUserID().toString(),userId);
+        model.addAttribute("messages",messages);
+        model.addAttribute("currentuser", user);
+        model.addAttribute("recipient", recipient);
 
-	@MessageMapping("/chat.sendMessage")
-	@SendTo("/topic/public")
-	public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-		return chatMessage;
-	}
-
-	@MessageMapping("/chat.addUser")
-	@SendTo("/topic/public")
-	public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-		// Add username in web socket session
-		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-		return chatMessage;
-	}
+        return "user/messenger";
+    }
+    @MessageMapping("/sendMessage")
+    @SendTo("/topic/public")
+    public void handleMessage(@Payload Message message) {
+        // Lưu tin nhắn vào cơ sở dữ liệu
+		if (message.getSenderId() == null ) {
+			System.err.println("Sender or receiver is null.");
+			return;  // Dừng lại nếu sender hoặc receiver là null
+		}
+		System.out.print("ok");
+        Message savedMessage = messageService.sendMessage(
+                message.getSenderId(),
+				message.getRecipientId(),
+                message.getContent()
+        );
+        System.out.print("ok2");
+        // Gửi tin nhắn tới người nhận qua WebSocket
+        messagingTemplate.convertAndSendToUser(
+                message.getRecipientId(),
+                "/queue/messages",
+                savedMessage
+        );
+		//System.out.println("Received message from: " + message.getSender().getUserID());
+		//System.out.println("Message content: " +message.getContent());
+		//System.out.println("Sending to user: " + message.getReceiver().getUserID());
+    }
 
 }

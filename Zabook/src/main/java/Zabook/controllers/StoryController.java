@@ -106,5 +106,5 @@ public class StoryController {
         return "error";
     }
     }
-    
+
 }
