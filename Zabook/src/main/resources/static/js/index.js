@@ -598,7 +598,6 @@ function handleEdit1(button) {
 
 
 
-//bình luận
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -700,22 +699,18 @@ function validateStoryForm(event) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const toggle = document.getElementById("dropdownToggle");
-    const menu = document.getElementById("dropdownMenu");
+    const showFormButton = document.getElementById("showFormButton5");
+    const formContainer = document.getElementById("formContainer5");
+    const closeFormButton = document.getElementById("closeFormButton5");
 
-    toggle.addEventListener("click", () => {
-        // Kiểm tra trạng thái hiện tại của menu và đổi trạng thái
-        if (menu.style.display === "none" || menu.style.display === "") {
-            menu.style.display = "block"; // Hiển thị menu
-        } else {
-            menu.style.display = "none";  // Ẩn menu
-        }
+    // Hiển thị form khi bấm vào thẻ A
+    showFormButton.addEventListener("click", () => {
+        formContainer.style.display = "block";
     });
 
-    // Đóng menu khi click ra ngoài
-    document.addEventListener("click", (event) => {
-        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
-            menu.style.display = "none";
-        }
+    // Ẩn form khi bấm nút Đóng
+    closeFormButton.addEventListener("click", () => {
+        formContainer.style.display = "none";
     });
 });
+
