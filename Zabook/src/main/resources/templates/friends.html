@@ -314,30 +314,12 @@ body {
 				Lời mời kết bạn <span class="request-count"
 					th:text="${friendRequests != null ? friendRequests.size() : 0}">14</span>
 			</h3>
-			<!-- People you may know -->
-			<h3 class="section-title" style="margin-top: 24px;">Những người
-				bạn có thể biết</h3>
-				<div id="currentUserIdDisplay"></div>
-
-			<div class="friend-card">
-				<img src="https://picsum.photos/62" alt="Avatar"
-					class="friend-avatar">
-				<div class="friend-info">
-					<div class="friend-name">Lê Văn C</div>
-					<div class="friend-meta">4 bạn chung</div>
-				</div>
-				<div class="action-buttons">
-					<button class="btn btn-primary">Thêm bạn bè</button>
-					<button class="btn btn-secondary">Gỡ</button>
-				</div>
-			</div>
 		</div>
 	</div>
 
 	<script>
         // Lấy các phần tử cần thiết
     const currentUserId = '[[${currentuser.userID}]]';
-    document.getElementById('currentUserIdDisplay').textContent = currentUserId;
     const searchInput = document.getElementById('searchInput');
     const resultsContainer = document.getElementById('results-container');
     const loadingElement = document.querySelector('.loading');

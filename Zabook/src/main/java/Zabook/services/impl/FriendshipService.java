@@ -81,6 +81,7 @@ public class FriendshipService implements IFriendshipService {
 		User user = userRepository.findById(userId).orElseThrow();
 		return friendshipRepository.findByStatusAndUser2("pending", user);
 	}
+	
 	public List<FriendShip> getPendingRequestsSorted(ObjectId userId) {
 		User user = userRepository.findById(userId).orElseThrow();
 		List<FriendShip> pendingRequests = friendshipRepository.findByStatusAndUser2("pending", user);
