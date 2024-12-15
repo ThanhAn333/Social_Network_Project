@@ -82,9 +82,9 @@ public class PostController {
 		newpost.setCreatedAt(LocalDateTime.now());
 
 		// Lấy thông tin người dùng hiện tại
-		ObjectId userid = userService.getCurrentBuyerId(principal);
-		User user = new User();
-		user.setUserID(userid);
+		//ObjectId userid = userService.getCurrentBuyerId(principal);
+		User user = userService.getCurrentUser();
+		
 		newpost.setUser(user);
 
 		// Xác định đường dẫn đầy đủ đến thư mục static
@@ -136,7 +136,9 @@ public class PostController {
 		newpost.setLikedUsers(new ArrayList<>());
 		// Lưu Post vào database
 		Post savedPost = postService.createPost(newpost);
-
+		user.setImage(imageList);
+		user.setVideo(videoList);
+		userService.updateUser(user);
 		if (savedPost != null) {
 			
 		} else {
