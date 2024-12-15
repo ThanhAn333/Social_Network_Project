@@ -89,7 +89,7 @@ public class UserController {
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
     	User user = userService.getCurrentUser();
-    	List<Post> posts = postService.getAllPost();
+    	List<Post> posts = postService.getAllPostSortedByTime();
         model.addAttribute("currentuser", user);
 
         storyService.updateStoryStatusIfExpired();
