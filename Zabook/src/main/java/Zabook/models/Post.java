@@ -52,7 +52,6 @@ public class Post {
 	private ObjectId originalPostId; // Nếu là bài chia sẻ, lưu ID của bài gốc
     private boolean isShared;      // Đánh dấu bài viết là bài chia sẻ hay không
     private int shareCount;
-	private int likeCount;
 	
 	// Danh sách người dùng đã like bài viết
     @DBRef(lazy = false)
@@ -64,19 +63,16 @@ public class Post {
             likedUsers = new ArrayList<>();
         }
         likedUsers.add(user);
-        likeCount = likedUsers.size();  // Cập nhật số lượng like
     }
 
     // Xóa người dùng khỏi danh sách likedUsers
     public void removeLikedUser(User user) {
         if (likedUsers != null) {
             likedUsers.remove(user);
-            likeCount = likedUsers.size();  // Cập nhật số lượng like
         }
     }
-
-	public void incrementLikeCount() { this.likeCount++; }
-	public void decrementLikeCount() { this.likeCount--; }
+    
+	
 	public Post() {
 		this.createdAt = LocalDateTime.now();
 	}
