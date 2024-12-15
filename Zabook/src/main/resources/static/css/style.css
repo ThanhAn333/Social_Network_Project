@@ -21972,6 +21972,7 @@ textarea.form-control {
 .user-avatar {
     width: 40px;
     height: 40px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 15px;
     margin-top: 0;

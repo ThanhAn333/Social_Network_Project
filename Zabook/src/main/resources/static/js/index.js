@@ -41,7 +41,7 @@ document.getElementById("sendCommentBtn").addEventListener("click", function() {
 function toggleLike(button) {
     const heart = button.querySelector('.love');  // Lấy phần tử trái tim bên trong nút bấm
     const likeText = button.querySelector('#like-text');  // Lấy văn bản "Thích" bên trong nút bấm
-
+	const likeBox = button.closest(".like-comment");
     // Kiểm tra trạng thái của trái tim và thay đổi màu sắc
     let reactionText = '';
     if (heart.classList.contains('liked')) {
@@ -57,13 +57,9 @@ function toggleLike(button) {
     }
 
     const postId = button.getAttribute('data-postId');
-    const updateLikeSelector = button.getAttribute('data-updateLike');
 
     // Kiểm tra nếu không có giá trị `data-updateLike`
-    if (!updateLikeSelector) {
-        console.error('data-updateLike attribute is missing on button.');
-        return;
-    }
+   
 
     // Gửi yêu cầu đến API
     fetch('/user/post/updateReaction', {
@@ -83,11 +79,11 @@ function toggleLike(button) {
         console.log("Updated Like Count:", updatedLikeCount); // Debug giá trị trả về từ server
 
         // Tìm phần tử HTML chứa số lượng like của bài viết
-        const likeCountElement = document.querySelector(updateLikeSelector);
+        const likeCountElement = likeBox.querySelector('.like-count');
         if (likeCountElement) {
             likeCountElement.textContent = updatedLikeCount;  // Cập nhật số lượng like
         } else {
-            console.error(`Element with selector "${updateLikeSelector}" not found.`);
+            console.error(`err`);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -559,7 +555,7 @@ function handleDelete1(button) {
         })
         .then(message => {
             console.log(message);  // In ra thông báo thành công
-            alert("Bình luận đã được xóa!");
+           // alert(message);
             // Load lại trang
             window.location.reload();
         })
@@ -578,10 +574,10 @@ function handleEdit1(button) {
     const commentBox = button.closest(".comment-form-container");
 
     // Lấy ID của bình luận cần chỉnh sửa
-    const commentId = button.id;
+    const commentId = button.getAttribute('id');
 
     // Lấy nội dung của bình luận từ thẻ comment-content
-    const commentContent = commentBox.querySelector(".comment-content p:nth-child(2)").textContent;
+    const commentContent = button.getAttribute('data-content');
 
     // Đổ nội dung vào input
     const contentInput = commentBox.querySelector("#contentInput");
@@ -600,47 +596,43 @@ function handleEdit1(button) {
     contentInput.focus();
 }
 
-// Thay đổi hành động của form dựa trên việc chỉnh sửa
-document.getElementById("comment-form").addEventListener("submit", function (event) {
-    const commentId = document.getElementById("commentId").value;
 
-    if (commentId) {
-        // Nếu có ID bình luận, thực hiện chỉnh sửa
-        event.preventDefault(); // Ngăn form gửi request mặc định
 
-        const postId = document.getElementById("postId").value;
-        const content = document.getElementById("contentInput").value;
+//bình luận
+async function handleComment(button) {
+    const parentForm = button.closest('.comment-bar'); // Tìm thẻ cha
+    const postId = parentForm.querySelector('#postId').value;
+    const commentId = parentForm.querySelector('#commentId').value;
+    const content = parentForm.querySelector('#contentInput').value;
 
-        fetch(`/user/comments/${commentId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                // Thêm header Authorization nếu cần
-            },
-            body: `content=${content}`,
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); // Hoặc response.json()
-            } else {
-                throw new Error('Failed to update comment');
-            }
-        })
-        .then(message => {
-            console.log(message); // Log kết quả trả về
-            alert("Bình luận đã được chỉnh sửa!");
-
-            // Cập nhật nội dung bình luận trực tiếp trên giao diện mà không cần load lại trang
-            const commentBox = document.querySelector(`button[id="${commentId}"]`).closest(".comment-box");
-            commentBox.querySelector(".comment-content p:nth-child(2)").textContent = content;
-
-            // Xóa giá trị input và reset input ẩn
-            document.getElementById("contentInput").value = "";
-            document.getElementById("commentId").value = "";
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Có lỗi xảy ra khi chỉnh sửa bình luận!");
-        });
+    if (!content.trim()) {
+        alert('Vui lòng nhập nội dung bình luận.');
+        return;
     }
-});
+
+    try {
+        const response = await fetch('/user/comments/addOrEdit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                postId: postId,
+                commentId: commentId,
+                content: content,
+            }),
+        });
+
+        // Kiểm tra trạng thái HTTP
+        const message = await response.text(); // Lấy nội dung phản hồi từ server
+        if (response.ok) {
+           // alert(message); // Hiển thị thông báo thành công
+             window.location.reload(); // Reload trang
+        } else {
+            alert(`Lỗi: ${message}`); // Hiển thị lỗi
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Đã xảy ra lỗi khi gửi yêu cầu.');
+    }
+}

@@ -115,19 +115,7 @@ public class PostService implements IPostService {
 
 		return null;
 	}
-	@Override
-	public int updateReaction(ObjectId postId, String reaction) {
-	    Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-	    // Kiểm tra xem người dùng đã bày tỏ cảm xúc chưa
-	    if (reaction.equals("none")) {
-	        post.setLikeCount(post.getLikeCount() - 1); // Bỏ cảm xúc
-	    } else {
-	        post.setLikeCount(post.getLikeCount() + 1); // Thêm cảm xúc
-	    }
-	    postRepository.save(post);
-	    return post.getLikeCount();
-	}
-
+	
 	@Override
 	public Optional<Post> getPostByCommentId(ObjectId commentId) {
         return postRepository.findByCommentId(commentId);
