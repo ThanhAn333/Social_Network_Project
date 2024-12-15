@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-	<title>facebook.com</title>
+	<link rel="shortcut icon" href="/images/logo1.png" type="image/x-icon">
+	<title>zabook.com</title>
 	<!-- style css link -->
 	<link rel="stylesheet" href="/css/style.css">
 	<!-- fontawesome css link -->
@@ -278,18 +278,13 @@
 
 
 				
-    <a href="javascript:void(0);" id="showFormButton5">
+    <a href="javascript:void(1);" id="showFormButton5">
         <i class="fa-solid fa-caret-down"></i>
     </a>
-    <div id="formContainer5" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;">
-    <h3>Form Tùy Chọn</h3>
-    <ul>
-        <li><a href="/user/profile">Trang cá nhân</a></li>
-        <li><a href="/logout">Đăng xuất</a></li>
-    </ul>
-    <button id="closeFormButton5" style="margin-top: 10px;">Đóng</button>
-</div>
+
+
+
+
 
 
 
@@ -333,10 +328,13 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 								<span>messenger</span>
 							</label>
 						</a>
-						<label>
+						<a href="/user/messenger">
+							<label>
 							<img src="/images/instagram.png" alt="instagram">
 							<span>instagram</span>
 						</label>
+						</a>
+						
 						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
 					</div>
 
@@ -554,7 +552,7 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 
 
 													</li>
-													<li style="width: 50%;"></li>
+													<li style="width: 60%;"></li>
 													<li><span
 															th:text="${post?.getCommentCount() != null ? post.getCommentCount() : 0}"></span>bình
 														luận</li>
