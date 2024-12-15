@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.models.Comment;
 import Zabook.models.NotificationType;
@@ -61,13 +62,13 @@ public class CommentController {
 	
 	@PostMapping("/addOrEdit")
 	public String addComment(
-	        //@RequestBody Comment comment,
 	        @RequestParam("content") String content,
 	        @RequestParam("postId") String postId,
 	        @RequestParam(required = false) String commentId,
-	        Principal principal) {
-
+	        Principal principal,
+	        RedirectAttributes redirectAttributes) {  // Thêm RedirectAttributes
 	    try {
+
 	    	 if (commentId == null || commentId.isEmpty()) {
 	    		ObjectId postObjectId = new ObjectId(postId);
 	 	        Post post = postService.findById(postObjectId).orElse(null);
@@ -87,14 +88,20 @@ public class CommentController {
 	    	 }else {
 	    		 ObjectId commentid = new ObjectId(commentId);
 	    		 User user = userService.getCurrentUser();
-	    		 commentService.editComment(commentid, user.getUserID(), content);
+	    		 String tb =commentService.editComment(commentid, user.getUserID(), content);
+	    		 redirectAttributes.addFlashAttribute("message", tb);
 	    	 }
-	        
+	    	 
 	        return "redirect:/user/";
 	    } catch (Exception e) {
-	        return null;
+	        // Thêm thông báo lỗi vào RedirectAttributes nếu có exception
+	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra. Vui lòng thử lại!");
+
+	        return "redirect:/user/";
 	    }
 	}
+
+
 
 
 	@PutMapping("/{commentId}")
@@ -104,8 +111,8 @@ public class CommentController {
 	    User user = userService.getCurrentUser();
 
 	    try {
-	        commentService.editComment(commentId, user.getUserID(), content);
-	        return ResponseEntity.ok("Comment updated successfully");
+	        String tb = commentService.editComment(commentId, user.getUserID(), content);
+	        return ResponseEntity.ok(tb);
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
 	    }
@@ -119,8 +126,8 @@ public class CommentController {
 		User user = userService.getCurrentUser();
 		try {
 			
-			commentService.deleteComment(commentId1, user.getUserID());
-			return ResponseEntity.ok("Comment deleted successfully");
+			String tb = commentService.deleteComment(commentId1, user.getUserID());
+			return ResponseEntity.ok(tb);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error: " + e.getMessage());
 		}

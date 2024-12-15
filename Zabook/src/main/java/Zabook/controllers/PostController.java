@@ -136,7 +136,7 @@ public class PostController {
 			}
 		}
 		newpost.setVideo(videoList); // Gán danh sách video vào bài viết
-		newpost.setLikeCount(0);
+		//newpost.setLikeCount(0);
 		newpost.setLikedUsers(new ArrayList<>());
 		// Lưu Post vào database
 		Post savedPost = postService.createPost(newpost);
@@ -234,14 +234,14 @@ public class PostController {
 	 	            return ResponseEntity.status(HttpStatus.CONFLICT)
 	 	            		.body(Map.of(
 	                                "message", "Bạn đã thích bài viết này rồi.",
-	                                "likeCount", post.getLikeCount()
+	                                "likeCount", post.getLikedUsers()
 	                        ));
 	 	        }
 	        }
 	       
 
 	        if ("like".equals(reaction)) {
-	            post.incrementLikeCount(); // Tăng số lượng like
+	            //post.incrementLikeCount(); // Tăng số lượng like
 	            post.addLikedUser(currentUser); // Thêm người dùng vào danh sách likedUsers
 				notificationService.sendNotification(
     				post.getUser().getUserID().toString(),
@@ -253,9 +253,9 @@ public class PostController {
 				);
 	        } else if ("unlike".equals(reaction)) {
 	            post.removeLikedUser(currentUser); // Xóa người dùng khỏi danh sách likedUsers
-	            if(post.getLikeCount()>0) {
-	            	post.decrementLikeCount(); // Giảm số lượng like
-	            }
+	            
+	            //post.decrementLikeCount(); // Giảm số lượng like
+	            
 	            
 	        } else {
 	        	System.out.println("Lỗi like");
@@ -263,9 +263,9 @@ public class PostController {
 	        }
 
 	        // Lưu lại bài viết đã được cập nhật
-	        postService.createPost(post); // Đảm bảo sử dụng phương thức save hoặc update thay vì createPost
+	        Post post2 = postService.createPost(post); // Đảm bảo sử dụng phương thức save hoặc update thay vì createPost
 
-	        int updatedLikeCount = post.getLikeCount();
+	        int updatedLikeCount = post2.getLikedUsers().size();
 	        System.out.println(updatedLikeCount);
 	        return ResponseEntity.ok(updatedLikeCount); 
 	        // Trả về số lượng like sau khi cập nhật
