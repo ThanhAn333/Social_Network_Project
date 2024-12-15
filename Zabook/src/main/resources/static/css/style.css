@@ -97,7 +97,7 @@ button:focus {
 img {
 	height: auto;
 	width: 20px;
-	
+	object-fit: cover;
 }
 
 .overlap {

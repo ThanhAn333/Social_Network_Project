@@ -39,18 +39,24 @@ public class MessageController {
 	@GetMapping("/messenger/{userId}")
     public String getChatPage(@PathVariable String userId, Model model) {
 		User user = userService.getCurrentUser();
-		
+		ObjectId userID= new ObjectId(userId);
         // Lấy thông tin người nhận từ userId
         User recipient = userService.getUserById(userId);
 		System.out.println(recipient);	
         if (recipient == null) {
             return "redirect:/error";
         }
-        List<Message> messages=messageService.getMessagesBetweenUsers(user.getUserID().toString(),userId);
+        List<Message> messages=messageService.getConversation(user.getUserID(),userID);
         model.addAttribute("messages",messages);
         model.addAttribute("currentuser", user);
         model.addAttribute("recipient", recipient);
-
+        
+        for(Message mess : messages) {
+        	System.out.print(mess.getContent());
+        }
+        if(messages==null) {
+        	System.out.print("ủa");
+        }
         return "user/messenger";
     }
     @MessageMapping("/sendMessage")
