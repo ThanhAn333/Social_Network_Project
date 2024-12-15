@@ -15,7 +15,7 @@
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link href="https://cdn.jsdelivr.net/npm/@feathericons/feather@4.28.0/dist/feather.min.css" rel="stylesheet">
 	<style>
-		.story-modal {
+		.modal1 {
 			display: none;
 			/* Ẩn ban đầu */
 			position: fixed;
@@ -31,7 +31,7 @@
 			align-items: center;
 		}
 
-		.story-modal .story-content {
+		.modal1 .story-content1 {
 			position: relative;
 			width: 40%;
 			max-width: 600px;
@@ -42,14 +42,14 @@
 			text-align: center;
 		}
 
-		.story-modal img,
-		.story-modal video {
+		.modal1 img,
+		.modal1 video {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
 		}
 
-		.story-modal p {
+		.modal1 p {
 			position: absolute;
 			bottom: 10px;
 			left: 50%;
@@ -59,7 +59,7 @@
 			font-size: 18px;
 		}
 
-		.close-btn {
+		.close-btn1 {
 			position: absolute;
 			top: 20px;
 			right: 20px;
@@ -188,6 +188,9 @@
 			width: 40px;
 		}
 	</style>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.4/stomp.min.js"></script>
 </head>
 
 
@@ -231,9 +234,11 @@
 				</div>
 				<div class="searchBox">
 					<input type="search">
+
 					<a href="/friendships">
 						<i class="fas fa-search"></i>
 					</a>
+
 				</div>
 				<!-- Navigation Icons -->
 				<div class="iconBox1">
@@ -247,17 +252,48 @@
 				<div class="iconBox2">
 					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
 					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
-					<a href="#"><i class="fa-solid fa-bell"></i></a>
+					<a href="javascript:void(0);" id="notificationBell" class="notification-Bell"><i
+							class="fa-solid fa-bell"></i></a>
 					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
 							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
 							alt="user"></a>
-					<a href="#"><i class="fa-solid fa-caret-down"></i></a>
+
+					<div class="notification-wrapper">
+
+
+						<!-- Dropdown để hiển thị thông báo -->
+						<div id="notificationDropdown" class="notification-dropdown ">
+							<ul id="notificationList">
+								<th:block th:each="notification : ${notifications}">
+									<li>
+										<span th:text="${notification.senderName}">Tên người gửi</span>
+										<span th:text="${notification.content}">Nội dung thông báo</span>
+										<span th:text="${notification.time}">Thời gian</span>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+
+
+
+					<a href="javascript:void(0);" id="dropdownToggle">
+    <i class="fa-solid fa-caret-down"></i>
+</a>
+
+
 				</div>
 			</div>
 		</div>
 	</header>
 
-
+<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;" aria-labelledby="accountDropdown">
+<ul >
+    <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+    <li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+</ul>
+</div>
 	<!-- header section end -->
 	<!-- home section start -->
 
@@ -440,6 +476,7 @@
 							</form>
 						</div>
 						<div id="post-container">
+
 							<div th:each="post : ${posts}">
 								<div class="fb-post1">
 									<div class="fb-post1-container" data-post-id="${post.id}">
@@ -504,14 +541,14 @@
 															onclick="loadLikeListFromController(this)">
 															<img src="/images/love.png" alt="love">
 														</button>
-														<label class="like-count" id="like-count-${post.id}" style="padding-bottom: 5px;"
-															data-postId="${post.id}"
+														<label class="like-count" id="like-count-${post.id}"
+															style="padding-bottom: 5px;" data-postId="${post.id}"
 															th:text="${#lists.isEmpty(post.likedUsers) ? 0 : #lists.size(post.likedUsers)}"></label>
 
 
 
 													</li>
-													<li style="width: 60%;"></li>
+													<li style="width: 50%;"></li>
 													<li><span
 															th:text="${post?.getCommentCount() != null ? post.getCommentCount() : 0}"></span>bình
 														luận</li>
@@ -531,9 +568,11 @@
 														th:if="${post?.likedUsers == null || !post.likedUsers.contains(user)}"
 														data-updateLike="#like-count-${post?.id}" class="btn-like"
 														th:data-postId="${post?.id}" onclick="toggleLike(this)">
+
 														<i class="fas fa-heart love"></i>
 														<span id="like-text">Thích</span>
 													</button>
+
 
 													<button class="btn-comment" onclick="toggleCommentForm(this)"><i
 															class="fas fa-comment-alt"></i> Bình luận</button>
@@ -542,8 +581,9 @@
 														th:data-postid="${post?.id}">
 														<i class="fa-solid fa-share-from-square"></i> Chia sẻ
 													</button>
-													
-													
+
+
+
 													<!-- Form chia sẻ dạng Popup -->
 													<div class="share-popup" style="display: none;">
 														<div class="popup-content">
@@ -559,13 +599,15 @@
 
 
 															</div>
+
 															<form action="/user/post/share" method="post">
-															<div class="share-textarea">
-																<textarea placeholder="Bạn nghĩ gì về bài viết này?"
-																	name="content" rows="4"></textarea>
-															</div>
-															<div class="share-actions">
-																
+
+																<div class="share-textarea">
+																	<textarea placeholder="Bạn nghĩ gì về bài viết này?"
+																		name="content" rows="4"></textarea>
+																</div>
+																<div class="share-actions">
+
 																	<p id="share-postid" name="postId"
 																		style="display: none;"></p>
 																	<input type="hidden" name="postId"
@@ -573,16 +615,17 @@
 																	<button class="btn-send">
 																		<i class="fas fa-arrow-right"></i> Chia sẻ
 																	</button>
-																
 
-																<button class="btn-cancel"
-																	onclick="toggleSharePopup(this)">Hủy</button>
-															</div>
+
+																	<button class="btn-cancel"
+																		onclick="toggleSharePopup(this)">Hủy</button>
+																</div>
+
 															</form>
 														</div>
 													</div>
 												</div>
-				<!--form bình luận-->
+												<!--form bình luận-->
 												<div class="comment-form-container" style="display: none;">
 													<div>
 														<li
@@ -604,6 +647,7 @@
 																	<div class="comment-actions">
 																		<span
 																			th:text="${comment?.getTimeAgo() != null ? comment.getTimeAgo() : ''}"></span>
+
 																		<div class="menu-container1">
 																			<button class="buttoncomment1"
 																				onclick="toggleMenu1(this)">
@@ -617,15 +661,18 @@
 																					onclick="handleEdit1(this)">
 																					Chỉnh sửa
 																				</button>
+
 																				<button th:id="${comment.id}"
 																					onclick="handleDelete1(this)">Xóa</button>
 																			</div>
 
 																		</div>
+
 																	</div>
 																</div>
 															</div>
 														</li>
+
 													</div>
 
 													<div class="comment-bar">
@@ -646,6 +693,7 @@
 														</form>
 													</div>
 												</div>
+
 											</div>
 										</div>
 									</div>
@@ -768,7 +816,7 @@
 	<!-- home section end -->
 	<div id="popupOverlay" class="popup-overlay">
 		<div class="popup-form">
-			<span class="close-btn1" onclick="hidePopup()">&times;</span>
+			<span class="close-btn4" onclick="hidePopup()">&times;</span>
 			<h3>Tạo Story mới</h3>
 
 			<!-- Lựa chọn loại Story -->
@@ -783,7 +831,8 @@
 			</div>
 
 			<!-- Form tạo Story -->
-			<form th:action="@{/user/story/createStory}" method="post" enctype="multipart/form-data">
+			<form th:action="@{/user/story/createStory}" method="post" enctype="multipart/form-data"
+				onsubmit="return validateStoryForm(event)">
 				<!-- Phần nhập nội dung văn bản -->
 				<div id="textStory" style="margin-top: 10px;">
 					<label for="textContent">Nội dung Story:</label>
@@ -797,9 +846,9 @@
 						onchange="previewMedia(event)">
 
 					<!-- Khu vực xem trước -->
-					<div id="previewContainer" style="margin-top: 10px;">
-						<img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; display: none;">
-						<video id="videoPreview" controls style="max-width: 100%; display: none;"></video>
+					<div id="previewContainer">
+						<img id="imagePreview" src="#" alt="Image Preview">
+						<video id="videoPreview" controls></video>
 					</div>
 				</div>
 
@@ -810,7 +859,7 @@
 	</div>
 	<div>
 		<div id="storyModal" class="story-modal">
-			<span class="close-btn" onclick="closeStory()">×</span>
+			<span class="close-btn3" onclick="closeStory()">×</span>
 			<div class="story-content">
 				<!-- Thông tin người dùng: Avatar và thời gian -->
 				<div class="story-header">
@@ -829,37 +878,43 @@
 			<div class="story-nav left" onclick="prevStory()">&#10094;</div>
 			<div class="story-nav right" onclick="nextStory()">&#10095;</div>
 		</div>
+	</div>
+	<!-- JavaScript -->
+	<script th:inline="javascript">
+		let currentStoryIndex = 0;
+		let stories = /*[[${stories}]]*/[];
+		stories = stories.map(story => {
+			return {
+				avatar: story.user != null ? story.user.avatar : '/images/avatar.jpg',
+				userName: story.user != null ? story.user.lastName + ' ' + story.user.firstName : 'Unknown User',
+				time: story.timestamp || 'Unknown Time',
+				image: story.image || null,
+				video: story.video || null,
+				textContent: story.textContent || ''
+			};
+		});
 
-		<!-- JavaScript -->
-		<script th:inline="javascript">
-			let currentStoryIndex = 0;
-			let stories = /*[[${stories}]]*/[];
-			stories = stories.map(story => {
-				return {
-					avatar: story.user != null ? story.user.avatar : '/images/avatar.jpg',
-					userName: story.user != null ? story.user.lastName + ' ' + story.user.firstName : 'Unknown User',
-					time: story.timestamp || 'Unknown Time',
-					image: story.image || null,
-					video: story.video || null,
-					textContent: story.textContent || ''
-				};
-			});
+		// Đảm bảo modal được ẩn khi trang được load lại
+		document.addEventListener("DOMContentLoaded", function () {
+			const modal = document.getElementById('storyModal');
+			if (modal) {
+				modal.style.display = 'none'; // Ẩn modal khi trang load xong
+			}
+		});
+		const notificationBell = document.getElementById("notificationBell");
 
-			// Đảm bảo modal được ẩn khi trang được load lại
-			document.addEventListener("DOMContentLoaded", function () {
-				const modal = document.getElementById('storyModal');
-				if (modal) {
-					modal.style.display = 'none'; // Ẩn modal khi trang load xong
-				}
-			});
-
+		notificationBell.addEventListener("click", function (event) {
+			event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+			notificationDropdown.classList.toggle("show"); // Toggle class 'show'
+			log.console.log("Show notification dropdown");
+		});
 
 
 			//tải thêm post
 
 
-		</script>
-		<script src="/js/index.js"></script>
+	</script>
+	<script src="/js/index.js"></script>
 
 </body>
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,14 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.models.Comment;
+import Zabook.models.NotificationType;
 import Zabook.models.Post;
 import Zabook.models.User;
+import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.impl.CommentService;
 import Zabook.services.impl.UserService;
@@ -32,6 +34,9 @@ public class CommentController {
 	private final CommentService commentService;
 	UserService userService;
 	IPostService postService;
+
+	@Autowired
+	INotificationService notificationService;
 
 	// Inject service thông qua constructor
 	public CommentController(CommentService commentService, UserService userService,IPostService postService) {
@@ -63,31 +68,31 @@ public class CommentController {
 	        Principal principal,
 	        RedirectAttributes redirectAttributes) {  // Thêm RedirectAttributes
 	    try {
-	        if (commentId == null || commentId.isEmpty()) {
-	            ObjectId postObjectId = new ObjectId(postId);
-	            ObjectId userId = userService.getCurrentBuyerId(principal);
 
-	            // Gọi service để thêm bình luận
-	            commentService.addComment(postObjectId, userId, content, 0);
+	    	 if (commentId == null || commentId.isEmpty()) {
+	    		ObjectId postObjectId = new ObjectId(postId);
+	 	        Post post = postService.findById(postObjectId).orElse(null);
+	 	        User currentUser = userService.getCurrentUser();
+	 	        ObjectId userId = userService.getCurrentBuyerId(principal);	 	        
+	 	        // Gọi service để thêm bình luận
+	 	        commentService.addComment(postObjectId, userId, content, 0);
 
-	            // Thêm thông báo thành công vào RedirectAttributes
-	           // redirectAttributes.addFlashAttribute("message", "Bình luận đã được thêm thành công!");
+				notificationService.sendNotification(
+    				post.getUser().getUserID().toString(),
+    				NotificationType.COMMENT,
+    				currentUser.getLastName(),
+    				postId,
+					post.getUser().getUserID().toString()
 
-	            // Chuyển hướng về trang người dùng
-	            return "redirect:/user/";
-	        } else {
-	            ObjectId commentid = new ObjectId(commentId);
-	            User user = userService.getCurrentUser();
-
-	            // Gọi service để chỉnh sửa bình luận
-	            String tb = commentService.editComment(commentid, user.getUserID(), content);
-
-	            // Thêm thông báo thành công vào RedirectAttributes
-	            redirectAttributes.addFlashAttribute("message", tb);
-
-	            // Chuyển hướng về trang người dùng
-	            return "redirect:/user/";
-	        }
+				);
+	    	 }else {
+	    		 ObjectId commentid = new ObjectId(commentId);
+	    		 User user = userService.getCurrentUser();
+	    		 String tb =commentService.editComment(commentid, user.getUserID(), content);
+	    		 redirectAttributes.addFlashAttribute("message", tb);
+	    	 }
+	    	 
+	        return "redirect:/user/";
 	    } catch (Exception e) {
 	        // Thêm thông báo lỗi vào RedirectAttributes nếu có exception
 	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra. Vui lòng thử lại!");

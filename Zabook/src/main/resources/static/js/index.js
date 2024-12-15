@@ -599,40 +599,123 @@ function handleEdit1(button) {
 
 
 //bình luận
-async function handleComment(button) {
-    const parentForm = button.closest('.comment-bar'); // Tìm thẻ cha
-    const postId = parentForm.querySelector('#postId').value;
-    const commentId = parentForm.querySelector('#commentId').value;
-    const content = parentForm.querySelector('#contentInput').value;
 
-    if (!content.trim()) {
-        alert('Vui lòng nhập nội dung bình luận.');
-        return;
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationBell = document.getElementById("notificationBell");
+    const notificationDropdown = document.getElementById("notificationDropdown");
+    const notificationList = document.getElementById("notificationList");
+    let stompClient;
+
+    // Kết nối WebSocket
+    function connect() {
+        const socket = new SockJS('/ws'); // Đường dẫn WebSocket
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('WebSocket Connected: ' + frame);
+
+            // Đăng ký kênh thông báo cá nhân
+            stompClient.subscribe('/user/queue/notifications', function (notification) {
+                showNotification(JSON.parse(notification.body));
+            });
+        });
     }
 
-    try {
-        const response = await fetch('/user/comments/addOrEdit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                postId: postId,
-                commentId: commentId,
-                content: content,
-            }),
-        });
+    // Hiển thị thông báo mới
+    function showNotification(notification) {
+        const newElement = document.createElement("li");
+        newElement.innerHTML = `
+            <strong>${notification.senderName}</strong> ${notification.content} 
+            <span style="font-size: 12px; color: gray;">(${notification.time})</span>
+        `;
+        notificationList.prepend(newElement); // Thêm vào đầu danh sách
+    }
+    notificationBell.addEventListener("click", function (event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        notificationDropdown.classList.toggle("show"); // Toggle class 'show'
+    });
 
-        // Kiểm tra trạng thái HTTP
-        const message = await response.text(); // Lấy nội dung phản hồi từ server
-        if (response.ok) {
-           // alert(message); // Hiển thị thông báo thành công
-             window.location.reload(); // Reload trang
-        } else {
-            alert(`Lỗi: ${message}`); // Hiển thị lỗi
+    // Ẩn dropdown khi click ra ngoài
+    document.addEventListener("click", function (event) {
+        if (!notificationDropdown.contains(event.target) &&
+            !notificationBell.contains(event.target)) {
+            notificationDropdown.classList.remove("show");
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi gửi yêu cầu.');
+    });
+
+    // Kết nối WebSocket
+    connect();
+});
+
+
+document.getElementById('mediaFile').addEventListener('change', function () {
+    document.getElementById('mediaStory').style.display = 'block';
+});
+
+// Hàm xem trước hình ảnh hoặc video khi chọn file
+function previewMedia(event) {
+    var file = event.target.files[0];
+    var previewImage = document.getElementById('imagePreview');
+    var previewVideo = document.getElementById('videoPreview');
+
+    // Reset preview
+    previewImage.style.display = 'none';
+    previewVideo.style.display = 'none';
+    
+    if (file) {
+        var reader = new FileReader();
+        if (file.type.startsWith('image/')) {
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else if (file.type.startsWith('video/')) {
+            var url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewVideo.style.display = 'block';
+        }
     }
 }
+
+// Hàm kiểm tra form trước khi gửi
+function validateStoryForm(event) {
+    var textContent = document.getElementById('textContent').value.trim();
+    var mediaFile = document.getElementById('mediaFile').files[0];
+
+    // Nếu có chọn tệp hình ảnh hoặc video thì không cần kiểm tra nội dung
+    if (!mediaFile && textContent === "") {
+        alert("Vui lòng nhập nội dung story hoặc tải lên hình ảnh/video!");
+        event.preventDefault();  // Ngừng gửi form nếu không có nội dung hoặc tệp
+        return false;
+    }
+    
+    return true;
+}
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("dropdownToggle");
+    const menu = document.getElementById("dropdownMenu");
+
+    toggle.addEventListener("click", () => {
+        // Kiểm tra trạng thái hiện tại của menu và đổi trạng thái
+        if (menu.style.display === "none" || menu.style.display === "") {
+            menu.style.display = "block"; // Hiển thị menu
+        } else {
+            menu.style.display = "none";  // Ẩn menu
+        }
+    });
+
+    // Đóng menu khi click ra ngoài
+    document.addEventListener("click", (event) => {
+        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = "none";
+        }
+    });
+});
