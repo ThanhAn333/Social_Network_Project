@@ -35,6 +35,9 @@ public class Message {
 			READ
 		}
 	
+
+		public Message() {
+		}
 		private MessageStatus status = MessageStatus.SENT;
 	
 		public ObjectId getMessageId() {

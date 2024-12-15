@@ -3,314 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Nhắn Tin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* CSS tùy chỉnh giao diện nhắn tin */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: Arial, sans-serif;
         }
-
-        .messenger-container {
-            display: flex;
+        #chat-container {
             width: 100%;
-            height: 100vh;
-            background: white;
-        }
-
-        /* Cột trái - Danh sách chat */
-        .sidebar {
-            width: 360px;
-            border-right: 1px solid #e4e4e4;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 15px;
-            border-bottom: 1px solid #e4e4e4;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-box {
-            padding: 10px 15px;
-            border-bottom: 1px solid #e4e4e4;
-            position: relative;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #65676b;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 8px 15px 8px 35px;
-            border-radius: 20px;
-            border: none;
-            background: #f0f2f5;
-        }
-
-        .chat-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .chat-item {
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .chat-item:hover {
-            background: #f0f2f5;
-        }
-
-        .chat-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-            object-fit: cover;
-        }
-
-        .chat-info {
-            flex: 1;
-        }
-
-        .chat-name {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-
-        .chat-preview {
-            font-size: 13px;
-            color: #65676b;
-        }
-
-        .chat-time {
-            font-size: 12px;
-            color: #65676b;
-        }
-
-        /* Cột phải - Khung chat */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 15px;
-            border-bottom: 1px solid #e4e4e4;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-info img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .status {
-            font-size: 13px;
-            color: #65676b;
-        }
-
-        .chat-messages {
-            flex: 1;
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ccc;
             padding: 20px;
-            overflow-y: auto;
-            background: white;
         }
-
-        .message {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .message.sent {
-            justify-content: flex-end;
-        }
-
-        .message-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .message-content {
-            padding: 8px 12px;
-            border-radius: 18px;
-            max-width: 60%;
-        }
-
-        .sent .message-content {
-            background: #0084ff;
-            color: white;
-        }
-
-        .received .message-content {
-            background: #e4e6eb;
-            color: black;
-        }
-
-        .chat-input {
-            padding: 15px;
-            border-top: 1px solid #e4e4e4;
-            display: flex;
-            align-items: center;
-        }
-
-        .chat-input input {
-            flex: 1;
+        #messages {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
             padding: 10px;
-            border: none;
-            border-radius: 20px;
-            background: #f0f2f5;
-            margin: 0 10px;
+            background-color: #f9f9f9;
         }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
+        .message {
+            padding: 10px;
+            border-bottom: 1px solid #f1f1f1;
         }
-
-        .action-button {
-            padding: 8px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .action-button:hover {
-            background: #f0f2f5;
-        }
-
-        .action-button i {
-            font-size: 18px;
-            color: #0084ff;
-        }
-
-        .send-button {
-            background-color: #0084ff;
-            width: 30px;
-            height: 30px;
-            padding: 6px;
-        }
-
-        .send-button i {
-            color: white;
-            font-size: 16px;
-        }
-
-        .send-button:hover {
-            background-color: #0073e6;
+        .message.sent {
+            text-align: right;
         }
     </style>
 </head>
 <body>
-    <div class="messenger-container">
-        <!-- Cột trái -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Messenger</h2>
-                <button class="action-button">
-                    <i class="fas fa-edit"></i>
-                </button>
-            </div>
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" placeholder="Tìm kiếm trên Messenger">
-            </div>
-            <div class="chat-list">
-                <div class="chat-item">
-                    <img src="https://trumtuvung.com/images/9/hat.jpg" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-name">Đại Long</div>
-                        <div class="chat-preview">ok</div>
-                    </div>
-                    <div class="chat-time">4:30pm</div>
-                </div>
-                
-                <div class="chat-item">
-                    <img src="https://trumtuvung.com/images/9/apple.jpg" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-name">Trương Long</div>
-                        <div class="chat-preview">Đang hoạt động</div>
-                    </div>
-                    <div class="chat-time">4:25pm</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cột phải -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="user-info">
-                    <img src="https://trumtuvung.com/images/9/hat.jpg" class="chat-avatar">
-                    <div>
-                        <h3>Đại Long</h3>
-                        <span class="status">Đang hoạt động trên Messenger</span>
-                    </div>
-                </div>
-                <div class="action-buttons">
-                    <button class="action-button"><i class="fas fa-phone"></i></button>
-                    <button class="action-button"><i class="fas fa-video"></i></button>
-                    <button class="action-button"><i class="fas fa-info-circle"></i></button>
-                </div>
-            </div>
-
-            <div class="chat-messages">
-                <div class="message sent">
-                    <div class="message-content">
-                        Hello
-                    </div>
-                </div>
-                <div class="message received">
-                    <img src="https://trumtuvung.com/images/9/hat.jpg" class="message-avatar">
-                    <div class="message-content">
-                        ok
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-input">
-                <button class="action-button"><i class="fas fa-image"></i></button>
-                <input type="text" placeholder="Aa">
-                <button class="action-button"><i class="far fa-smile"></i></button>
-                <button class="action-button"><i class="fas fa-thumbs-up"></i></button>
-                <button class="action-button send-button">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
+    <div id="chat-container">
+        <h2>Nhắn tin với: 
+            <span th:text="${recipient != null ? recipient.firstName + ' ' + recipient.lastName : 'Người Dùng Không Xác Định'}">
+                Tên Người Dùng
+            </span>
+        </h2>
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+        <button id="sendButton">Gửi</button>
     </div>
+
+    <script th:inline="javascript">
+        
+        /* Dữ liệu từ backend */
+        const senderId = /*[[${currentuser}]]*/ "";
+        const recipientId = /*[[${recipient}]]*/ "";
+        console.log(senderId, recipientId);
+
+        // Kết nối tới WebSocket Server
+        let socket = new SockJS('/ws');
+        let stompClient = Stomp.over(socket);
+        
+        // Kết nối đến WebSocket
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/user/' + senderId + '/queue/messages', function(response) {
+                let message = JSON.parse(response.body);
+                displayMessage(message);
+            });
+        });
+
+        // Gửi tin nhắn
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput");
+            const messageText = messageInput.value;
+            if (messageText.trim()) {
+                const message = {
+                    senderId: senderId,
+                    recipientId: recipientId,
+                    content: messageText
+                };
+                // Gửi tin nhắn tới backend qua WebSocket
+                stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
+                displayMessage({ content: messageText, sent: true });
+                messageInput.value = ''; // Xóa input
+            }
+        }
+
+        // Hiển thị tin nhắn trong chat-box
+         function displayMessage(message) {
+            const chatBox = document.getElementById("messages");
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            if (message.sent) {
+                messageDiv.classList.add("sent");
+            }
+            messageDiv.textContent = message.content;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
+        }
+    </script>
 </body>
 </html>

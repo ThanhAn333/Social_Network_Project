@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Thêm liên kết đến Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Zabook.com</title>
+	<!-- style css link -->
+	<link rel="stylesheet" href="/css/style.css">
+	<!-- fontawesome css link -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://cdn.jsdelivr.net/npm/@feathericons/feather@4.28.0/dist/feather.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+		<div class="header-container">
+			<div class="header-wrapper">
+				<div class="logoBox">
+					<img src="/images/th.png" alt="logo">
+				</div>
+				<div class="searchBox">
+					<input type="search">
+
+					<a href="/friendships">
+						<i class="fas fa-search"></i>
+					</a>
+
+				</div>
+				<!-- Navigation Icons -->
+				<div class="iconBox1">
+					<a href="/user/"><i class="fa-solid fa-house"></i></a>
+					<a href="/user/groups"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
+					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
+				</div>
+
+				<!-- User Options -->
+				<div class="iconBox2">
+					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
+					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
+					<a href="javascript:void(0);" id="notificationBell" class="notification-Bell"><i
+							class="fa-solid fa-bell"></i></a>
+					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
+							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+							alt="user"></a>
+							<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;" aria-labelledby="accountDropdown">
+								<ul >
+									<li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+									<li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+									<li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+								</ul>
+							</div>
+					<div class="notification-wrapper">
+
+
+						<!-- Dropdown để hiển thị thông báo -->
+						<div id="notificationDropdown" class="notification-dropdown ">
+							<ul id="notificationList">
+								<th:block th:each="notification : ${notifications}">
+									<li>
+										<span th:text="${notification.senderName}">Tên người gửi</span>
+										<span th:text="${notification.content}">Nội dung thông báo</span>
+										<span th:text="${notification.time}">Thời gian</span>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</header>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Hiển thị ảnh đại diện người dùng -->
+                <img th:src="@{${user.avatar != null ? user.avatar : '/images/avatar.jpg'}}" 
+                     alt="user-avatar" class="img-fluid" style="width: 150px; height: 150px; border-radius: 50%;">
+            </div>
+            <div class="col-md-8">
+                <!-- Thông tin người dùng -->
+                <h2 th:text="${user.firstName} + ' ' + ${user.lastName}">Tên người dùng</h2>
+                <p><strong>Email: </strong><span th:text="${user.email}">email@example.com</span></p>
+                <p><strong>Giới tính: </strong><span th:text="${user.gender}">Giới tính</span></p>
+                <p><strong>Ngày sinh: </strong><span th:text="${user.birthDay}">Ngày sinh</span></p>
+                <p><strong>Địa chỉ: </strong><span th:text="${user.address}">Địa chỉ</span></p>
+                <p><strong>Số điện thoại: </strong><span th:text="${user.phone}">Số điện thoại</span></p>
+                <p><strong>Tiểu sử: </strong><span th:text="${user.bio}">Tiểu sử</span></p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <!-- Nút nhắn tin và thêm bạn bè -->
+            <a th:href="@{'/user/messenger/' + ${user.getUserID()}}" class="btn btn-primary">Nhắn Tin</a>
+            <a href="#" class="btn btn-success">Thêm bạn bè</a>
+        </div>
+    </div>
+
+    <script>
+		const notificationBell = document.getElementById("notificationBell");
+
+		notificationBell.addEventListener("click", function (event) {
+			event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+			notificationDropdown.classList.toggle("show"); // Toggle class 'show'
+			log.console.log("Show notification dropdown");
+		});
+
+
+			//tải thêm post
+
+
+	</script>
+    <script src="/js/index.js"></script>
+    <!-- Thêm JavaScript Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -21,4 +21,7 @@ public interface IMessageService {
     List<User> getRecentChats(ObjectId userId);
     // Lấy tin nhắn gần nhất với mỗi người
     Message getLatestMessage(ObjectId user1Id, ObjectId user2Id);
+
+
+    public Message sendMessage(String senderId, String recipientId, String content);
 }

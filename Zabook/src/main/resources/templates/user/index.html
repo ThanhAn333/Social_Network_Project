@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-	<title>facebook.com</title>
+	<title>Zabook.com</title>
 	<!-- style css link -->
 	<link rel="stylesheet" href="/css/style.css">
 	<!-- fontawesome css link -->
@@ -257,7 +257,13 @@
 					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
 							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
 							alt="user"></a>
-
+							<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;" aria-labelledby="accountDropdown">
+								<ul >
+									<li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+									<li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+									<li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+								</ul>
+							</div>
 					<div class="notification-wrapper">
 
 
@@ -274,25 +280,12 @@
 							</ul>
 						</div>
 					</div>
-
-
-
-					<a href="javascript:void(0);" id="dropdownToggle">
-    <i class="fa-solid fa-caret-down"></i>
-</a>
-
-
 				</div>
+				
 			</div>
 		</div>
 	</header>
 
-<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;" aria-labelledby="accountDropdown">
-<ul >
-    <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
-    <li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
-    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-</ul>
 </div>
 	<!-- header section end -->
 	<!-- home section start -->
@@ -409,8 +402,10 @@
 								<div class="single-stories" th:each="story, i : ${stories}"
 									th:onclick="|openStory(${i.index})|">
 									<label>
-										<img th:src="@{${story.user != null ? story.getUser().getAvatar() : '/images/avatar.jpg'}}"
-											alt="user-avatar">
+										<a th:href="@{'/user/profile/' + ${story.user != null ? story.getUser().getUserID() : 0}}">
+											<img th:src="@{${story.user != null ? story.user.getAvatar() : '/images/avatar.jpg'}}"
+												 alt="user-avatar" class="img-fluid" style="width: 50px; height: 50px; border-radius: 50%;">
+										</a>
 									</label>
 									<div>
 										<img th:if="${story.image != null}" th:src="@{${story.image}}"
@@ -483,6 +478,7 @@
 										<div class="fb-post1-header"></div>
 										<div class="fb-p1-main">
 											<div class="post-title">
+												
 												<img th:src="${post?.user?.avatar != null ? post.user.avatar : '/images/default-avatar.png'}"
 													alt="user picture">
 												<ul>

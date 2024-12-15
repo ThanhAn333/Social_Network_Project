@@ -28,4 +28,7 @@ public interface MessageRepository extends MongoRepository<Message, ObjectId>{
     @Query(value = "{$or: [{'sender': ?0}, {'receiver': ?0}]}", 
            sort = "{'timestamp': -1}")
     List<Message> findMessagesByUser(User user);
+
+
+    
 }
