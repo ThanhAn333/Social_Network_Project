@@ -677,10 +677,10 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         notificationList.prepend(newElement); // Thêm vào đầu danh sách
     }
-
-	function toggleNotificationDropdown() {
-        notificationDropdown.style.display = notificationDropdown.style.display === 'none' ? 'block' : 'none';
-    }
+    notificationBell.addEventListener("click", function (event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        notificationDropdown.classList.toggle("show"); // Toggle class 'show'
+    });
 
     // Ẩn dropdown khi click ra ngoài
     document.addEventListener("click", function (event) {
@@ -694,3 +694,48 @@ document.addEventListener("DOMContentLoaded", function () {
     connect();
 });
 
+
+document.getElementById('mediaFile').addEventListener('change', function () {
+    document.getElementById('mediaStory').style.display = 'block';
+});
+
+// Hàm xem trước hình ảnh hoặc video khi chọn file
+function previewMedia(event) {
+    var file = event.target.files[0];
+    var previewImage = document.getElementById('imagePreview');
+    var previewVideo = document.getElementById('videoPreview');
+
+    // Reset preview
+    previewImage.style.display = 'none';
+    previewVideo.style.display = 'none';
+    
+    if (file) {
+        var reader = new FileReader();
+        if (file.type.startsWith('image/')) {
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else if (file.type.startsWith('video/')) {
+            var url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewVideo.style.display = 'block';
+        }
+    }
+}
+
+// Hàm kiểm tra form trước khi gửi
+function validateStoryForm(event) {
+    var textContent = document.getElementById('textContent').value.trim();
+    var mediaFile = document.getElementById('mediaFile').files[0];
+
+    // Nếu có chọn tệp hình ảnh hoặc video thì không cần kiểm tra nội dung
+    if (!mediaFile && textContent === "") {
+        alert("Vui lòng nhập nội dung story hoặc tải lên hình ảnh/video!");
+        event.preventDefault();  // Ngừng gửi form nếu không có nội dung hoặc tệp
+        return false;
+    }
+    
+    return true;
+}

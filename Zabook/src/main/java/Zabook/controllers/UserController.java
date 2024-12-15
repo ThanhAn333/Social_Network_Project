@@ -92,11 +92,13 @@ public class UserController {
     	List<Post> posts = postService.getAllPost();
         model.addAttribute("currentuser", user);
 
+        storyService.updateStoryStatusIfExpired();
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
     	model.addAttribute("user",user);
+
 
         List<Notification> notifications = notificationService.getNotifications(userId.toString()); 
         model.addAttribute("notifications", notifications);
