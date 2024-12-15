@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.ui.Model;
 
 import Zabook.models.User;
+import Zabook.dto.UserDTO;
 import Zabook.models.FriendShip;
 import Zabook.services.impl.FriendshipService;
 import Zabook.services.impl.UserService;
@@ -25,6 +26,7 @@ public class FriendshipController {
 	private FriendshipService friendshipService;
 	@Autowired
 	UserService userService;
+	
 
 	@GetMapping("")
     public String AddFriends(Model model) {
@@ -38,9 +40,13 @@ public class FriendshipController {
 	
 	// API gửi lời mời kết bạn
 	@PostMapping("/request")
-	public ResponseEntity<?> sendFriendRequest(@RequestParam ObjectId senderId, @RequestParam ObjectId receiverId) {
+	public ResponseEntity<?> sendFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
+		 System.out.println("Received senderId: " + senderId);
+	     System.out.println("Received receiverId: " + receiverId);
+	     ObjectId senderObjectId = new ObjectId(senderId);
+	     ObjectId receiverObjectId = new ObjectId(receiverId);
 		try {
-			FriendShip friendship = friendshipService.sendFriendRequest(senderId, receiverId);
+			FriendShip friendship = friendshipService.sendFriendRequest(senderObjectId, receiverObjectId);
 			return ResponseEntity.ok(friendship);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -52,7 +58,9 @@ public class FriendshipController {
 	public ResponseEntity<?> acceptFriendRequest(@PathVariable ObjectId friendshipId) {
 		try {
 			FriendShip friendship = friendshipService.acceptFriendRequest(friendshipId);
-			return ResponseEntity.ok(friendship);
+			UserDTO senderDTO = friendshipService.convertToUserDTO(friendship.getUser1(), friendship);  // Cập nhật trạng thái của sender
+	        UserDTO receiverDTO = friendshipService.convertToUserDTO(friendship.getUser2(), friendship);  // Cập nhật trạng thái của receiver
+	        return ResponseEntity.ok(friendship);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
