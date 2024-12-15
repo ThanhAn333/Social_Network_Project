@@ -127,10 +127,11 @@
                         <td th:text="${post.createdAt}"></td>
                         
                         <td>
-                            <button class="btn">Xóa</button>
+                            <form th:action="@{/admin/deletepost/{postId}(postId=${post.getId()})}" method="post">
+                                <button type="submit" class="btn">Xóa</button>
+                            </form>
                         </td>
                     </tr>
-                    <!-- Dữ liệu sẽ được load từ backend -->
                 </tbody>
             </table>
         </section>
@@ -148,18 +149,7 @@
                         <th>Hành động</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>5001</td>
-                        <td>Nội dung không phù hợp</td>
-                        <td>Nguyễn Văn B</td>
-                        <td>Người dùng đăng nội dung xúc phạm</td>
-                        <td>
-                            <button class="btn">Xem</button>
-                            <button class="btn btn-danger">Xóa</button>
-                        </td>
-                    </tr>
-                    <!-- Dữ liệu sẽ được load từ backend -->
+                
                 </tbody>
             </table>
         </section>

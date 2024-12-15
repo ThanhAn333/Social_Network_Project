@@ -1,6 +1,8 @@
 package Zabook.controllers;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import Zabook.services.IPostService;
 import Zabook.services.IUserService;
+import jakarta.ws.rs.Path;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -29,11 +35,19 @@ public class AdminController {
         return "admin/index";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
      @PostMapping("/lockUser/{id}")
     public String lockUser(@PathVariable("id") String id) {
-        userService.lockUser(id); // Gọi service để khóa người dùng
-        return "redirect:/admin/"; // Điều hướng lại danh sách người dùng
+        userService.lockUser(id); 
+        return "redirect:/admin/"; 
     }
+
+    @PostMapping("/deletepost/{postId}")
+    public String postMethodName(@PathVariable("postId") String postId) {
+        postService.deletePost(new ObjectId(postId));
+        return "redirect:/admin/";
+    }
+    
 
     
 }
