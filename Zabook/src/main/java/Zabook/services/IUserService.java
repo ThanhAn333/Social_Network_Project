@@ -40,6 +40,9 @@ public interface IUserService {
 	public boolean resetPassword(String email, String password);
 	
 	public ObjectId getCurrentBuyerId(Principal principal) ;
+	
+	List<User> getAllUsers();
+	
 
 	List<User> getFriendList(User user);
 

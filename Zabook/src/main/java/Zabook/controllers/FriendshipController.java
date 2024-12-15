@@ -14,20 +14,39 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.ui.Model;
 
 import Zabook.models.User;
+import Zabook.dto.UserDTO;
 import Zabook.models.FriendShip;
 import Zabook.services.impl.FriendshipService;
+import Zabook.services.impl.UserService;
 
 @Controller
 @RequestMapping("/friendships")
 public class FriendshipController {
 	@Autowired
 	private FriendshipService friendshipService;
+	@Autowired
+	UserService userService;
+	
 
+	@GetMapping("")
+    public String AddFriends(Model model) {
+		
+		User user = userService.getCurrentUser();
+		model.addAttribute("currentuser", user);
+		
+        // Thêm logic xử lý dữ liệu nếu cần
+        return "friends"; // Trả về trang messenger.html
+    }
+	
 	// API gửi lời mời kết bạn
 	@PostMapping("/request")
-	public ResponseEntity<?> sendFriendRequest(@RequestParam ObjectId senderId, @RequestParam ObjectId receiverId) {
+	public ResponseEntity<?> sendFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
+		 System.out.println("Received senderId: " + senderId);
+	     System.out.println("Received receiverId: " + receiverId);
+	     ObjectId senderObjectId = new ObjectId(senderId);
+	     ObjectId receiverObjectId = new ObjectId(receiverId);
 		try {
-			FriendShip friendship = friendshipService.sendFriendRequest(senderId, receiverId);
+			FriendShip friendship = friendshipService.sendFriendRequest(senderObjectId, receiverObjectId);
 			return ResponseEntity.ok(friendship);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,6 +58,19 @@ public class FriendshipController {
 	public ResponseEntity<?> acceptFriendRequest(@PathVariable ObjectId friendshipId) {
 		try {
 			FriendShip friendship = friendshipService.acceptFriendRequest(friendshipId);
+			UserDTO senderDTO = friendshipService.convertToUserDTO(friendship.getUser1(), friendship);  // Cập nhật trạng thái của sender
+	        UserDTO receiverDTO = friendshipService.convertToUserDTO(friendship.getUser2(), friendship);  // Cập nhật trạng thái của receiver
+	        return ResponseEntity.ok(friendship);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	// API từ chối lời mời kết bạn
+	@PutMapping("/reject/{friendshipId}")
+	public ResponseEntity<?> rejectFriendRequest(@PathVariable ObjectId friendshipId) {
+		try {
+			FriendShip friendship = friendshipService.rejectFriendRequest(friendshipId);
 			return ResponseEntity.ok(friendship);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -73,5 +105,44 @@ public class FriendshipController {
 		}
 		
 		return "Friends"; // Trả về tên file Friends.html
+	}
+
+	// API tìm kiếm người dùng
+	@GetMapping("/search")
+	public ResponseEntity<List<User>> searchUsers(
+			@RequestParam(required = false) String firstName,
+			@RequestParam(required = false) String lastName) {
+		try {
+			List<User> users = friendshipService.searchUsers(firstName, lastName);
+			return ResponseEntity.ok(users);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+
+	// API tìm kiếm với một từ khóa chung
+	@GetMapping("/search/keyword")
+	public ResponseEntity<List<User>> searchByKeyword(@RequestParam String keyword) {
+		try {
+			// Sử dụng cùng một từ khóa cho cả firstName và lastName
+			List<User> users = friendshipService.searchUsers(keyword, keyword);
+			return ResponseEntity.ok(users);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+
+	// API hiển thị trang tìm kiếm
+	@GetMapping("/search-page")
+	public String showSearchPage(
+			Model model,
+			@RequestParam(required = false) String keyword) {
+		
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			List<User> searchResults = friendshipService.searchUsers(keyword, keyword);
+			model.addAttribute("searchResults", searchResults);
+			model.addAttribute("keyword", keyword);
+		}
+		return "UserSearch";
 	}
 }

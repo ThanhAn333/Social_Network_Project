@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import Zabook.dto.FriendshipStatus;
+import Zabook.models.Notification;
+import Zabook.dto.UserDTO;
+import Zabook.models.FriendShip;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
 import Zabook.models.Video;
+import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
+import Zabook.services.impl.FriendshipService;
 import Zabook.services.impl.UserService;
 
 
@@ -45,6 +52,12 @@ public class UserController {
 
     @Autowired
     private IStoryService storyService; 
+    
+    @Autowired
+	private FriendshipService friendshipService;
+
+    @Autowired
+    private INotificationService notificationService;
 
 	// Inject service thông qua constructor
 	public UserController(CommentService commentService, UserService userService,IPostService postService) {
@@ -83,13 +96,20 @@ public class UserController {
     @GetMapping("/")
     public String getMethodName(Model model,Principal principal) {
     	ObjectId userId = userService.getCurrentBuyerId(principal);
-    	List<Post> posts = postService.getAllPost();
-        User user = userService.getCurrentUser();
+    	User user = userService.getCurrentUser();
+    	List<Post> posts = postService.getAllPostSortedByTime();
         model.addAttribute("currentuser", user);
+
+        storyService.updateStoryStatusIfExpired();
         List<Story> stories = storyService.getActiveStories();
         model.addAttribute("stories",stories);
     	model.addAttribute("posts",posts);
     	model.addAttribute("id",userId);
+    	model.addAttribute("user",user);
+
+
+        List<Notification> notifications = notificationService.getNotifications(userId.toString()); 
+        model.addAttribute("notifications", notifications);
         return "user/index";
     }
 
@@ -168,4 +188,49 @@ public class UserController {
         return ResponseEntity.ok("Thông tin đã được cập nhật!");
     }
     //lâm
+    
+    
+    
+    //Long
+    @GetMapping("/getalluser")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    	// Lấy người dùng hiện tại
+        User currentUser = userService.getCurrentUser();
+        ObjectId currentUserId = currentUser.getUserID();
+
+        // Lấy tất cả người dùng và ánh xạ sang UserDTO
+        List<UserDTO> users = userService.getAllUsers().stream().map(user -> {
+            // Lấy thông tin cơ bản
+            String fullName = user.getFirstName() + " " + user.getLastName();
+            ObjectId otherUserId = user.getUserID();
+
+            // Trạng thái tình bạn
+            FriendshipStatus friendshipStatus = friendshipService.getFriendshipStatus(currentUserId, otherUserId);
+
+            // Lấy thông tin mối quan hệ (nếu có)
+            FriendShip friendship = friendshipService.getFriendshipBetweenUsers(currentUserId, otherUserId);
+            String friendshipId = friendship != null ? friendship.getFriendshipID().toString() : null;
+            boolean isSender = friendship != null && friendship.getUser1().equals(currentUser);
+
+            // Tính số lượng bạn chung
+            //int mutualFriends = calculateMutualFriends(currentUser, user);
+            int mutualFriends = 0;
+
+            // Ánh xạ sang UserDTO
+            return new UserDTO(
+                user.getUserID(),
+                fullName,
+                user.getAvatar(),
+                mutualFriends,
+                friendshipStatus,
+                friendshipId,
+                isSender
+            );
+        }).collect(Collectors.toList());
+
+        // Log danh sách kết quả để kiểm tra
+        System.out.println("Mapped UserDTO List: " + users);
+
+        return ResponseEntity.ok(users);
+    }
 }

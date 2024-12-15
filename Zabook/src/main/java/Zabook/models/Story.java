@@ -1,5 +1,6 @@
 package Zabook.models;
 
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -84,9 +85,5 @@ public class Story {
     public void setTextContent(String textContent) {
         this.textContent = textContent;
     }
-
-
-
-    
 
 }

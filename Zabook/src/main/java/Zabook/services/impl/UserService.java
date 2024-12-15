@@ -296,14 +296,20 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public ObjectId getCurrentBuyerId(Principal principal) {
-        String username = principal.getName();
+	@Override
+	public ObjectId getCurrentBuyerId(Principal principal) {
+    	String username = principal.getName();
+	    
+	    // Tìm User theo email hoặc username để lấy ID
+	    User user = getUserByEmail(username);
+	    
+	    return user.getUserID();
+ 	}
 
-        // Tìm User theo email hoặc username để lấy ID
-        User user = getUserByEmail(username);
-
-        return user.getUserID();
-    }
+	@Override
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
+   
 
 }

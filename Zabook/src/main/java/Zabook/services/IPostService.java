@@ -12,6 +12,8 @@ public interface IPostService {
 	Post createPost(Post post) ;
     
     List<Post> getAllPost();
+    
+    public List<Post> getAllPostSortedByTime();
 	
     Post updatePost(Post post);
 	
@@ -24,8 +26,11 @@ public interface IPostService {
 
 	List<Post> findByUserId(ObjectId userId);
 	
-	public Post sharePost(ObjectId userId, ObjectId originalPostId);
+	public Post sharePost(ObjectId userId, ObjectId originalPostId , String contentShare);
 	
 	List<User> getUsersWhoLiked(ObjectId postId);
+
 	
+	public Optional<Post> getPostByCommentId(ObjectId commentId);
+
 }

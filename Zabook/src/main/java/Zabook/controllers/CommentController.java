@@ -2,8 +2,10 @@ package Zabook.controllers;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,12 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.models.Comment;
+import Zabook.models.NotificationType;
 import Zabook.models.Post;
+import Zabook.models.User;
+import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.impl.CommentService;
 import Zabook.services.impl.UserService;
@@ -29,6 +34,9 @@ public class CommentController {
 	private final CommentService commentService;
 	UserService userService;
 	IPostService postService;
+
+	@Autowired
+	INotificationService notificationService;
 
 	// Inject service thông qua constructor
 	public CommentController(CommentService commentService, UserService userService,IPostService postService) {
@@ -50,39 +58,60 @@ public class CommentController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	    }
 	}
-
 	
-	@PostMapping("/add")
+	@PostMapping("/addOrEdit")
 	public String addComment(
-	        //@RequestBody Comment comment,
 	        @RequestParam("content") String content,
 	        @RequestParam("postId") String postId,
-	        @RequestParam(value = "rate", defaultValue = "0") double rate,
-	        Principal principal) {
-
+	        @RequestParam(required = false) String commentId,
+	        Principal principal,
+	        RedirectAttributes redirectAttributes) {  // Thêm RedirectAttributes
 	    try {
-	        ObjectId postObjectId = new ObjectId(postId);
-	        ObjectId userId = userService.getCurrentBuyerId(principal);
 
-	        // Gọi service để thêm bình luận
-	        commentService.addComment(postObjectId, userId, content, rate);
+	    	 if (commentId == null || commentId.isEmpty()) {
+	    		ObjectId postObjectId = new ObjectId(postId);
+	 	        Post post = postService.findById(postObjectId).orElse(null);
+	 	        User currentUser = userService.getCurrentUser();
+	 	        ObjectId userId = userService.getCurrentBuyerId(principal);	 	        
+	 	        // Gọi service để thêm bình luận
+	 	        commentService.addComment(postObjectId, userId, content, 0);
 
+				notificationService.sendNotification(
+    				post.getUser().getUserID().toString(),
+    				NotificationType.COMMENT,
+    				currentUser.getLastName(),
+    				postId,
+					post.getUser().getUserID().toString()
+
+				);
+	    	 }else {
+	    		 ObjectId commentid = new ObjectId(commentId);
+	    		 User user = userService.getCurrentUser();
+	    		 String tb =commentService.editComment(commentid, user.getUserID(), content);
+	    		 redirectAttributes.addFlashAttribute("message", tb);
+	    	 }
+	    	 
 	        return "redirect:/user/";
 	    } catch (Exception e) {
-	        return null;
+	        // Thêm thông báo lỗi vào RedirectAttributes nếu có exception
+	        redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra. Vui lòng thử lại!");
+
+	        return "redirect:/user/";
 	    }
 	}
 
 
+
+
 	@PutMapping("/{commentId}")
-	public ResponseEntity<String> editComment(@PathVariable ObjectId commentId, @RequestBody Comment comment) {
+	public ResponseEntity<String> editComment(@PathVariable ObjectId commentId,@RequestParam String content) {
 	    // Trường hợp này commentId đã được lấy từ URL, còn các giá trị khác vẫn lấy từ request body
-	    String content = comment.getContent();
-	    ObjectId userId = comment.getUserComment().getUserID();
+	   
+	    User user = userService.getCurrentUser();
 
 	    try {
-	        commentService.editComment(commentId, userId, content);
-	        return ResponseEntity.ok("Comment updated successfully");
+	        String tb = commentService.editComment(commentId, user.getUserID(), content);
+	        return ResponseEntity.ok(tb);
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
 	    }
@@ -90,11 +119,14 @@ public class CommentController {
 
 
 	@DeleteMapping("/{commentId}")
-	public ResponseEntity<String> deleteComment(@PathVariable ObjectId commentId, @RequestBody Comment comment) {
-		ObjectId userId = comment.getUserComment().getUserID();
+	public ResponseEntity<String> deleteComment(@PathVariable String commentId) {
+		
+		ObjectId commentId1 = new ObjectId(commentId);
+		User user = userService.getCurrentUser();
 		try {
-			commentService.deleteComment(commentId, userId);
-			return ResponseEntity.ok("Comment deleted successfully");
+			
+			String tb = commentService.deleteComment(commentId1, user.getUserID());
+			return ResponseEntity.ok(tb);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error: " + e.getMessage());
 		}

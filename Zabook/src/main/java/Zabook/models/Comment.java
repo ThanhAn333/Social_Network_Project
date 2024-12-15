@@ -1,10 +1,14 @@
 package Zabook.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import Zabook.Until.TimeUntil;
 import jakarta.persistence.Id;
 
 @Document(collection = "Comments")
@@ -13,7 +17,7 @@ public class Comment {
 	@Id
 	private ObjectId id;
 	private String content;
-	private LocalDate createTime;
+	private LocalDateTime createTime;
 
 	private double rate;
 
@@ -49,13 +53,13 @@ public class Comment {
 
 
 
-	public LocalDate getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
 
 
 
-	public void setCreateTime(LocalDate createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 
@@ -98,7 +102,24 @@ public class Comment {
 
 
 	public Comment() {
-		this.createTime = LocalDate.now();
+		this.createTime = LocalDateTime.now();
+	}
+	public String getTimeAgo() {
+	       return TimeUntil.timeAgo(createTime);
+	    }
+
+	
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o) return true;
+	    if (o == null || getClass() != o.getClass()) return false;
+	    Comment comment = (Comment) o;
+	    return id.equals(comment.id); // So sánh dựa trên id
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(id);
 	}
 
 }

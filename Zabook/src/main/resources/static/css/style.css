@@ -96,7 +96,8 @@ button:focus {
 
 img {
 	height: auto;
-	max-width: 100%;
+	width: 20px;
+	
 }
 
 .overlap {
@@ -13562,12 +13563,13 @@ aside.sidebar .friend-box .frnd-meta {
 }
 
 .post-title>span {
-	border: 1px solid #8c8c8c;
+	
 	border-radius: 4px;
 	font-size: 11px;
 	padding: 2px 8px;
 	text-transform: capitalize;
-	color: #dcdcdc;
+	color: rgb(0, 0, 0);
+	font-size: 13px;
 	vertical-align: middle;
 }
 
@@ -20909,7 +20911,7 @@ header {
 	height: 60px;
 	overflow: hidden;
 	border-radius: 10px;
-	display: flex;
+	
 	align-items: center;
 	margin-bottom: 30px;
 	cursor: pointer;
@@ -20917,6 +20919,8 @@ header {
 
 .profile img {
 	width: 40px;
+	height: 40px;
+	object-fit: cover;
 	float: left;
 	margin-right: 8px;
 	border-radius: 50px;
@@ -20926,6 +20930,7 @@ header {
 	font-size: 16px;
 	color: var(--black);
 	text-transform: capitalize;
+	margin-top: 10px;
 }
 
 .pages,
@@ -21164,6 +21169,8 @@ header {
 
 .post-text img {
 	width: 40px;
+	height: 40px;
+	object-fit: cover;
 	border-radius: 50px;
 	position: absolute;
 	left: 10px;
@@ -21261,6 +21268,8 @@ header {
 
 .post-title img {
 	width: 50px;
+	height: 50px;
+	object-fit: cover;
 	border-radius: 50px;
 	margin-right: 20px;
 	margin-bottom: 20px;
@@ -21291,44 +21300,21 @@ header {
 }
 
 .post-images1 {
-	width: 60%;
+	width: 100%;
 	overflow: hidden;
 }
 
-.post-images2 {
-	width: 37%;
-	overflow: hidden;
-}
 
-.post-images1 img:nth-child(1) {
+
+.post-images1 img {
 	width: 100%;
 	margin-bottom: 10px;
-	height: 200px;
+	height: 400px;
 	object-fit: cover;
 	border-radius: 15px;
 }
 
-.post-images1 img:nth-child(2) {
-	width: 47%;
-	margin-right: 4%;
-	height: 120px;
-	object-fit: cover;
-	border-radius: 15px;
-}
 
-.post-images1 img:nth-child(3) {
-	width: 47%;
-	height: 120px;
-	object-fit: cover;
-	border-radius: 15px;
-}
-
-.post-images2 img {
-	width: 100%;
-	height: 335px;
-	border-radius: 15px;
-	object-fit: cover;
-}
 
 .like-comment {
 	width: 100%;
@@ -21354,7 +21340,7 @@ header {
 
 .like-comment ul li span {
 	color: var(--gray);
-	margin-left: 10px;
+	
 	font-size: 14px;
 }
 
@@ -21706,19 +21692,6 @@ header {
 	color: #1877f2;
 }
 
-.emoji-icons {
-	position: absolute;
-	display: none;
-	top: -50px;
-	left: 130px;
-	transform: translateX(-50%);
-	padding-right: 10px;
-	border-radius: 20px;
-	justify-content: space-evenly;
-	width: 280px;
-	height: 65px;
-	z-index: 1;
-}
 
 .post-actions .btn-like:hover .emoji-icons {
 	display: flex;
@@ -21735,40 +21708,6 @@ header {
 	transform: scale(1.2);
 }
 
-.like {
-	color: #4267b2;
-}
-
-.love {
-	color: #f02849;
-}
-
-.haha {
-	color: #f7b731;
-}
-
-.wow {
-	color: #f1c40f;
-}
-
-.sad {
-	color: #f39c12;
-}
-
-.angry {
-	color: #e74c3c;
-}
-
-.btn-like.selected {
-	color: #1877f2;
-}
-
-/*doi mau like khi chọn*/
-.btn-like.selected.like-color {
-	color: #3498db;
-	/* Màu xanh dương cho Thích */
-	
-}
 
 .btn-like.selected.love-color {
 	color: #e74c3c;
@@ -21776,29 +21715,6 @@ header {
 	
 }
 
-.btn-like.selected.haha-color {
-	color: #f1c40f;
-	/* Màu vàng cho Haha */
-	
-}
-
-.btn-like.selected.wow-color {
-	color: #f1c40f;
-	/* Màu tím cho Wow */
-	
-}
-
-.btn-like.selected.sad-color {
-	color: #ebb20c;
-	/* Màu xám cho Buồn */
-	
-}
-
-.btn-like.selected.angry-color {
-	color: #e67e22;
-	/* Màu cam cho Phẫn nộ */
-	
-}
 
 
 
@@ -21851,6 +21767,7 @@ header {
 .avatar {
 	width: 40px;
 	height: 40px;
+	object-fit: cover;
 	border-radius: 50%;
 	margin-right: 10px;
 }
@@ -22056,6 +21973,7 @@ textarea.form-control {
 .user-avatar {
     width: 40px;
     height: 40px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 15px;
     margin-top: 0;
@@ -22192,6 +22110,7 @@ textarea.form-control {
     justify-content: space-between; /* Tạo khoảng cách đều giữa các mục */
     flex-wrap: wrap; /* Để các mục xuống hàng nếu không đủ chỗ */
     gap: 10px; /* Khoảng cách giữa các mục */
+    margin-top: 10px;
 }
 
 /* Căn chỉnh nút Đăng ở góc phải */
@@ -22323,23 +22242,36 @@ textarea.form-control {
 	color: #000;
 }
 
+.close-btn4 {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: black;
+    font-size: 18px;
+    cursor: pointer;
+}
+
 /* CSS cho modal với vị trí góc trên bên trái */
 .story-modal {
-    position: fixed; /* Giữ modal cố định ở vị trí trên màn hình */
-    top: 20px; /* Khoảng cách từ trên xuống */
-    left: 20px; /* Khoảng cách từ trái qua */
-    width: 300px; /* Chiều rộng của modal */
-    height: auto; /* Chiều cao tự động theo nội dung */
-    background: rgba(0, 0, 0, 0.8); /* Màu nền đen mờ */
-    border-radius: 10px; /* Bo góc */
+    position: fixed; /* Cố định modal trên màn hình */
+    top: 50%; /* Dịch xuống giữa màn hình */
+    left: 50%; /* Dịch ngang vào giữa màn hình */
+    transform: translate(-50%, -50%); /* Canh giữa hoàn hảo */
+    width: 50vw; /* Chiếm 50% chiều rộng màn hình */
+    height: 70vh; /* Chiếm 70% chiều cao màn hình */
+    background: rgba(0, 0, 0, 0.9); /* Nền đen mờ */
+    border-radius: 10px; /* Bo góc nhẹ */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
-    color: #fff; /* Màu chữ trắng */
+    color: #fff; /* Chữ trắng */
     z-index: 1000; /* Hiển thị trên các phần tử khác */
     display: none; /* Ẩn mặc định */
-    flex-direction: column; /* Hiển thị theo chiều dọc */
-    overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
-    padding: 10px;
+    flex-direction: column; /* Xếp dọc nội dung */
+    justify-content: center; /* Canh giữa theo chiều dọc */
+    align-items: center; /* Canh giữa theo chiều ngang */
+    overflow: hidden; /* Ẩn phần tràn */
+    padding: 0;
 }
+
 
 /* Cấu trúc phần đầu của story (gồm avatar, tên người dùng, và thời gian) */
 .story-header {
@@ -22384,7 +22316,7 @@ textarea.form-control {
 }
 
 /* Nút đóng modal */
-.close-btn {
+.close-btn3 {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -22410,6 +22342,215 @@ textarea.form-control {
 
 .story-nav.right {
     right: 10px;
+}
+
+.gach {
+  display: block;
+    width: 100%;
+    border-bottom: 2px solid #888; /* Đường kẻ dưới, có thể thay đổi độ dày và màu sắc */
+    margin: 5px 0; /* Màu nền đường kẻ */
+}
+
+
+
+.modal1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content1 {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
+}
+
+.close1 {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#prevBtn1, #nextBtn1 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+#prevBtn1 {
+    left: 10px;
+}
+
+#nextBtn1 {
+    right: 10px;
+}
+
+
+.close-btn1 {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
+
+
+
+/*menu bình luận*/
+
+.menu-container1 {
+    position: relative;
+}
+
+.menu-options1 {
+    display: none;
+    position: absolute;
+    top: 35px; /* Điều chỉnh tùy theo kích thước nút */
+    right: 0;
+    width: 100px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    text-align: center;
+}
+
+.menu-options1 button {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.menu-options1 button:hover {
+    background-color: #f0f0f0;
+}
+
+#popup-like-list #span2 {
+    font-size: 16px; /* Kích thước chữ */
+    color: #555; /* Màu chữ */
+    font-weight: bold; /* In đậm */
+    font-family: Arial, sans-serif;
+    text-align: center; /* Font chữ */
+       position: absolute;
+    top: 60px;
+    right: 100px;
+}
+
+
+/* Wrapper chứa thông báo */
+/* Wrapper chứa thông báo */
+.notification-wrapper {
+    position: fixed; /* Đảm bảo cố định vị trí của nút chuông */
+    top: 10px; /* Khoảng cách từ trên cùng của màn hình */
+    right: 2px; /* Khoảng cách từ bên phải của màn hình */
+    z-index: 1000; /* Đảm bảo nó luôn ở trên các phần tử khác */
+}
+
+/* Nút thông báo */
+.notification-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Dropdown thông báo */
+.notification-dropdown {
+    display: none; /* Mặc định ẩn */
+    position: fixed; /* Cố định dropdown trên màn hình */
+    top: 40px; /* Khoảng cách từ trên */
+    right: 10px; /* Căn phải */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 300px;
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Hiển thị thanh cuộn nếu nội dung quá dài */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Luôn nằm trên các phần tử khác */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển đổi */
+    transform: translateY(-10px); /* Hiệu ứng khi ẩn */
+    opacity: 0; /* Ẩn bằng cách giảm độ trong suốt */
+}
+
+/* Hiển thị dropdown khi thêm class "show" */
+.notification-dropdown.show {
+    transform: translateY(0); /* Hiển thị vị trí đúng */
+    opacity: 1; /* Đặt độ trong suốt về 1 để hiển thị */
+    display: block; /* Bật hiển thị */
+	margin: 60px;
+}
+
+/* Danh sách thông báo */
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Mỗi thông báo */
+.notification-dropdown li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f9f9f9; /* Đổi màu nền khi hover */
+}
+
+
+/* Khu vực xem trước */
+#previewContainer {
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung */
+    align-items: center; /* Căn giữa dọc */
+    margin-top: 10px;
+    width: 100%; /* Đảm bảo chiều rộng 100% */
+    max-height: 300px; /* Giới hạn chiều cao */
+    overflow: hidden; /* Ẩn phần vượt quá */
+    border: 1px solid #ccc; /* Thêm viền nếu cần */
+    background-color: #f9f9f9; /* Nền sáng để dễ nhìn */
+}
+
+/* Hình ảnh xem trước */
+#imagePreview {
+    display: none; /* Ẩn mặc định */
+    max-width: 100%; /* Chiều rộng tối đa bằng container */
+    max-height: 300px; /* Chiều cao tối đa */
+    height: auto; /* Tự động điều chỉnh chiều cao theo tỷ lệ */
+    width: auto; /* Tự động điều chỉnh chiều rộng theo tỷ lệ */
+    object-fit: contain; /* Đảm bảo giữ nguyên tỷ lệ hình ảnh */
+}
+
+/* Video xem trước */
+#videoPreview {
+    display: none; /* Ẩn mặc định */
+    max-width: 100%; /* Chiều rộng tối đa bằng container */
+    max-height: 300px; /* Giới hạn chiều cao */
+    object-fit: contain; /* Giữ tỷ lệ video */
 }
 
 

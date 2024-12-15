@@ -1,313 +1,512 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zabook - Bạn bè</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zabook - Bạn bè</title>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+	rel="stylesheet">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Helvetica, Arial, sans-serif;
+}
 
-        body {
-            background-color: #f0f2f5;
-        }
+body {
+	background-color: #f0f2f5;
+}
 
-        /* Header styles */
-        .header {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-        }
+/* Header styles */
+.header {
+	background: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 100;
+	padding: 8px 16px;
+	display: flex;
+	align-items: center;
+}
 
-        .logo {
-            color: #1877f2;
-            font-size: 40px;
-            margin-right: 10px;
-        }
+.logo {
+	color: #1877f2;
+	font-size: 40px;
+	margin-right: 10px;
+}
 
-        .search-bar {
-            background: #f0f2f5;
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            width: 240px;
-        }
+.search-bar {
+	background: #f0f2f5;
+	border-radius: 50px;
+	padding: 10px 20px;
+	display: flex;
+	align-items: center;
+	width: 300px;
+}
 
-        .search-bar input {
-            border: none;
-            background: transparent;
-            margin-left: 8px;
-            outline: none;
-            width: 100%;
-        }
+.search-bar input {
+	border: none;
+	background: transparent;
+	margin-left: 8px;
+	outline: none;
+	width: 100%;
+}
 
-        /* Main content */
-        .container {
-            display: flex;
-            margin-top: 60px;
-            padding: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+/* Main content */
+.container {
+	display: flex;
+	margin-top: 60px;
+	padding: 20px;
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
 
-        /* Left sidebar */
-        .sidebar {
-            width: 360px;
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-right: 20px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            height: calc(100vh - 100px);
-            position: sticky;
-            top: 80px;
-        }
+/* Left sidebar */
+.sidebar {
+	width: 360px;
+	background: white;
+	border-radius: 8px;
+	padding: 16px;
+	margin-right: 20px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	height: calc(100vh - 100px);
+	position: sticky;
+	top: 80px;
+}
 
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
+.sidebar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16px;
+}
 
-        .sidebar-title {
-            font-size: 24px;
-            font-weight: bold;
-        }
+.sidebar-title {
+	font-size: 24px;
+	font-weight: bold;
+}
 
-        .settings-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #f0f2f5;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.settings-btn {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: #f0f2f5;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-        .friend-menu {
-            list-style: none;
-        }
+.friend-menu {
+	list-style: none;
+}
 
-        .friend-menu-item {
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            margin-bottom: 4px;
-        }
+.friend-menu-item {
+	padding: 8px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	margin-bottom: 4px;
+}
 
-        .friend-menu-item:hover {
-            background: #f0f2f5;
-        }
+.friend-menu-item:hover {
+	background: #f0f2f5;
+}
 
-        .friend-menu-item i {
-            width: 36px;
-            height: 36px;
-            background: #e4e6eb;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-        }
+.friend-menu-item i {
+	width: 36px;
+	height: 36px;
+	background: #e4e6eb;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 12px;
+}
 
-        /* Main content area */
-        .main-content {
-            flex: 1;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
+/* Main content area */
+.main-content {
+	flex: 1;
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
 
-        /* Friend card styles */
-        .friend-card {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
+/* Friend card styles */
+.friend-card {
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	border-radius: 8px;
+	margin-bottom: 8px;
+}
 
-        .friend-card:hover {
-            background: #f0f2f5;
-        }
+.friend-card:hover {
+	background: #f0f2f5;
+}
 
-        .friend-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
+.friend-avatar {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin-right: 12px;
+}
 
-        .friend-info {
-            flex: 1;
-        }
+.friend-info {
+	flex: 1;
+}
 
-        .friend-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+.friend-name {
+	font-weight: 600;
+	margin-bottom: 4px;
+}
 
-        .friend-meta {
-            color: #65676b;
-            font-size: 13px;
-        }
+.friend-meta {
+	color: #65676b;
+	font-size: 13px;
+}
+/* User card */
+.user-card {
+	display: flex;
+	align-items: center;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e4e6eb;
+	transition: background-color 0.2s;
+}
 
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
+.user-card:hover {
+	background-color: #f0f2f5;
+}
 
-        .btn {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
+.user-avatar {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin-right: 12px;
+	object-fit: cover;
+}
 
-        .btn-primary {
-            background: #1877f2;
-            color: white;
-        }
+.user-info {
+	flex: 1;
+}
 
-        .btn-secondary {
-            background: #e4e6eb;
-            color: #050505;
-        }
+.user-name {
+	font-weight: 600;
+	font-size: 15px;
+	margin-bottom: 4px;
+}
 
-        /* Friend request section */
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e4e6eb;
-        }
+.user-meta {
+	font-size: 13px;
+}
 
-        .request-count {
-            color: #65676b;
-            font-weight: normal;
-            margin-left: 8px;
-        }
-    </style>
+.action-buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.btn {
+	padding: 8px 12px;
+	border-radius: 6px;
+	border: none;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.btn-primary {
+	background: #1877f2;
+	color: white;
+}
+
+.btn-secondary {
+	background: #e4e6eb;
+	color: #050505;
+}
+
+/* Friend request section */
+.section-title {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #e4e6eb;
+}
+
+.request-count {
+	color: #65676b;
+	font-weight: normal;
+	margin-left: 8px;
+}
+
+.navbar-custom .navbar-brand {
+	color: white;
+	font-weight: bold;
+	font-size: 1.8rem;
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <i class="fab fa-facebook logo"></i>
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Tìm kiếm trên Zabook">
-        </div>
-    </div>
+	<!-- Header -->
+	<div class="header">
+		<a class="navbar-brand" href="/user/"> <img src="/images/th.png"
+			alt="logo" style="width: 50px; height: 50px; margin-right: 10px;">
+		</a>
+		<div class="search-bar">
+			<i class="fas fa-search"></i> <input type="text" id="searchInput"
+				placeholder="Tìm kiếm bạn bè">
+		</div>
+		<img
+			th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+			alt="Profile Picture" class="profile-pic"
+			style="width: 35px; height: 35px; margin-left: 10px;">
+		<h3
+			th:text="${currentuser.firstName +' '+ currentuser.lastName + ' ' + currentuser.userID }"></h3>
+	</div>
 
-    <!-- Main container -->
-    <div class="container">
-        <!-- Left sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2 class="sidebar-title">Bạn bè</h2>
-                <button class="settings-btn">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
+	</div>
 
-            <ul class="friend-menu">
-                <li class="friend-menu-item">
-                    <i class="fas fa-user-friends"></i>
-                    <span>Trang chủ</span>
-                </li>
-                <li class="friend-menu-item">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Lời mời kết bạn</span>
-                </li>
-                <li class="friend-menu-item">
-                    <i class="fas fa-user-check"></i>
-                    <span>Gợi ý</span>
-                </li>
-                <li class="friend-menu-item">
-                    <i class="fas fa-birthday-cake"></i>
-                    <span>Sinh nhật</span>
-                </li>
-                <li class="friend-menu-item">
-                    <i class="fas fa-list"></i>
-                    <span>Tất cả bạn bè</span>
-                </li>
-            </ul>
-        </div>
+	<!-- Main container -->
+	<div class="container">
+		<!-- Left sidebar -->
+		<div class="sidebar">
+			<div class="sidebar-header">
+				<h2 class="sidebar-title">Bạn bè</h2>
+				<button class="settings-btn">
+					<i class="fas fa-cog"></i>
+				</button>
+			</div>
+			<ul class="friend-menu">
+				<li class="friend-menu-item"><i class="fas fa-user-friends"></i>
+					<span>Trang chủ</span></li>
+				<li class="friend-menu-item"><i class="fas fa-user-plus"></i> <span>Lời
+						mời kết bạn</span></li>
+				<li class="friend-menu-item"><i class="fas fa-list"></i> <span>Tất
+						cả bạn bè</span></li>
+			</ul>
+		</div>
 
-        <!-- Main content -->
-        <div class="main-content">
-            <h3 class="section-title">
-                Lời mời kết bạn
-                <span class="request-count" th:text="${friendRequests != null ? friendRequests.size() : 0}">14</span>
-            </h3>
+		<!-- Main content -->
+		<div class="main-content">
+			<div class="search-results">
+				<h3 class="section-title">Kết quả tìm kiếm</h3>
+				<div id="results-container">
+					<!-- Loading state -->
+					<div class="loading" style="display: none;">
+						<i class="fas fa-spinner fa-spin"></i> Đang tìm kiếm...
+					</div>
 
-            <!-- Friend requests -->
-            <div class="friend-card" th:each="request : ${friendRequests}">
-                <img th:src="${request.sender.avatar != null ? request.sender.avatar : 'https://picsum.photos/60'}" 
-                     alt="Avatar" class="friend-avatar">
-                <div class="friend-info">
-                    <div class="friend-name" th:text="${request.sender.name}">Nguyễn Văn A</div>
-                    <div class="friend-meta">2 bạn chung</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" th:onclick="'acceptFriend(\'' + ${request.id} + '\')'">Xác nhận</button>
-                    <button class="btn btn-secondary">Xóa</button>
-                </div>
-            </div>
+					<!-- No results state -->
+					<div class="no-results" style="display: none;">
+						<i class="fas fa-search"></i>
+						<p>Không tìm thấy kết quả nào</p>
+					</div>
+				</div>
+			</div>
+			<h3 class="section-title">
+				Lời mời kết bạn <span class="request-count"
+					th:text="${friendRequests != null ? friendRequests.size() : 0}">14</span>
+			</h3>
+			<!-- People you may know -->
+			<h3 class="section-title" style="margin-top: 24px;">Những người
+				bạn có thể biết</h3>
+				<div id="currentUserIdDisplay"></div>
 
-            <!-- People you may know -->
-            <h3 class="section-title" style="margin-top: 24px;">
-                Những người bạn có thể biết
-            </h3>
+			<div class="friend-card">
+				<img src="https://picsum.photos/62" alt="Avatar"
+					class="friend-avatar">
+				<div class="friend-info">
+					<div class="friend-name">Lê Văn C</div>
+					<div class="friend-meta">4 bạn chung</div>
+				</div>
+				<div class="action-buttons">
+					<button class="btn btn-primary">Thêm bạn bè</button>
+					<button class="btn btn-secondary">Gỡ</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-            <div class="friend-card">
-                <img src="https://picsum.photos/62" alt="Avatar" class="friend-avatar">
-                <div class="friend-info">
-                    <div class="friend-name">Lê Văn C</div>
-                    <div class="friend-meta">4 bạn chung</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-primary">Thêm bạn bè</button>
-                    <button class="btn btn-secondary">Gỡ</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<script>
+        // Lấy các phần tử cần thiết
+    const currentUserId = '[[${currentuser.userID}]]';
+    document.getElementById('currentUserIdDisplay').textContent = currentUserId;
+    const searchInput = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('results-container');
+    const loadingElement = document.querySelector('.loading');
+    const noResultsElement = document.querySelector('.no-results');
+    const urlParams = new URLSearchParams(window.location.search);
+    const keyword = urlParams.get('keyword');
 
-    <script th:inline="javascript">
-        function acceptFriend(friendshipId) {
-            fetch(`/friendships/accept/${friendshipId}`, {
-                method: 'PUT'
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Reload trang hoặc cập nhật UI
-                    location.reload();
-                }
-            })
-            .catch(error => console.error('Error:', error));
+    // Thêm sự kiện lắng nghe cho ô tìm kiếm
+    searchInput.addEventListener('input', function() {
+        const keyword = searchInput.value.trim();
+        if (keyword) {
+            showLoading();
+            performSearch(keyword);
+        } else {
+            clearResults();
         }
+    });
+
+    // Hiển thị trạng thái "Đang tìm kiếm"
+    function showLoading() {
+        loadingElement.style.display = 'block';
+        noResultsElement.style.display = 'none';
+        resultsContainer.innerHTML = '';
+    }
+ 	// Giả lập dữ liệu tìm kiếm
+    let AllUsers = [
+    	{ id: '10000', fullName: 'Nguyễn Văn A', avatar: 'https://via.placeholder.com/60', mutualFriends: 5, friendshipStatus: 'none' },
+        { id: '40000', fullName: 'Nguyễn Văn D', avatar: 'https://via.placeholder.com/60', mutualFriends: 5, friendshipStatus: 'accepted' }
+    ];
+    fetch('/user/getalluser')
+	    .then(response => response.json())
+	    .then(data => {
+	        console.log("Dữ liệu trả về từ API:", data); // Kiểm tra dữ liệu trả về
+	        if (Array.isArray(data)) {
+	        	AllUsers = data.map(user => {
+	                console.log("Processing user:", user);  // Kiểm tra từng đối tượng người dùng
+	                return {
+	                    id: user.id || '[ID không xác định]',  // Nếu `userID` không tồn tại, hiển thị thông báo
+	                    fullName: user.fullName || '[Tên không xác định]',
+	                    avatar: user.avatar || 'https://via.placeholder.com/60',
+	                    mutualFriends: user.mutualFriends || 0,
+	                    friendshipStatus: user.friendshipStatus || 'none', // Nếu không có trạng thái tình bạn, mặc định là 'none'
+	                    friendshipId: user.friendshipId || '[ID mối quan hệ không xác định]',  // Thêm ID mối quan hệ
+	                    isSender: user.isSender || false  // Kiểm tra xem người dùng có phải là người gửi lời mời không, mặc định là false
+	                };
+	            });
+	        	
+	            console.log("Danh sách người dùng sau xử lý:", AllUsers); // Kiểm tra dữ liệu sau map
+	        } else {
+	            console.error('Dữ liệu trả về không phải mảng');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Error fetching users:', error);
+	    });
+    // Gửi yêu cầu tìm kiếm người dùng
+    function performSearch(keyword) {
+        // Giả lập API trả về kết quả tìm kiếm
+        setTimeout(() => {
+            const filteredUsers = AllUsers.filter(user => user.fullName.toLowerCase().includes(keyword.toLowerCase()));
+            loadingElement.style.display = 'none';
+            if (filteredUsers.length === 0) {
+                noResultsElement.style.display = 'block';
+            } else {
+                displayResults(filteredUsers);
+            }
+        }, 100); // Giả lập thời gian chờ API
+    }
+
+    // Hiển thị kết quả tìm kiếm
+    function displayResults(users) {
+        resultsContainer.innerHTML = '';  // Xóa kết quả cũ nếu có
+
+        users.forEach(user => {
+            const userCard = document.createElement('div');
+            userCard.classList.add('user-card');
+            userCard.innerHTML = `
+                <img src="${user.avatar}" alt="Avatar" class="user-avatar">
+                <div class="user-info">
+                	<div class="user-name">${user.id}</div>
+                    <div class="user-name">${user.fullName}</div>
+                    <div class="user-meta">${user.mutualFriends > 0 ? user.mutualFriends + ' bạn chung' : 'Không có bạn chung'}</div>
+                    <div class="user-name">${user.friendshipId}</div>
+                </div>
+                <div class="action-buttons">
+                    ${renderActionButton(user)}
+                </div>
+            `;
+            resultsContainer.appendChild(userCard);
+        });
+    }
+
+    // Tạo nút hành động tùy theo trạng thái tình bạn
+    function renderActionButton(user) {
+    	
+        switch(user.friendshipStatus) {
+	        case 'none':
+	            // Nếu chưa kết bạn, cho phép gửi lời mời kết bạn
+	            return `<button class="btn btn-primary" onclick="sendFriendRequest('${user.id}')">Thêm bạn bè</button>`;
+	        
+	        case 'pending':
+	            // Người dùng hiện tại là người gửi lời mời, nhưng không phải là người hiện tại
+	            if (user.isSender === false && user.id !== currentUserId) {
+	                return `<button class="btn btn-secondary" onclick>Đã gửi lời mời</button>`;
+	            } 
+	            // Người dùng hiện tại là người nhận lời mời, có thể chấp nhận
+	            else if (user.isSender === true && user.id !== currentUserId) {
+	                return `<button class="btn btn-secondary" onclick="acceptFriendRequest('${user.friendshipId}')">Chấp nhận</button>`;
+	            }
+	            // Người dùng hiện tại là người gửi lời mời và là chính người đó
+	            else if (user.id === currentUserId) {
+	                return `<button class="btn btn-secondary">Bản Thân</button>`;
+	            }
+	        case 'friend':
+	            // Trường hợp đã kết bạn
+	            return `<button class="btn btn-secondary">Bạn bè</button>`;
+	        default:
+	            return '';
+        }
+    }
+
+ // Hàm gửi lời mời kết bạn
+    function sendFriendRequest(receiverId) {
+        console.log(`Sending request with senderId: ${currentUserId}, receiverId: ${receiverId}`);
+        
+        fetch('/friendships/request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `senderId=${currentUserId}&receiverId=${receiverId}`
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Đã gửi lời mời kết bạn!');
+                buttonElement.disabled = true;
+                location.reload();
+            } else {
+                response.text().then(text => {
+                    console.error('Server response:', text);
+                    alert(`Lỗi: ${text}`);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Hàm chấp nhận lời mời kết bạn
+    function acceptFriendRequest(friendshipId) {
+        fetch(`/friendships/accept/${friendshipId}`, {
+            method: 'PUT'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Đã chấp nhận lời mời kết bạn!');
+                location.reload();
+            } else {
+                alert('Có lỗi xảy ra khi chấp nhận lời mời kết bạn.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    
+    // Xóa kết quả khi không có từ khóa tìm kiếm
+    function clearResults() {
+        resultsContainer.innerHTML = '';
+        loadingElement.style.display = 'none';
+        noResultsElement.style.display = 'none';
+    }
     </script>
 </body>
 </html>

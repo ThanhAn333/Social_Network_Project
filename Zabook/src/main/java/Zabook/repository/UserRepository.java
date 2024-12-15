@@ -1,5 +1,6 @@
 package Zabook.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -23,4 +24,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
 
 	Optional<User> findById(ObjectId userId);
+
+	// Tìm kiếm người dùng theo tên hoặc họ
+	List<User> findByFirstNameContainingOrLastNameContainingIgnoreCase(String firstName, String lastName);
 }

@@ -1,8 +1,10 @@
 package Zabook.services.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class CommentService implements ICommentService {
 	    // Tạo comment mới
 	    Comment comment = new Comment();
 	    comment.setContent(content);
-	    comment.setCreateTime(LocalDate.now());
+	    comment.setCreateTime(LocalDateTime.now());
 	    comment.setRate(rate);
 	    comment.setPost(post);
 	    comment.setUserComment(user);
@@ -48,6 +50,9 @@ public class CommentService implements ICommentService {
 	    // Lưu comment vào cơ sở dữ liệu
 	    commentRepo.save(comment);
 	   
+	    if (post.getComment() == null) {
+            post.setComment(new ArrayList<>());
+        }
 	    post.getComment().add(comment);
 	   
 
@@ -56,37 +61,43 @@ public class CommentService implements ICommentService {
 
 	}
 	@Override
-	public void editComment(ObjectId commentId, ObjectId userId, String content) {
-		Comment comment = commentRepo.findById(commentId)
-	            .orElseThrow(() -> new RuntimeException("Comment not found"));
+	public String editComment(ObjectId commentId, ObjectId userId, String content) {
+	    // Tìm bình luận theo ID
+	    Comment comment = commentRepo.findById(commentId)
+	        .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 	    // Kiểm tra quyền của người dùng
 	    if (!comment.getUserComment().getUserID().equals(userId)) {
-	        throw new RuntimeException("You do not have permission to edit this comment");
-	    }else {
-	    	 throw new RuntimeException(userId.toString()+" - "+comment.getUserComment().getUserID() );
+	        return "Bạn ko thể chỉnh sửa bình luận này!";
 	    }
 
-	    // Cập nhật nội dung và đánh giá
-	   // comment.setContent(content);
-	   // comment.setCreateTime(LocalDate.now()); // Cập nhật lại thời gian sửa
+	    // Cập nhật nội dung và thời gian chỉnh sửa
+	    comment.setContent(content);
+	    comment.setCreateTime(LocalDateTime.now());
 
-	    // Lưu lại thay đổi
-	   // commentRepo.save(comment);
+	    // Lưu thay đổi vào cơ sở dữ liệu
+	    commentRepo.save(comment);
+	    return "Chỉnh sửa bình luận thành công!";
 	}
+
 	@Override
-	public void deleteComment(ObjectId commentId, ObjectId userId) {
+	public String deleteComment(ObjectId commentId, ObjectId userId) {
 		// Kiểm tra xem commentId có tồn tại trong cơ sở dữ liệu không
 		Comment comment = commentRepo.findById(commentId)
 		    .orElseThrow(() -> new RuntimeException("Comment not found"));
 
 		if (!comment.getUserComment().getUserID().equals(userId)) {
-		    throw new RuntimeException(userId.toString()+" - "+comment.getUserComment().getUserID() );
+			
+		    return "Bạn không thể xóa bình luận này!";
 		}
-
-
+		Optional<Post> post1 = postRepo.findByCommentId(comment.getId());
+		Post post = post1.get();
+		post.getComment().remove(comment);
+		postRepo.save(post);
+		System.out.print(comment.getUserComment().getUserID()+" "+ userId);
 		// Xóa bình luận trong cơ sở dữ liệu
 		commentRepo.delete(comment);
+		return "Xóa bình luận thành công!";
 
 	}
 	@Override
