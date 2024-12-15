@@ -26,13 +26,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import Zabook.dto.FriendshipStatus;
 import Zabook.dto.UserDTO;
+import Zabook.models.FriendShip;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
 import Zabook.services.impl.CommentService;
+import Zabook.services.impl.FriendshipService;
 import Zabook.services.impl.UserService;
 
 
@@ -46,6 +49,9 @@ public class UserController {
 
     @Autowired
     private IStoryService storyService; 
+    
+    @Autowired
+	private FriendshipService friendshipService;
 
 	// Inject service thông qua constructor
 	public UserController(CommentService commentService, UserService userService,IPostService postService) {
@@ -171,21 +177,43 @@ public class UserController {
     //Long
     @GetMapping("/getalluser")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
+    	// Lấy người dùng hiện tại
+        User currentUser = userService.getCurrentUser();
+        ObjectId currentUserId = currentUser.getUserID();
+
+        // Lấy tất cả người dùng và ánh xạ sang UserDTO
         List<UserDTO> users = userService.getAllUsers().stream().map(user -> {
+            // Lấy thông tin cơ bản
             String fullName = user.getFirstName() + " " + user.getLastName();
-            // Kiểm tra ID trong log
-            System.out.println("User ID: " + user.getUserID());
+            ObjectId otherUserId = user.getUserID();
+
+            // Trạng thái tình bạn
+            FriendshipStatus friendshipStatus = friendshipService.getFriendshipStatus(currentUserId, otherUserId);
+
+            // Lấy thông tin mối quan hệ (nếu có)
+            FriendShip friendship = friendshipService.getFriendshipBetweenUsers(currentUserId, otherUserId);
+            String friendshipId = friendship != null ? friendship.getFriendshipID().toString() : null;
+            boolean isSender = friendship != null && friendship.getUser1().equals(currentUser);
+
+            // Tính số lượng bạn chung
+            //int mutualFriends = calculateMutualFriends(currentUser, user);
+            int mutualFriends = 0;
+
+            // Ánh xạ sang UserDTO
             return new UserDTO(
-                user.getUserID(), 
+                user.getUserID(),
                 fullName,
                 user.getAvatar(),
-                0,  // Placeholder cho mutualFriends
-                "none"  // Placeholder cho friendshipStatus
+                mutualFriends,
+                friendshipStatus,
+                friendshipId,
+                isSender
             );
         }).collect(Collectors.toList());
-        
+
+        // Log danh sách kết quả để kiểm tra
         System.out.println("Mapped UserDTO List: " + users);
-        
+
         return ResponseEntity.ok(users);
     }
 }
