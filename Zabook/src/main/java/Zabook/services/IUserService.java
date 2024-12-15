@@ -2,6 +2,7 @@ package Zabook.services;
 
 
 import java.security.Principal;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,6 +38,9 @@ public interface IUserService {
 	public boolean resetPassword(String email, String password);
 	
 	public ObjectId getCurrentBuyerId(Principal principal) ;
+	
+	List<User> getAllUsers();
+	
 
 	
 }

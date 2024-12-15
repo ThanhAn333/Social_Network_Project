@@ -22413,11 +22413,13 @@ textarea.form-control {
     position: absolute;
     top: 35px; /* Điều chỉnh tùy theo kích thước nút */
     right: 0;
+    width: 100px;
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     z-index: 1000;
+    text-align: center;
 }
 
 .menu-options1 button {

@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import Zabook.models.Notification;
+import Zabook.dto.UserDTO;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
@@ -170,4 +172,27 @@ public class UserController {
         return ResponseEntity.ok("Thông tin đã được cập nhật!");
     }
     //lâm
+    
+    
+    
+    //Long
+    @GetMapping("/getalluser")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers().stream().map(user -> {
+            String fullName = user.getFirstName() + " " + user.getLastName();
+            // Kiểm tra ID trong log
+            System.out.println("User ID: " + user.getUserID());
+            return new UserDTO(
+                user.getUserID(), 
+                fullName,
+                user.getAvatar(),
+                0,  // Placeholder cho mutualFriends
+                "none"  // Placeholder cho friendshipStatus
+            );
+        }).collect(Collectors.toList());
+        
+        System.out.println("Mapped UserDTO List: " + users);
+        
+        return ResponseEntity.ok(users);
+    }
 }

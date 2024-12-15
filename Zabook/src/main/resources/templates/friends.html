@@ -39,10 +39,10 @@
         .search-bar {
             background: #f0f2f5;
             border-radius: 50px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
-            width: 240px;
+            width: 300px;
         }
 
         .search-bar input {
@@ -170,6 +170,40 @@
             color: #65676b;
             font-size: 13px;
         }
+            /* User card */
+        .user-card {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e4e6eb;
+            transition: background-color 0.2s;
+        }
+
+        .user-card:hover {
+            background-color: #f0f2f5;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .user-meta {
+            font-size: 13px;
+        }
 
         .action-buttons {
             display: flex;
@@ -208,17 +242,29 @@
             font-weight: normal;
             margin-left: 8px;
         }
+        .navbar-custom .navbar-brand {
+            color: white;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
+	<!-- Header -->
     <div class="header">
-        <i class="fab fa-facebook logo"></i>
+        <a class="navbar-brand" href="/user/">
+        <img src="/images/th.png" alt="logo" style="width: 50px; height: 50px; margin-right: 10px;">
+        </a>
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Tìm kiếm trên Zabook">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm bạn bè">
         </div>
+        <img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'" 
+                     alt="Profile Picture" class="profile-pic" style="width: 35px; height: 35px; margin-left: 10px;">
+        <h3 th:text="${currentuser.firstName +' '+ currentuser.lastName + ' ' + currentuser.userID }"></h3>
     </div>
+
+</div>
 
     <!-- Main container -->
     <div class="container">
@@ -230,7 +276,6 @@
                     <i class="fas fa-cog"></i>
                 </button>
             </div>
-
             <ul class="friend-menu">
                 <li class="friend-menu-item">
                     <i class="fas fa-user-friends"></i>
@@ -241,14 +286,6 @@
                     <span>Lời mời kết bạn</span>
                 </li>
                 <li class="friend-menu-item">
-                    <i class="fas fa-user-check"></i>
-                    <span>Gợi ý</span>
-                </li>
-                <li class="friend-menu-item">
-                    <i class="fas fa-birthday-cake"></i>
-                    <span>Sinh nhật</span>
-                </li>
-                <li class="friend-menu-item">
                     <i class="fas fa-list"></i>
                     <span>Tất cả bạn bè</span>
                 </li>
@@ -257,6 +294,21 @@
 
         <!-- Main content -->
         <div class="main-content">
+                <div class="search-results">
+                    <h3 class="section-title">Kết quả tìm kiếm</h3>
+                    <div id="results-container">
+                        <!-- Loading state -->
+                        <div class="loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Đang tìm kiếm...
+                        </div>
+        
+                        <!-- No results state -->
+                        <div class="no-results" style="display: none;">
+                            <i class="fas fa-search"></i>
+                            <p>Không tìm thấy kết quả nào</p>
+                        </div>
+                    </div>
+                </div>
             <h3 class="section-title">
                 Lời mời kết bạn
                 <span class="request-count" th:text="${friendRequests != null ? friendRequests.size() : 0}">14</span>
@@ -295,7 +347,131 @@
         </div>
     </div>
 
-    <script th:inline="javascript">
+    <script>
+        // Lấy các phần tử cần thiết
+    const searchInput = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('results-container');
+    const loadingElement = document.querySelector('.loading');
+    const noResultsElement = document.querySelector('.no-results');
+    const urlParams = new URLSearchParams(window.location.search);
+    const keyword = urlParams.get('keyword');
+
+    // Thêm sự kiện lắng nghe cho ô tìm kiếm
+    searchInput.addEventListener('input', function() {
+        const keyword = searchInput.value.trim();
+        if (keyword) {
+            showLoading();
+            performSearch(keyword);
+        } else {
+            clearResults();
+        }
+    });
+
+    // Hiển thị trạng thái "Đang tìm kiếm"
+    function showLoading() {
+        loadingElement.style.display = 'block';
+        noResultsElement.style.display = 'none';
+        resultsContainer.innerHTML = '';
+    }
+ 	// Giả lập dữ liệu tìm kiếm
+    let AllUsers = [
+    	{ userID: '10000', fullName: 'Nguyễn Văn A', avatar: 'https://via.placeholder.com/60', mutualFriends: 5, friendshipStatus: 'none' },
+        { userID: '40000', fullName: 'Nguyễn Văn D', avatar: 'https://via.placeholder.com/60', mutualFriends: 5, friendshipStatus: 'accepted' }
+    ];
+    fetch('/user/getalluser')
+    .then(response => response.json())
+    .then(data => {
+        console.log("Dữ liệu trả về từ API:", data); // Kiểm tra dữ liệu trả về
+        if (Array.isArray(data)) {
+        	AllUsers = data.map(user => {
+                console.log("Processing user:", user);  // Kiểm tra từng đối tượng người dùng
+                let userID = user.userID;
+                if (typeof userID === 'object') {
+                    userID = userID.id || '[ID không xác định]'; // Điều chỉnh tùy thuộc vào cấu trúc thực tế
+                }
+                return {
+                    id: user.userID || user.id || '[ID không xác định]',  // Nếu userID không tồn tại, hiển thị thông báo
+                    fullName: user.fullName || '[Tên không xác định]',
+                    avatar: user.avatar || 'https://via.placeholder.com/60',
+                    mutualFriends: user.mutualFriends || 0,
+                    friendshipStatus: user.friendshipStatus || 'none'
+                };
+            });
+
+            console.log("Danh sách người dùng sau xử lý:", AllUsers); // Kiểm tra dữ liệu sau map
+
+            // Hiển thị kết quả
+            AllUsers.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.innerHTML = `
+                	ID: ${user.id !== 'Không có userID' ? user.id : 'Chưa rõ ID'}, 
+                    Full Name: ${user.fullName}, 
+                    Friendship Status: ${user.friendshipStatus}`;
+                document.body.appendChild(userDiv);
+            });
+        } else {
+            console.error('Dữ liệu trả về không phải mảng');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error);
+    });
+    // Gửi yêu cầu tìm kiếm người dùng
+    function performSearch(keyword) {
+        // Giả lập API trả về kết quả tìm kiếm
+        setTimeout(() => {
+            const filteredUsers = AllUsers.filter(user => user.fullName.toLowerCase().includes(keyword.toLowerCase()));
+            loadingElement.style.display = 'none';
+            if (filteredUsers.length === 0) {
+                noResultsElement.style.display = 'block';
+            } else {
+                displayResults(filteredUsers);
+            }
+        }, 100); // Giả lập thời gian chờ API
+    }
+
+    // Hiển thị kết quả tìm kiếm
+    function displayResults(users) {
+        resultsContainer.innerHTML = '';  // Xóa kết quả cũ nếu có
+
+        users.forEach(user => {
+            const userCard = document.createElement('div');
+            userCard.classList.add('user-card');
+            userCard.innerHTML = `
+                <img src="${user.avatar}" alt="Avatar" class="user-avatar">
+                <div class="user-info">
+                	<div class="user-name">${user.id}</div>
+                    <div class="user-name">${user.fullName}</div>
+                    <div class="user-meta">${user.mutualFriends > 0 ? user.mutualFriends + ' bạn chung' : 'Không có bạn chung'}</div>
+                </div>
+                <div class="action-buttons">
+                    ${renderActionButton(user)}
+                </div>
+            `;
+            resultsContainer.appendChild(userCard);
+        });
+    }
+
+    // Tạo nút hành động tùy theo trạng thái tình bạn
+    function renderActionButton(user) {
+        switch(user.friendshipStatus) {
+            case 'none':
+                return `<button class="btn btn-primary">Thêm bạn bè</button>`;
+            case 'pending':
+                return `<button class="btn btn-secondary" disabled>Đã gửi lời mời</button>`;
+            case 'accepted':
+                return `<button class="btn btn-secondary">Bạn bè</button>`;
+            default:
+                return '';
+        }
+    }
+
+    // Xóa kết quả khi không có từ khóa tìm kiếm
+    function clearResults() {
+        resultsContainer.innerHTML = '';
+        loadingElement.style.display = 'none';
+        noResultsElement.style.display = 'none';
+    }
         function acceptFriend(friendshipId) {
             fetch(`/friendships/accept/${friendshipId}`, {
                 method: 'PUT'

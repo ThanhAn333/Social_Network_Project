@@ -16,13 +16,26 @@ import org.springframework.ui.Model;
 import Zabook.models.User;
 import Zabook.models.FriendShip;
 import Zabook.services.impl.FriendshipService;
+import Zabook.services.impl.UserService;
 
 @Controller
 @RequestMapping("/friendships")
 public class FriendshipController {
 	@Autowired
 	private FriendshipService friendshipService;
+	@Autowired
+	UserService userService;
 
+	@GetMapping("")
+    public String AddFriends(Model model) {
+		
+		User user = userService.getCurrentUser();
+		model.addAttribute("currentuser", user);
+		
+        // Thêm logic xử lý dữ liệu nếu cần
+        return "friends"; // Trả về trang messenger.html
+    }
+	
 	// API gửi lời mời kết bạn
 	@PostMapping("/request")
 	public ResponseEntity<?> sendFriendRequest(@RequestParam ObjectId senderId, @RequestParam ObjectId receiverId) {
