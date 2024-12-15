@@ -1,11 +1,15 @@
 package Zabook.controllers;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,46 +29,59 @@ public class MessageController {
 
 	@Autowired
 	private IMessageService messageService;
+	
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
+
 	@GetMapping("/messenger/{userId}")
-    public String getChatPage(@PathVariable ObjectId userId, Model model) {
+    public String getChatPage(@PathVariable String userId, Model model) {
 		User user = userService.getCurrentUser();
-		model.addAttribute("currentuser", user);
+		ObjectId userID= new ObjectId(userId);
         // Lấy thông tin người nhận từ userId
-        User recipient = userService.getUserById(userId.toString());
+        User recipient = userService.getUserById(userId);
 		System.out.println(recipient);	
         if (recipient == null) {
             return "redirect:/error";
         }
+        List<Message> messages=messageService.getConversation(user.getUserID(),userID);
+        model.addAttribute("messages",messages);
+        model.addAttribute("currentuser", user);
         model.addAttribute("recipient", recipient);
-
+        
+        for(Message mess : messages) {
+        	System.out.print(mess.getContent());
+        }
+        if(messages==null) {
+        	System.out.print("ủa");
+        }
         return "user/messenger";
     }
     @MessageMapping("/sendMessage")
-	@SendTo("/topic/messages")
+    @SendTo("/topic/public")
     public void handleMessage(@Payload Message message) {
         // Lưu tin nhắn vào cơ sở dữ liệu
-		if (message.getSender() == null || message.getReceiver() == null) {
+		if (message.getSenderId() == null ) {
 			System.err.println("Sender or receiver is null.");
 			return;  // Dừng lại nếu sender hoặc receiver là null
 		}
+		System.out.print("ok");
         Message savedMessage = messageService.sendMessage(
-                message.getSender().getUserID().toString(),
-				message.getReceiver().getUserID().toString(),
+                message.getSenderId(),
+				message.getRecipientId(),
                 message.getContent()
         );
-
+        System.out.print("ok2");
         // Gửi tin nhắn tới người nhận qua WebSocket
         messagingTemplate.convertAndSendToUser(
-                message.getReceiver	().getUserID().toString(),
+                message.getRecipientId(),
                 "/queue/messages",
                 savedMessage
         );
-		System.out.println("Received message from: " + message.getSender().getUserID());
-		System.out.println("Message content: " +message.getContent());
-		System.out.println("Sending to user: " + message.getReceiver().getUserID());
+		//System.out.println("Received message from: " + message.getSender().getUserID());
+		//System.out.println("Message content: " +message.getContent());
+		//System.out.println("Sending to user: " + message.getReceiver().getUserID());
     }
+
 }

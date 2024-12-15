@@ -20,6 +20,9 @@ public class Message {
 		private LocalDateTime timestamp; // Thời gian gửi
 		
 		private boolean isRead; // Trạng thái đọc
+		 private String senderId; // ID người gửi
+		    private String recipientId; 
+		
 		@DBRef
 		private User sender; // Người gửi
 		@DBRef
@@ -148,4 +151,21 @@ public class Message {
 			// Nếu là năm trước
 			return messageTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm"));
 		}
+		
+		public String getSenderId() {
+	        return senderId;
+	    }
+
+	    public void setSenderId(String senderId) {
+	        this.senderId = senderId;
+	    }
+
+	    public String getRecipientId() {
+	        return recipientId;
+	    }
+
+	    public void setRecipientId(String recipientId) {
+	        this.recipientId = recipientId;
+	    }
+	    
 }

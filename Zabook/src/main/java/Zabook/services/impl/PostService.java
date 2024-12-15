@@ -120,5 +120,9 @@ public class PostService implements IPostService {
 	public Optional<Post> getPostByCommentId(ObjectId commentId) {
         return postRepository.findByCommentId(commentId);
     }
+	@Override
+	public List<Post> getAllPostSortedByTime() {
+        return postRepository.findAllByOrderByCreatedAtDesc();
+    }
 
 }

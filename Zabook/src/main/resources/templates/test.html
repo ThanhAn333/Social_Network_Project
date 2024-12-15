@@ -1,18 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.0/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 </head>
 <body>
-<div th:if="${listpost != null and not #lists.isEmpty(listpost)}">
-    <div th:each="post : ${listpost}">
-        <p th:text="${post.content}"></p>
-    </div>
-</div>
-<div th:if="${listpost == null or #lists.isEmpty(listpost)}">
-    <p>Không có bài viết nào.</p>
-</div>
+    <h2>Chat</h2>
+    <div id="messages"></div>
+    <form id="chatForm">
+        <input type="text" id="messageInput" placeholder="Enter message"/>
+        <button type="submit">Send</button>
+    </form>
 
+    <script>
+        var socket = new SockJS('/ws');
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe('/topic/messages', function(message) {
+                var messageDiv = document.createElement("div");
+                messageDiv.textContent = message.body;
+                document.getElementById("messages").appendChild(messageDiv);
+            });
+        });
+
+        document.getElementById("chatForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var message = document.getElementById("messageInput").value;
+            stompClient.send("/app/sendMessage", {}, message);
+            document.getElementById("messageInput").value = '';
+        });
+    </script>
 </body>
 </html>

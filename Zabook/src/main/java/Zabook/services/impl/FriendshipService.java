@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import Zabook.dto.FriendshipStatus;
+import Zabook.dto.UserDTO;
 import Zabook.models.FriendShip;
 import Zabook.models.User;
 import Zabook.repository.FriendshipRepository;
@@ -24,6 +26,9 @@ public class FriendshipService implements IFriendshipService {
 	private UserRepository userRepository;
 	@Autowired
 	private FriendshipRepository friendshipRepository;
+	@Autowired
+	private UserService userService;
+	
 
 	// Gửi lời mời kết bạn
 	@Override
@@ -36,10 +41,40 @@ public class FriendshipService implements IFriendshipService {
             friendshipRepository.findByUser1AndUser2(receiver, sender).isPresent()) {
             throw new RuntimeException("Lời mời kết bạn đã tồn tại");
         }
+        FriendShip friendship = new FriendShip(sender, receiver, FriendshipStatus.PENDING);
+        friendshipRepository.save(friendship);
         
-        FriendShip friendship = new FriendShip(sender, receiver, "pending");
-        return friendshipRepository.save(friendship);
+        if (sender == null || receiver == null || friendship == null) {
+            throw new IllegalArgumentException("Sender, Receiver hoặc Friendship không được null");
+        }
+        UserDTO senderDTO = convertToUserDTO(sender, friendship);
+        UserDTO receiverDTO = convertToUserDTO(receiver, friendship);
+     // Đồng bộ trạng thái vào DTO
+
+
+        // Nếu cần, trả về DTO
+        return friendship;
 	}
+	// Chấp nhận lời mời kết bạn
+		@Override
+		public FriendShip acceptFriendRequest(ObjectId friendshipId) {
+
+		     // Tìm mối quan hệ trong cơ sở dữ liệu
+		        FriendShip friendship = friendshipRepository.findById(friendshipId)
+		                .orElseThrow(() -> new RuntimeException("Không tìm thấy lời mời kết bạn"));
+
+		        // Kiểm tra trạng thái mối quan hệ
+		        if (!friendship.getStatus().equals(FriendshipStatus.PENDING)) {
+		            throw new RuntimeException("Lời mời kết bạn không ở trạng thái chờ");
+		        }
+
+		        // Cập nhật trạng thái mối quan hệ
+		        friendship.setStatus(FriendshipStatus.ACCEPTED);
+		        
+		        // Lưu lại mối quan hệ đã thay đổi
+		        return friendshipRepository.save(friendship);
+		}
+	
 	// Lấy danh sách lời mời kết bạn đang chờ
 	@Override
 	public List<FriendShip> getPendingRequests(ObjectId userId) {
@@ -55,19 +90,7 @@ public class FriendshipService implements IFriendshipService {
 		
 		return pendingRequests;
 	}
-	// Chấp nhận lời mời kết bạn
-	@Override
-	public FriendShip acceptFriendRequest(ObjectId friendshipId) {
-		FriendShip friendship = friendshipRepository.findById(friendshipId)
-	            .orElseThrow(() -> new RuntimeException("Không tìm thấy lời mời kết bạn"));
-	            
-	        if (!friendship.getStatus().equals("pending")) {
-	            throw new RuntimeException("Lời mời kết bạn không ở trạng thái chờ");
-	        }
-	        
-	        friendship.setStatus("accepted");
-	        return friendshipRepository.save(friendship);
-	}
+	
 		// Thêm phương thức từ chối lời mời kết bạn
 		@Override
 		public FriendShip rejectFriendRequest(ObjectId friendshipId) {
@@ -78,7 +101,7 @@ public class FriendshipService implements IFriendshipService {
 				throw new RuntimeException("Lời mời kết bạn không ở trạng thái chờ");
 			}
 			
-			friendship.setStatus("rejected");
+			friendship.setStatus(FriendshipStatus.REJECTED);
 			return friendshipRepository.save(friendship);
 		}
 	// Lấy danh sách bạn bè
@@ -116,6 +139,58 @@ public class FriendshipService implements IFriendshipService {
 		
 		return userRepository.findByFirstNameContainingOrLastNameContainingIgnoreCase(
 			firstName, lastName);
+	}
+	@Override
+	public UserDTO convertToUserDTO(User user, FriendShip friendship) {
+		// Khai báo các giá trị cần thiết
+	    FriendshipStatus status = FriendshipStatus.NONE; // Mặc định trạng thái là NONE
+	    boolean isSender = false; // Mặc định không phải là người gửi
+	    String friendshipId = null; // Mặc định không có ID mối quan hệ
+	    String fullName = user.getFirstName() + " " + user.getLastName(); // Ghép tên đầy đủ
+
+	    if (friendship != null) { // Nếu có mối quan hệ
+	        status = friendship.getStatus(); // Lấy trạng thái từ mối quan hệ
+	        friendshipId = friendship.getFriendshipID().toString(); // Lấy ID của mối quan hệ
+
+	        // Kiểm tra người dùng hiện tại có phải là người gửi không
+	        isSender = friendship.getUser1().equals(userService.getCurrentUser());
+	    }
+
+	    // Trả về đối tượng UserDTO với các thông tin đã xử lý
+	    return new UserDTO(
+	        user.getUserID(),
+	        fullName,
+	        user.getAvatar(),
+	        calculateMutualFriends(user), // Tính số lượng bạn chung
+	        status,
+	        friendshipId,
+	        isSender
+	    );
+	    
+	}
+	private int calculateMutualFriends(User user) {
+        // Logic để tính số lượng bạn chung
+        return 0; // Thay thế bằng logic thực tế
+    }
+	 public FriendshipStatus getFriendshipStatus(ObjectId userId1, ObjectId userId2) {
+	        // Kiểm tra trạng thái quan hệ
+
+		 	User sender = userRepository.findById(userId1).orElseThrow();
+	        User receiver = userRepository.findById(userId2).orElseThrow();
+	        FriendShip friendship = friendshipRepository.findByUser1AndUser2(sender, receiver)
+	                .orElse(friendshipRepository.findByUser1AndUser2(receiver, sender).orElse(null));
+	        if (friendship == null) {
+	            return FriendshipStatus.NONE;
+	        }
+
+	        return friendship.getStatus();
+	    }
+	public FriendShip getFriendshipBetweenUsers(ObjectId userId1, ObjectId userId2) {
+		User sender = userRepository.findById(userId1).orElseThrow();
+        User receiver = userRepository.findById(userId2).orElseThrow();    
+		 return friendshipRepository.findByUser1AndUser2(sender, receiver)
+			        .orElse(friendshipRepository.findByUser1AndUser2(receiver, sender).orElse(null));
+
 	}
 
 	// Thêm method để lấy thời gian gửi lời mời

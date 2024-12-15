@@ -598,7 +598,6 @@ function handleEdit1(button) {
 
 
 
-//bình luận
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -699,23 +698,11 @@ function validateStoryForm(event) {
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const toggle = document.getElementById("dropdownToggle");
-    const menu = document.getElementById("dropdownMenu");
-
-    toggle.addEventListener("click", () => {
-        // Kiểm tra trạng thái hiện tại của menu và đổi trạng thái
-        if (menu.style.display === "none" || menu.style.display === "") {
-            menu.style.display = "block"; // Hiển thị menu
-        } else {
-            menu.style.display = "none";  // Ẩn menu
-        }
-    });
-
-    // Đóng menu khi click ra ngoài
-    document.addEventListener("click", (event) => {
-        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
-            menu.style.display = "none";
-        }
+document.querySelectorAll('.toggle-dropdown').forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn chặn điều hướng mặc định
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.classList.toggle('show'); // Thêm/bỏ class "show"
     });
 });
+

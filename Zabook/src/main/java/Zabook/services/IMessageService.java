@@ -24,4 +24,6 @@ public interface IMessageService {
 
 
     public Message sendMessage(String senderId, String recipientId, String content);
+    
+    public List<Message> getMessagesBetweenUsers(String senderId, String recipientId);
 }

@@ -105,5 +105,9 @@ public class MessageService implements IMessageService {
 
         return messageRepository.save(message);
     }
+	@Override
+	public List<Message> getMessagesBetweenUsers(String senderId, String recipientId) {
+        return messageRepository.findBySenderIdAndRecipientIdOrderByTimestampAsc(senderId, recipientId);
+    }
 
 }

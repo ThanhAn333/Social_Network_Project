@@ -1,103 +1,243 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhắn Tin</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <style>
-        /* CSS tùy chỉnh giao diện nhắn tin */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #chat-container {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-            border: 1px solid #ccc;
-            padding: 20px;
-        }
-        #messages {
-            height: 400px;
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #f9f9f9;
-        }
-        .message {
-            padding: 10px;
-            border-bottom: 1px solid #f1f1f1;
-        }
-        .message.sent {
-            text-align: right;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nhắn Tin</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<style>
+		/* CSS tùy chỉnh giao diện nhắn tin */
+		/* Thiết lập font chữ cho toàn bộ trang */
+/* CSS tùy chỉnh giao diện nhắn tin */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container của hộp chat */
+#chat-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+/* Tiêu đề chat */
+#chat-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Hiển thị avatar và tên người dùng */
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+/* Khung chat hiển thị tin nhắn */
+#messages {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Các tin nhắn */
+.message {
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    max-width: 80%;
+    font-size: 1rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* Tin nhắn người gửi */
+.message.sent {
+    background-color: #d1e7fd;
+    text-align: right;
+    margin-left: auto;
+    border-radius: 12px 12px 0 12px;
+}
+
+/* Tin nhắn người nhận */
+.message.received {
+    background-color: #e4e4e4;
+    text-align: left;
+    border-radius: 12px 12px 12px 0;
+}
+
+/* Input tin nhắn */
+.message-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.message-input-container input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.message-input-container input[type="text"]:focus {
+    border-color: #7ab6f9;
+    outline: none;
+}
+
+.message-input-container button {
+    width: 18%;
+    padding: 12px;
+    background-color: #7ab6f9;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.message-input-container button:hover {
+    background-color: #5098f2;
+}
+
+/* Cải thiện thanh cuộn */
+#messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+/* Đảm bảo thiết kế responsive trên di động */
+@media (max-width: 600px) {
+    #chat-container {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    button {
+        font-size: 1.1rem;
+        padding: 10px;
+    }
+
+    input[type="text"] {
+        font-size: 1rem;
+        padding: 10px;
+    }
+}
+
+
+	</style>
 </head>
+
 <body>
-    <div id="chat-container">
-        <h2>Nhắn tin với: 
+	<div id="chat-container">
+    <h2>
+        <div class="user-info">
+            <img th:src="${recipient != null ? recipient.avatar : 'avata.png'}" alt="Avatar" />
             <span th:text="${recipient != null ? recipient.firstName + ' ' + recipient.lastName : 'Người Dùng Không Xác Định'}">
                 Tên Người Dùng
             </span>
-        </h2>
-        <div id="messages"></div>
+        </div>
+    </h2>
+    <div id="messages"></div>
+    <input type="hidden" id="sender" th:value="${currentuser.getUserID()}">
+    <input type="hidden" id="recipent" th:value="${recipient.getUserID()}">
+    <div class="message-input-container">
         <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
         <button id="sendButton">Gửi</button>
     </div>
+</div>
 
-    <script th:inline="javascript">
-        
-        /* Dữ liệu từ backend */
-        const senderId = /*[[${currentuser.userID}]]*/ "";
-        const recipientId = /*[[${recipient.userID}]]*/ "";
-        console.log(senderId, recipientId);
 
-        // Kết nối tới WebSocket Server
-        let socket = new SockJS('/ws');
-        let stompClient = Stomp.over(socket);
-        
-        // Kết nối đến WebSocket
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/user/' + senderId + '/queue/messages', function(response) {
-                let message = JSON.parse(response.body);
-                displayMessage(message);
-            });
-        });
+	<script>
+		// Lấy dữ liệu từ input HTML
+		const senderId = document.getElementById("sender").value;
+		const recipientId = document.getElementById("recipent").value;
+		console.log("Sender ID:", senderId, "Recipient ID:", recipientId);
 
-        // Gửi tin nhắn
-        document.getElementById("sendButton").addEventListener("click", sendMessage);
-        function sendMessage() {
-            const messageInput = document.getElementById("messageInput");
-            const messageText = messageInput.value;
-            if (messageText.trim()) {
-                const message = {
-                    senderId: senderId,
-                    recipientId: recipientId,
-                    content: messageText
-                };
-                
-                // Gửi tin nhắn tới backend qua WebSocket
-                stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
-                displayMessage({ content: messageText, sent: true });
-                messageInput.value = ''; // Xóa input
-            }
-        }
+		// Kết nối tới WebSocket Server
+		let socket = new SockJS('/ws');
+		let stompClient = Stomp.over(socket);
 
-        // Hiển thị tin nhắn trong chat-box
-         function displayMessage(message) {
-            const chatBox = document.getElementById("messages");
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            if (message.sent) {
-                messageDiv.classList.add("sent");
-            }
-            messageDiv.textContent = message.content;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
-        }
-    </script>
+		// Kết nối đến WebSocket
+		stompClient.connect({}, function (frame) {
+			console.log('Connected: ' + frame);
+			stompClient.subscribe('/user/' + senderId + '/queue/messages', function (response) {
+				let message = JSON.parse(response.body);
+				displayMessage(message);
+			});
+
+		});
+
+		// Gửi tin nhắn
+		document.getElementById("sendButton").addEventListener("click", sendMessage);
+		function sendMessage() {
+			const messageInput = document.getElementById("messageInput");
+			const messageText = messageInput.value;
+			if (messageText.trim()) {
+				const message = {
+					senderId: senderId,
+					recipientId: recipientId,
+					content: messageText
+				};
+				// Gửi tin nhắn tới backend qua WebSocket
+				stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
+				displayMessage({content: messageText, sent: true});
+				messageInput.value = ''; // Xóa input
+			}
+		}
+
+		// Hiển thị tin nhắn trong chat-box
+		function displayMessage(message) {
+			const chatBox = document.getElementById("messages");
+			const messageDiv = document.createElement("div");
+			messageDiv.classList.add("message");
+			if (message.sent) {
+				messageDiv.classList.add("sent");
+			}
+			messageDiv.textContent = message.content;
+			chatBox.appendChild(messageDiv);
+			chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
+		}
+	</script>
+
 </body>
+
 </html>

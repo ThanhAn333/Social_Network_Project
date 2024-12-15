@@ -97,7 +97,7 @@ button:focus {
 img {
 	height: auto;
 	width: 20px;
-	
+	object-fit: cover;
 }
 
 .overlap {
@@ -22555,9 +22555,3 @@ textarea.form-control {
 }
 
 
-.dropdown-menu2 {
-    position: absolute; /* Đảm bảo menu xuất hiện bên dưới */
-    top: 100%;          /* Vị trí dưới thẻ <a> */
-    left: 50px;            /* Căn chỉnh theo chiều ngang */
-    z-index: 1000;      /* Đảm bảo menu nằm trên các thành phần khác */
-}

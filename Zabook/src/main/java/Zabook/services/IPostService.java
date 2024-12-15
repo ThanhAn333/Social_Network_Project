@@ -12,6 +12,8 @@ public interface IPostService {
 	Post createPost(Post post) ;
     
     List<Post> getAllPost();
+    
+    public List<Post> getAllPostSortedByTime();
 	
     Post updatePost(Post post);
 	

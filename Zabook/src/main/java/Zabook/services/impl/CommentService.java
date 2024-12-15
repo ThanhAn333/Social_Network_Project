@@ -50,6 +50,9 @@ public class CommentService implements ICommentService {
 	    // Lưu comment vào cơ sở dữ liệu
 	    commentRepo.save(comment);
 	   
+	    if (post.getComment() == null) {
+            post.setComment(new ArrayList<>());
+        }
 	    post.getComment().add(comment);
 	   
 

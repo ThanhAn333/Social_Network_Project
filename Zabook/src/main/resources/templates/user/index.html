@@ -5,8 +5,10 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+
+	<link rel="shortcut icon" href="/images/logo1.png" type="image/x-icon">
 	<title>Zabook.com</title>
+
 	<!-- style css link -->
 	<link rel="stylesheet" href="/css/style.css">
 	<!-- fontawesome css link -->
@@ -280,13 +282,30 @@
 							</ul>
 						</div>
 					</div>
+
+
+
+
+				
+    <a href="javascript:void(1);" id="showFormButton5">
+        <i class="fa-solid fa-caret-down"></i>
+    </a>
+
+
+
+
+
+
+
+
 				</div>
 				
 			</div>
 		</div>
 	</header>
 
-</div>
+
+
 	<!-- header section end -->
 	<!-- home section start -->
 
@@ -320,10 +339,13 @@
 								<span>messenger</span>
 							</label>
 						</a>
-						<label>
+						<a href="/user/messenger">
+							<label>
 							<img src="/images/instagram.png" alt="instagram">
 							<span>instagram</span>
 						</label>
+						</a>
+						
 						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
 					</div>
 
@@ -544,7 +566,7 @@
 
 
 													</li>
-													<li style="width: 50%;"></li>
+													<li style="width: 60%;"></li>
 													<li><span
 															th:text="${post?.getCommentCount() != null ? post.getCommentCount() : 0}"></span>bình
 														luận</li>
