@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class FriendshipService implements IFriendshipService {
 	@Autowired
 	private FriendshipRepository friendshipRepository;
 	@Autowired
+	@Lazy
 	private UserService userService;
 	
 
@@ -78,8 +80,26 @@ public class FriendshipService implements IFriendshipService {
 	// Lấy danh sách lời mời kết bạn đang chờ
 	@Override
 	public List<FriendShip> getPendingRequests(ObjectId userId) {
-		User user = userRepository.findById(userId).orElseThrow();
-		return friendshipRepository.findByStatusAndUser2("pending", user);
+		//User user = userRepository.findById(userId).orElseThrow();
+		return friendshipRepository.findByUser2AndStatus(userId, FriendshipStatus.PENDING);
+	}
+
+	@Override
+    public List<FriendShip> getFriendships(ObjectId id) {
+		User user = userRepository.findById(id).orElseThrow();
+        return friendshipRepository.findByStatusAndUser2("accepted",user);
+    }
+
+
+	@Override
+	public boolean accept(ObjectId friendshipId) {
+		FriendShip friendship = friendshipRepository.findById(friendshipId).orElseThrow();
+		if (friendship.getStatus().equals(FriendshipStatus.PENDING)) {
+			friendship.setStatus(FriendshipStatus.ACCEPTED);
+			friendshipRepository.save(friendship);
+			return true;
+		}
+		return false;
 	}
 	public List<FriendShip> getPendingRequestsSorted(ObjectId userId) {
 		User user = userRepository.findById(userId).orElseThrow();

@@ -104,14 +104,21 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
                 </p>
 
                 <!-- Các nút để chấp nhận hoặc từ chối -->
-                <div class="d-flex justify-content-start">
-                    <form th:action="@{/inviteFriend/accept/{id}(id=${request.id})}" method="post" class="mr-2">
-                        <button type="submit" class="btn btn-success">Chấp Nhận</button>
-                    </form>
-                    <form th:action="@{/inviteFriend/reject/{id}(id=${request.id})}" method="post">
-                        <button type="submit" class="btn btn-danger">Từ Chối</button>
-                    </form>
-                </div>
+				<div class="btn-group" role="group">
+					<form action="/user/inviteFriend/accept" method="post" style="display:inline;">
+						<input type="hidden" th:name="friendshipId" th:value="${request.friendshipID}">
+						<button type="submit" class="btn btn-success btn-sm">
+							<i class="fa fa-check"></i> Chấp nhận
+						</button>
+					</form>
+
+					<form action="/friendship/reject" method="POST" style="display:inline;">
+						<input type="hidden" th:name="friendshipId" th:value="${request.friendshipID}">
+						<button type="submit" class="btn btn-danger btn-sm">
+							<i class="fa fa-times"></i> Từ chối
+						</button>
+					</form>
+				</div>
             </div>
         </div>
     </div>

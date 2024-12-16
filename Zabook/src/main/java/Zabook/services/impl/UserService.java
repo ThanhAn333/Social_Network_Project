@@ -21,14 +21,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.configs.CustomUserDetails;
+import Zabook.dto.FriendshipStatus;
 import Zabook.dto.UserRequest;
 import Zabook.models.FriendShip;
 import Zabook.models.Image;
 import Zabook.models.User;
 import Zabook.models.Video;
+import Zabook.repository.FriendshipRepository;
 import Zabook.repository.UserRepository;
+import Zabook.services.IFriendshipService;
 import Zabook.services.IUserService;
 import Zabook.services.JwtService;
+import groovy.lang.Lazy;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
@@ -50,6 +54,14 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepo;
+
+
+    @Autowired
+    @Lazy
+    private IFriendshipService friendshipService;
+
+    @Autowired
+    private FriendshipRepository friendshipRepository;
 
     private String generateRandomString(int length) {
         final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -156,6 +168,8 @@ public class UserService implements IUserService {
         userRepo.save(user);
     }
 
+    
+
     @Override
     public List<User> getFriendList(User user) {
         // Khởi tạo danh sách bạn bè
@@ -164,7 +178,7 @@ public class UserService implements IUserService {
         // Kiểm tra nếu friendships của user không phải null
         if (user.getFriendships() != null) {
             for (FriendShip fship : user.getFriendships()) {
-                if (fship.getUser2() != null && "friend".equals(fship.getStatus())) {
+                if (fship.getUser2() != null && FriendshipStatus.ACCEPTED.equals(fship.getStatus())) {
                     Flist.add(fship.getUser2());
                 }
             }

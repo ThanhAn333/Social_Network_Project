@@ -180,7 +180,7 @@
             <div id="friends" class="tab-content">
                 <h3>Danh sách bạn bè</h3>
                 <div class="friends-list">
-                    <div th:each="user : ${friendList}">
+                    <div th:each="user : ${friendShips}">
                         <div class="friend" th:text="${user.firstName + ' ' + user.lastName}"></div>
                     </div>
 

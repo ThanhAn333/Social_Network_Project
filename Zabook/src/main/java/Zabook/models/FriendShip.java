@@ -41,6 +41,9 @@ public class FriendShip {
         this.user1 = user1;
     }
 
+    /**
+     * @return the second user in this friendship
+     */
     public User getUser2() {
         return user2;
     }

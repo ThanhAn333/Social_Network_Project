@@ -23,4 +23,10 @@ public interface IFriendshipService {
 	public List<FriendShip> getPendingRequestsSorted(ObjectId userId);
 	//Đồng bộ UserDTO vs Friendship
 	public UserDTO convertToUserDTO(User user, FriendShip friendship);
+
+	public boolean accept(ObjectId friendshipId) ;
+
+
+	
+	public List<FriendShip> getFriendships(ObjectId id) ;
 }

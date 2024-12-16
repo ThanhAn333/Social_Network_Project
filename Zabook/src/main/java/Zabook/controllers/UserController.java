@@ -137,11 +137,14 @@ public class UserController {
     public String profile(Model model) {
 
         User user = userService.getCurrentUser();
+        List<FriendShip> friendShips = friendshipService.getFriendships(user.getUserID());
         List<Post> posts = postService.findByUserId(user.getUserID());
         List<User> FriendList = userService.getFriendList(user);
         List<Zabook.models.Image> images = userService.getImages(user);
         List<Video> videos = userService.getVideos(user);
 
+
+        model.addAttribute("friendShips", friendShips);
         model.addAttribute("images", images);
         model.addAttribute("videos", videos);
         model.addAttribute("friendList", FriendList);
@@ -216,7 +219,15 @@ public class UserController {
         model.addAttribute("requestFriends",requestList );
         return "user/inviteFriends";
     }
-    
+
+    @PostMapping("/inviteFriend/accept")
+    public String inviteFriend(@RequestParam("friendshipId") String friendId) {
+        boolean check = friendshipService.accept(new ObjectId(friendId));
+        if(check){
+            return "redirect:/user/inviteFriend";
+        }
+        return "redirect:/user/inviteFriend";
+    }
     
     //Long
     @GetMapping("/getalluser")
