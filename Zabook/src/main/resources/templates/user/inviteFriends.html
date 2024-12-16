@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Mời Kết Bạn</title>
+    <link rel="stylesheet" href="/css/style.css">
+	<!-- fontawesome css link -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/@feathericons/feather@4.28.0/dist/feather.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+		<div class="header-container">
+			<div class="header-wrapper">
+				<div class="logoBox">
+					<img src="/images/th.png" alt="logo">
+				</div>
+				<div class="searchBox">
+					<input type="search">
+
+					<a href="/friendships">
+						<i class="fas fa-search"></i>
+					</a>
+
+				</div>
+				<!-- Navigation Icons -->
+				<div class="iconBox1">
+					<a href="/user/"><i class="fa-solid fa-house"></i></a>
+					<a href="/user/inviteFriend"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
+					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
+				</div>
+
+				<!-- User Options -->
+				<div class="iconBox2">
+					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
+					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
+					<a href="javascript:void(0);" id="notificationBell" class="notification-Bell"><i
+							class="fa-solid fa-bell"></i></a>
+					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
+							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+							alt="user"></a>
+
+					<div class="notification-wrapper">
+
+
+						<!-- Dropdown để hiển thị thông báo -->
+						<div id="notificationDropdown" class="notification-dropdown ">
+							<ul id="notificationList">
+								<th:block th:each="notification : ${notifications}">
+									<li>
+										<span th:text="${notification.senderName}">Tên người gửi</span>
+										<span th:text="${notification.content}">Nội dung thông báo</span>
+										<span th:text="${notification.time}">Thời gian</span>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+
+
+
+
+					<a href="javascript:void(0);" id="showFormButton5">
+						<i class="fa-solid fa-caret-down"></i>
+					</a>
+					<div id="formContainer5"
+						style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;">
+						<h3>Form Tùy Chọn</h3>
+						<ul>
+							<li><a href="/user/profile">Trang cá nhân</a></li>
+							<li><a href="/logout">Đăng xuất</a></li>
+						</ul>
+						<button id="closeFormButton5" style="margin-top: 10px;">Đóng</button>
+					</div>
+
+
+
+
+				</div>
+			</div>
+		</div>
+	</header>
+    <div class="container mt-5">
+        <h2 class="text-center">Lời Mời Kết Bạn</h2>
+
+        <!-- Kiểm tra xem có lời mời nào không -->
+        <div th:if="${requestFriends.isEmpty()}">
+            <p class="text-center">Không có lời mời kết bạn nào!</p>
+        </div>
+
+        <!-- Hiển thị danh sách lời mời -->
+        <div th:each="request : ${requestFriends}" class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${request.getUser1().getFirstName() + ' ' + request.getUser1().getLastName()}"></h5>
+                <p class="card-text">
+                    <span>Lời mời từ: </span>
+                    <span th:text="${request.getUser1().getEmail()}"></span>
+                </p>
+
+                <!-- Các nút để chấp nhận hoặc từ chối -->
+                <div class="d-flex justify-content-start">
+                    <form th:action="@{/inviteFriend/accept/{id}(id=${request.id})}" method="post" class="mr-2">
+                        <button type="submit" class="btn btn-success">Chấp Nhận</button>
+                    </form>
+                    <form th:action="@{/inviteFriend/reject/{id}(id=${request.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Từ Chối</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
