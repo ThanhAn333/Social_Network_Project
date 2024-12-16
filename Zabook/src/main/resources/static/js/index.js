@@ -698,19 +698,11 @@ function validateStoryForm(event) {
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const showFormButton = document.getElementById("showFormButton5");
-    const formContainer = document.getElementById("formContainer5");
-    const closeFormButton = document.getElementById("closeFormButton5");
-
-    // Hiển thị form khi bấm vào thẻ A
-    showFormButton.addEventListener("click", () => {
-        formContainer.style.display = "block";
-    });
-
-    // Ẩn form khi bấm nút Đóng
-    closeFormButton.addEventListener("click", () => {
-        formContainer.style.display = "none";
+document.querySelectorAll('.toggle-dropdown').forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn chặn điều hướng mặc định
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.classList.toggle('show'); // Thêm/bỏ class "show"
     });
 });
 

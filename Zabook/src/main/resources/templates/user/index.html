@@ -5,8 +5,10 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-	<title>facebook.com</title>
+
+	<link rel="shortcut icon" href="/images/logo1.png" type="image/x-icon">
+	<title>Zabook.com</title>
+
 	<!-- style css link -->
 	<link rel="stylesheet" href="/css/style.css">
 	<!-- fontawesome css link -->
@@ -243,7 +245,7 @@
 				<!-- Navigation Icons -->
 				<div class="iconBox1">
 					<a href="/user/"><i class="fa-solid fa-house"></i></a>
-					<a href="/user/groups"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/friendships"><i class="fa-solid fa-user-group"></i></a>
 					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
 					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
 				</div>
@@ -257,7 +259,14 @@
 					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
 							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
 							alt="user"></a>
-
+					<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;"
+						aria-labelledby="accountDropdown">
+						<ul>
+							<li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+							<li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+							<li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+						</ul>
+					</div>
 					<div class="notification-wrapper">
 
 
@@ -292,13 +301,23 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 						<button id="closeFormButton5" style="margin-top: 10px;">Đóng</button>
 					</div>
 
+					<a href="javascript:void(1);" id="showFormButton5">
+						<i class="fa-solid fa-caret-down"></i>
+					</a>
+
+
+
+
+
 
 
 
 				</div>
+
 			</div>
 		</div>
 	</header>
+
 
 
 	<!-- header section end -->
@@ -334,10 +353,13 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 								<span>messenger</span>
 							</label>
 						</a>
-						<label>
-							<img src="/images/instagram.png" alt="instagram">
-							<span>instagram</span>
-						</label>
+						<a href="/user/messenger">
+							<label>
+								<img src="/images/instagram.png" alt="instagram">
+								<span>instagram</span>
+							</label>
+						</a>
+
 						<button class="see-more-btn">See more <i class="fa-solid fa-angle-down"></i></button>
 					</div>
 
@@ -416,8 +438,12 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 								<div class="single-stories" th:each="story, i : ${stories}"
 									th:onclick="|openStory(${i.index})|">
 									<label>
-										<img th:src="@{${story.user != null ? story.getUser().getAvatar() : '/images/avatar.jpg'}}"
-											alt="user-avatar">
+										<a
+											th:href="@{'/user/profile/' + ${story.user != null ? story.getUser().getUserID() : 0}}">
+											<img th:src="@{${story.user != null ? story.user.getAvatar() : '/images/avatar.jpg'}}"
+												alt="user-avatar" class="img-fluid"
+												style="width: 50px; height: 50px; border-radius: 50%;">
+										</a>
 									</label>
 									<div>
 										<img th:if="${story.image != null}" th:src="@{${story.image}}"
@@ -490,14 +516,21 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 										<div class="fb-post1-header"></div>
 										<div class="fb-p1-main">
 											<div class="post-title">
-												<img th:src="${post?.user?.avatar != null ? post.user.avatar : '/images/default-avatar.png'}"
-													alt="user picture">
+												<a
+													th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}"><img
+														th:src="${post?.user?.avatar != null ? post.user.avatar : '/images/default-avatar.png'}"
+														alt="user picture"> </a>
+
 												<ul>
 													<li>
 														<h3>
-															<h4 style="display: inline;"
-																th:text="${post?.user != null ? post.user.firstName + ' ' + post.user.lastName : 'Unknown User'}">
-															</h4>
+															<a
+																th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}">
+																<h4 style="display: inline;"
+																	th:text="${post?.user != null ? post.user.firstName + ' ' + post.user.lastName : 'Unknown User'}">
+																</h4>
+															</a>
+
 															<h4 style="display: inline;" th:if="${post?.isShared}"> - Đã
 																chia sẻ bài viết</h4>
 														</h3>
@@ -555,7 +588,7 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 
 
 													</li>
-													<li style="width: 50%;"></li>
+													<li style="width: 60%;"></li>
 													<li><span
 															th:text="${post?.getCommentCount() != null ? post.getCommentCount() : 0}"></span>bình
 														luận</li>
@@ -778,33 +811,6 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 							</ul>
 						</div>
 
-						<div class="messenger">
-							<div class="messenger-search">
-								<i class="fa-solid fa-user-group"></i>
-								<h4>Messenger</h4>
-								<input type="search" placeholder="Search">
-								<i class="fa-solid fa-magnifying-glass"></i>
-							</div>
-							<ul>
-								<li>
-									<img src="/images/us2.png" alt="user">
-									<b>Zunayed Hossain <span>Online</span></b>
-									<i class="fa-brands fa-facebook-messenger"></i>
-								</li>
-
-								<li>
-									<img src="/images/us3.png" alt="user">
-									<b>Armanul Islam <span>Offline</span></b>
-									<i class="fa-brands fa-facebook-messenger"></i>
-								</li>
-
-								<li>
-									<img src="/images/us4.png" alt="user">
-									<b>Mohammad Amir <span>Online</span></b>
-									<i class="fa-brands fa-facebook-messenger"></i>
-								</li>
-							</ul>
-						</div>
 
 					</div><!-- home right wrapper end -->
 				</div><!-- home right end -->
