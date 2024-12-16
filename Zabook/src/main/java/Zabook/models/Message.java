@@ -3,6 +3,7 @@ package Zabook.models;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -66,6 +67,26 @@ public class Message {
 		public void setTimestamp(LocalDateTime timestamp) {
 			this.timestamp = timestamp;
 		}
+		
+		
+		
+		// Hàm xử lý thời gian
+	    public String getFormattedTimestamp() {
+	        LocalDateTime now = LocalDateTime.now();
+	        
+	        // Tính khoảng cách thời gian giữa hiện tại và timestamp
+	        long hoursBetween = ChronoUnit.HOURS.between(timestamp, now);
+	        
+	        // Nếu thời gian nhỏ hơn 24h, hiển thị theo định dạng giờ:phút
+	        if (hoursBetween < 24) {
+	            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+	            return timestamp.format(timeFormatter);
+	        } else {
+	            // Nếu thời gian lớn hơn hoặc bằng 24h, hiển thị theo định dạng ngày/tháng/năm
+	            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	            return timestamp.format(dateFormatter);
+	        }
+	    }
 	
 		public boolean isRead() {
 			return isRead;

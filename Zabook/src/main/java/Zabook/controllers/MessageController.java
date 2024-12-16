@@ -46,17 +46,21 @@ public class MessageController {
         if (recipient == null) {
             return "redirect:/error";
         }
-        List<Message> messages=messageService.getConversation(user.getUserID(),userID);
+        List<Message> messages=messageService.getMessagesBetweenUsers(userId,user.getUserID().toString());
         model.addAttribute("messages",messages);
         model.addAttribute("currentuser", user);
         model.addAttribute("recipient", recipient);
         
         for(Message mess : messages) {
         	System.out.print(mess.getContent());
+        	System.out.print(mess.getSender().getUserID());
         }
-        if(messages==null) {
-        	System.out.print("ủa");
+        if (messages == null || messages.isEmpty()) {
+            System.out.println("Danh sách tin nhắn rỗng hoặc chưa được khởi tạo!");
+        } else {
+            System.out.println("Danh sách tin nhắn có dữ liệu!");
         }
+
         return "user/messenger";
     }
     @MessageMapping("/sendMessage")

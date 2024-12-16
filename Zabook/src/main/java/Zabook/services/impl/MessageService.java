@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import Zabook.models.Message;
 import Zabook.models.User;
 import Zabook.repository.MessageRepository;
+import Zabook.repository.UserRepository;
 import Zabook.services.IMessageService;
 @Service
 public class MessageService implements IMessageService {
@@ -22,6 +24,8 @@ public class MessageService implements IMessageService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	UserRepository userRepo;
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
@@ -107,7 +111,25 @@ public class MessageService implements IMessageService {
     }
 	@Override
 	public List<Message> getMessagesBetweenUsers(String senderId, String recipientId) {
-        return messageRepository.findBySenderIdAndRecipientIdOrderByTimestampAsc(senderId, recipientId);
+        // Lấy đối tượng User từ ID
+		ObjectId sendID = new ObjectId(senderId);
+		ObjectId recipID = new ObjectId(recipientId);
+        User sender = userRepo.findById(sendID).orElse(null);
+        User receiver = userRepo.findById(recipID).orElse(null);
+
+        if (sender == null || receiver == null) {
+            throw new IllegalArgumentException("Người gửi hoặc người nhận không tồn tại");
+        }
+
+        return messageRepository.findBySenderAndReceiverOrSenderAndReceiverOrderByTimestamp(
+                sender, receiver, receiver, sender
+        );
     }
+	@Override
+	public List<Message> getAllMessages() {
+        return messageRepository.findAllByOrderByTimestampDesc();
+    }
+	
+	
 
 }

@@ -26,4 +26,7 @@ public interface IMessageService {
     public Message sendMessage(String senderId, String recipientId, String content);
     
     public List<Message> getMessagesBetweenUsers(String senderId, String recipientId);
+    
+ // Lấy tin nhắn giữa hai người dùng
+    public List<Message> getAllMessages();
 }
