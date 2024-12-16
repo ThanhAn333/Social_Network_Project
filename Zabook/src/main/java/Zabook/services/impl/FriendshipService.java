@@ -94,7 +94,12 @@ public class FriendshipService implements IFriendshipService {
 	@Override
 	public boolean accept(ObjectId friendshipId) {
 		FriendShip friendship = friendshipRepository.findById(friendshipId).orElseThrow();
+		FriendShip friendship1 = new FriendShip();
+		friendship1.setUser1(friendship.getUser2());
+		friendship1.setUser2(friendship.getUser1());
+		
 		if (friendship.getStatus().equals(FriendshipStatus.PENDING)) {
+
 			friendship.setStatus(FriendshipStatus.ACCEPTED);
 			friendshipRepository.save(friendship);
 			return true;

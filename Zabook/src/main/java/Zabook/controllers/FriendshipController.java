@@ -57,6 +57,7 @@ public class FriendshipController {
 		   List<FriendShip> list = user.getFriendships();
 		   list.add(friendship);
 		   user.setFriendships(list);
+		   userService.updateUser(user);
 		   return "redirect:/user/profile/" + receiverId;
 
 	   } catch (Exception e) {
