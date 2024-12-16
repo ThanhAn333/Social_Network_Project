@@ -263,10 +263,7 @@ body {
 			<i class="fas fa-search"></i> <input type="text" id="searchInput"
 				placeholder="Tìm kiếm bạn bè">
 		</div>
-		<img
-			th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
-			alt="Profile Picture" class="profile-pic"
-			style="width: 35px; height: 35px; margin-left: 10px;">
+		
 		<h3
 			th:text="${currentuser.firstName +' '+ currentuser.lastName}"></h3>
 	</div>
@@ -314,23 +311,7 @@ body {
 				Lời mời kết bạn <span class="request-count"
 					th:text="${friendRequests != null ? friendRequests.size() : 0}">14</span>
 			</h3>
-			<!-- People you may know -->
-			<h3 class="section-title" style="margin-top: 24px;">Những người
-				bạn có thể biết</h3>
-				<div id="currentUserIdDisplay"></div>
-
-			<div class="friend-card">
-				<img src="https://picsum.photos/62" alt="Avatar"
-					class="friend-avatar">
-				<div class="friend-info">
-					<div class="friend-name">Lê Văn C</div>
-					<div class="friend-meta">4 bạn chung</div>
-				</div>
-				<div class="action-buttons">
-					<button class="btn btn-primary">Thêm bạn bè</button>
-					<button class="btn btn-secondary">Gỡ</button>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 

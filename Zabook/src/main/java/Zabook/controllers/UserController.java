@@ -1,7 +1,6 @@
 package Zabook.controllers;
 
 
-import java.awt.Image;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,9 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import Zabook.dto.FriendshipStatus;
-import Zabook.models.Notification;
 import Zabook.dto.UserDTO;
 import Zabook.models.FriendShip;
+import Zabook.models.Notification;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
@@ -118,18 +117,16 @@ public class UserController {
         // Lấy thông tin người dùng từ cơ sở dữ liệu
     	User user1 = userService.getCurrentUser();
         model.addAttribute("currentuser", user1);
-
-
         List<Notification> notifications = notificationService.getNotifications(user1.toString()); 
         model.addAttribute("notifications", notifications);
-
         User user = userService.getUserById(userId.toString());
         if (user == null) {
             return "redirect:/error";  
         }
+        // String statusShip = null;
 
         model.addAttribute("user", user);
-        return "user/ProfileUser"; 
+        return "user/someone-else-profile-page"; 
     }
 
     //lâm

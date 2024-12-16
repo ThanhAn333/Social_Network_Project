@@ -516,21 +516,16 @@ background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4p
 										<div class="fb-post1-header"></div>
 										<div class="fb-p1-main">
 											<div class="post-title">
-												<a
-													th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}"><img
-														th:src="${post?.user?.avatar != null ? post.user.avatar : '/images/default-avatar.png'}"
-														alt="user picture"> </a>
-
+												<a th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}"><img th:src="${post?.user?.avatar != null ? post.user.avatar : '/images/default-avatar.png'}"
+													alt="user picture"> </a>
+												
 												<ul>
 													<li>
 														<h3>
-															<a
-																th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}">
-																<h4 style="display: inline;"
-																	th:text="${post?.user != null ? post.user.firstName + ' ' + post.user.lastName : 'Unknown User'}">
-																</h4>
-															</a>
-
+															<a th:href="@{'/user/profile/' + ${post.user != null ? post.getUser().getUserID() : 0}}"> <h4 style="display: inline;"
+																th:text="${post?.user != null ? post.user.firstName + ' ' + post.user.lastName : 'Unknown User'}">
+															</h4></a>
+															
 															<h4 style="display: inline;" th:if="${post?.isShared}"> - Đã
 																chia sẻ bài viết</h4>
 														</h3>
