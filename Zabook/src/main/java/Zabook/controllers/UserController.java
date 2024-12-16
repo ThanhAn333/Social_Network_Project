@@ -189,6 +189,14 @@ public class UserController {
     }
     //lâm
     
+    @GetMapping("/inviteFriend")
+    public String getMethodName(Model model) {
+        User currentUser = userService.getCurrentUser();
+        List<FriendShip> requestList = friendshipService.getPendingRequests(currentUser.getUserID());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("requestFriends",requestList );
+        return "user/inviteFriends";
+    }
     
     
     //Long
