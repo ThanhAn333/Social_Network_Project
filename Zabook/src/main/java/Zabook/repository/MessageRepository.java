@@ -30,7 +30,9 @@ public interface MessageRepository extends MongoRepository<Message, ObjectId>{
     List<Message> findMessagesByUser(User user);
 
     // Truy vấn lấy tất cả tin nhắn giữa người gửi và người nhận
-    List<Message> findBySenderIdAndRecipientIdOrderByTimestampAsc(String senderId, String recipientId);
-
-    
+    List<Message> findBySenderAndReceiverOrSenderAndReceiverOrderByTimestamp(
+            User sender1, User receiver1,
+            User sender2, User receiver2
+    );
+    List<Message> findAllByOrderByTimestampDesc();
 }

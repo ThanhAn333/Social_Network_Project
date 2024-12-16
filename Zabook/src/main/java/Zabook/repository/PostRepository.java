@@ -18,4 +18,5 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
     List<Post> findAllByOrderByCreatedAtDesc();
     
     Optional<Post> findByCommentId(ObjectId commentId);
+    
 }
