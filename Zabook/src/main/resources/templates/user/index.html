@@ -245,7 +245,7 @@
 				<!-- Navigation Icons -->
 				<div class="iconBox1">
 					<a href="/user/"><i class="fa-solid fa-house"></i></a>
-					<a href="/user/groups"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/user/inviteFriend"><i class="fa-solid fa-user-group"></i></a>
 					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
 					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
 				</div>
@@ -286,14 +286,19 @@
 
 
 
-				
-    <a href="javascript:void(1);" id="showFormButton5">
-        <i class="fa-solid fa-caret-down"></i>
-    </a>
-
-
-
-
+					<a href="javascript:void(0);" id="showFormButton5">
+						<i class="fa-solid fa-caret-down"></i>
+					</a>
+					<div id="formContainer5"
+						style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;">
+						<h3>Form Tùy Chọn</h3>
+						<ul>
+							<li><a href="/user/profile">Trang cá nhân</a></li>
+							<li><a href="/logout">Đăng xuất</a></li>
+						</ul>
+						<button id="closeFormButton5" style="margin-top: 10px;">Đóng</button>
+					</div>
 
 
 
@@ -928,7 +933,7 @@
 		});
 
 
-			//tải thêm post
+		//tải thêm post
 
 
 	</script>

@@ -1,6 +1,7 @@
 package Zabook.controllers;
 
 
+import java.awt.Image;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +33,7 @@ import Zabook.models.FriendShip;
 import Zabook.models.Post;
 import Zabook.models.Story;
 import Zabook.models.User;
+import Zabook.models.Video;
 import Zabook.services.INotificationService;
 import Zabook.services.IPostService;
 import Zabook.services.IStoryService;
@@ -136,7 +138,13 @@ public class UserController {
 
         User user = userService.getCurrentUser();
         List<Post> posts = postService.findByUserId(user.getUserID());
+        List<User> FriendList = userService.getFriendList(user);
+        List<Zabook.models.Image> images = userService.getImages(user);
+        List<Video> videos = userService.getVideos(user);
 
+        model.addAttribute("images", images);
+        model.addAttribute("videos", videos);
+        model.addAttribute("friendList", FriendList);
         model.addAttribute("posts", posts );
         model.addAttribute("currentuser", user);
         
@@ -200,6 +208,14 @@ public class UserController {
     }
     //lâm
     
+    @GetMapping("/inviteFriend")
+    public String getMethodName(Model model) {
+        User currentUser = userService.getCurrentUser();
+        List<FriendShip> requestList = friendshipService.getPendingRequests(currentUser.getUserID());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("requestFriends",requestList );
+        return "user/inviteFriends";
+    }
     
     
     //Long

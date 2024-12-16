@@ -9,7 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Zabook.dto.UserRequest;
+import Zabook.models.Image;
 import Zabook.models.User;
+import Zabook.models.Video;
 import jakarta.servlet.http.HttpSession;
 
 public interface IUserService {
@@ -45,6 +47,8 @@ public interface IUserService {
 	 @PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<User> getAllUsersWithRoleUser();
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void lockUser(String id);
+	List<User> getFriendList(User user);
+
+	public List<Image> getImages(User user);
+	public List<Video> getVideos(User user);
 }

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .profile-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .post-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-header .user-details {
+            flex-grow: 1;
+        }
+
+        .post-header .username {
+            font-weight: bold;
+            margin: 0;
+            font-size: 0.95rem;
+            color: #050505;
+        }
+
+        .post-header .time {
+            font-size: 0.85rem;
+            color: #65676b;
+            margin: 0;
+        }
+
+        .post-content {
+            font-size: 0.95rem;
+            color: #050505;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .post-content img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e4e6eb;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: #65676b;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-actions button i {
+            margin-right: 5px;
+        }
+
+        .post-actions button:hover {
+            color: #1877f2;
+        }
+    </style>
+</head>
+<div th:replace="user/header"></div>
+
+<body>
+
+    <div class="container mt-4">
+        <!-- Profile Section -->
+        <div class="profile-section text-center">
+
+            <a href="#" data-toggle="modal" data-target="#avatarModal">
+                <img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+                    alt="Profile Picture" class="profile-pic">
+            </a>
+
+            <h3 th:text="${currentuser.firstName +' '+ currentuser.lastName}"></h3>
+
+            <!-- chỉnh sửa Bio -->
+            <div class="form-group">
+                <!-- Hiển thị tiểu sử -->
+                <p id="bioDisplay" th:text="${currentuser.bio}"></p>
+
+                <!-- Input để chỉnh sửa tiểu sử, ẩn ban đầu -->
+                <textarea id="bioEdit" class="form-control" style="display: none;">[[${currentuser.bio}]]</textarea>
+
+                <!-- Icon chỉnh sửa -->
+                <button type="button" id="editBioBtn" class="btn btn-light mt-2 ">
+                    <i class="fas fa-edit"></i> Chỉnh sửa tiểu sử
+                </button>
+
+                <!-- Nút lưu, ẩn ban đầu -->
+                <button type="button" id="saveBioBtn" class="btn btn-primary mt-2" style="display: none;">
+                    <i class="fas fa-save"></i> Lưu
+                </button>
+            </div>
+            <!-- end chỉnh sửa Bio -->
+
+            <div class="form-group">
+                <!-- Hiển thị Gender -->
+                <p id="genderDisplay" th:text="${'Giới tính: '+ currentuser.gender}"></p>
+                <select id="genderEdit" class="form-control" style="display: none;">
+                    <option value="Nam" th:selected="${currentuser.gender == 'Nam'}">Nam</option>
+                    <option value="Nữ" th:selected="${currentuser.gender == 'Nữ'}">Nữ</option>
+                    <option value="Khác" th:selected="${currentuser.gender == 'Khác'}">Khác</option>
+                </select>
+
+                <!-- Hiển thị Address -->
+                <p id="addressDisplay" th:text="${'Địa chỉ: '+currentuser.address}"></p>
+                <textarea id="addressEdit" class="form-control" placeholder="Nhập địa chỉ của bạn"
+                    style="display: none;">[[${currentuser.address}]]</textarea>
+
+                <!-- Nút chỉnh sửa và lưu -->
+                <button type="button" id="editProfileBtn" class="btn btn-primary mt-2">Chỉnh sửa thông tin</button>
+                <button type="button" id="saveProfileBtn" class="btn btn-success mt-2"
+                    style="display: none;">Lưu</button>
+            </div>
+
+
+        </div>
+        <!-- tab danh sách bạn bè -->
+        <div class="profile-tabs">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn" onclick="toggleTab(event, 'friends')">Danh sách bạn bè</button>
+                <button class="tab-btn" onclick="toggleTab(event, 'media')">Danh sách hình ảnh & video</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="friends" class="tab-content">
+                <h3>Danh sách bạn bè</h3>
+                <div class="friends-list">
+                    <div th:each="user : ${friendList}">
+                        <div class="friend" th:text="${user.firstName + ' ' + user.lastName}"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="media" class="tab-content">
+                <h3>Danh sách hình ảnh & video</h3>
+                <div class="media-list">
+                    <div th:each="image : ${images}" class="media-item">
+                        <img th:src="@{'/uploads/images/' + ${image.linkImage}}" >
+                    </div>
+                    <div th:each="video : ${videos}" class="media-item">
+                        <video th:src="@{'/uploads/images/' + ${image.linkVideo}}" >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /tab danh sách bạn bè -->
+
+
+
+
+        <!-- script -->
+
+        <script>
+
+            function toggleTab(event, tabId) {
+                const tabContent = document.getElementById(tabId);
+                const allTabContents = document.querySelectorAll('.tab-content');
+                const allTabButtons = document.querySelectorAll('.tab-btn');
+
+                // Nếu tab đã được mở (class active), ẩn nó đi
+                if (tabContent.classList.contains('active')) {
+                    tabContent.classList.remove('active');
+                    event.currentTarget.classList.remove('active');
+                } else {
+                    // Ẩn tất cả các tab khác
+                    allTabContents.forEach(content => content.classList.remove('active'));
+                    allTabButtons.forEach(button => button.classList.remove('active'));
+
+                    // Hiển thị tab được chọn và đánh dấu button là active
+                    tabContent.classList.add('active');
+                    event.currentTarget.classList.add('active');
+                }
+            }
+        </script>
+        <!-- /script -->
+
+        <!-- style -->
+        <style>
+            /* Tabs */
+            .tabs {
+                display: flex;
+                margin-bottom: 10px;
+            }
+
+            .tab-btn {
+                flex: 1;
+                padding: 10px;
+                cursor: pointer;
+                border: 1px solid #ddd;
+                background-color: #f1f1f1;
+                text-align: center;
+            }
+
+            .tab-btn.active {
+                background-color: #ccc;
+                font-weight: bold;
+            }
+
+            /* Tab Content */
+            .tab-content {
+                display: none;
+                /* Ban đầu tất cả tab được ẩn */
+            }
+
+            .tab-content.active {
+                display: block;
+                /* Hiển thị tab khi có class active */
+            }
+
+            /* Friends List */
+            .friends-list {
+                display: flex;
+                /* Sắp xếp bạn bè theo chiều ngang */
+                gap: 10px;
+                /* Khoảng cách giữa các mục */
+            }
+
+            .friend {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                text-align: center;
+            }
+
+            /* Media List */
+            .media-list {
+                display: flex;
+                /* Sắp xếp hình ảnh và video theo chiều ngang */
+                gap: 10px;
+                /* Khoảng cách giữa các mục */
+            }
+
+            .media-item {
+                padding: 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
+            /* Hiệu ứng bo góc và mượt mà cho card */
+            .post-section {
+                border-radius: 15px;
+                /* Bo góc cho card */
+                background-color: white;
+                transition: box-shadow 0.3s ease-in-out;
+                /* Thêm hiệu ứng khi thay đổi box-shadow */
+            }
+
+            /* Thêm hiệu ứng khi hover vào card */
+            .post-section:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                /* Hiệu ứng đổ bóng khi hover */
+            }
+
+            /* Đổi màu nền cho textarea khi hover */
+            .post-input:focus {
+                border-color: #007bff;
+                /* Màu viền khi focus */
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+                /* Hiệu ứng ánh sáng xung quanh khi focus */
+            }
+
+            #bioEdit {
+                width: 100%;
+                resize: none;
+            }
+
+            .fas.fa-edit,
+            .fas.fa-save {
+                margin-left: 8px;
+            }
+
+            /* Tùy chỉnh nút x */
+            .remove-btn {
+                font-size: 18px;
+                font-weight: bold;
+                width: 22px;
+                height: 22px;
+                text-align: center;
+                line-height: 16px;
+                color: white;
+                background-color: #007bff;
+                /* Màu nền xanh biển */
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                /* Hiệu ứng chuyển màu nền */
+            }
+
+            /* Hiệu ứng hover cho nút x */
+            .remove-btn:hover {
+                background-color: #0056b3;
+                /* Màu nền khi hover */
+            }
+
+            /* Tùy chỉnh phần preview ảnh/video */
+            .file-preview-item {
+                display: inline-block;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                position: relative;
+                border-radius: 10px;
+                /* Bo góc cho preview */
+                overflow: hidden;
+                transition: transform 0.3s ease;
+                /* Hiệu ứng khi di chuột vào */
+            }
+
+            /* Hiệu ứng khi hover vào preview ảnh/video */
+            .file-preview-item:hover {
+                transform: scale(1.05);
+                /* Phóng to nhẹ khi hover */
+            }
+
+            /* Nút post */
+            .btn-primary {
+                background-color: #007bff;
+                /* Màu nền xanh biển */
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+                /* Hiệu ứng chuyển màu nền */
+            }
+
+            /* Hiệu ứng hover cho nút post */
+            .btn-primary:hover {
+                background-color: #0056b3;
+                /* Màu nền khi hover */
+            }
+
+            /* Chỉnh sửa phần preview file */
+            #file-preview {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            /* Tùy chỉnh cho container của file preview */
+            .file-preview-item img,
+            .file-preview-item video {
+                max-width: 150px;
+                border-radius: 10px;
+            }
+
+            .profile-pic,
+            #avatarPreview {
+                border-radius: 50%;
+                /* Tạo hình tròn */
+                object-fit: cover;
+                /* Đảm bảo hình ảnh không bị méo */
+                width: 150px;
+                /* Kích thước hình ảnh (điều chỉnh tùy ý) */
+                height: 150px;
+                /* Kích thước hình ảnh */
+                display: block;
+                margin: 0 auto;
+                /* Canh giữa */
+            }
+        </style>
+        <!-- /style -->
+
+
+        <!-- Feed Section -->
+        <div class="post-container">
+            <h5 class="mb-3">Recent Posts</h5>
+
+            <div th:each="post : ${posts}" class="post">
+                <div class="post-header" style="position: relative;">
+                    <img th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+                        alt="User Avatar">
+                    <div class="user-details">
+                        <p class="username" th:text="${currentuser.firstName + ' '+ currentuser.lastName}"></p>
+                        <p class="time" th:text="${post.timeAgo}"></p>
+                    </div>
+                   
+
+
+                </div>
+                <div class="post-content">
+                    <div th:text="${post.content}"></div>
+                    <div class="post-images">
+                        <img th:each="image : ${post.image}" th:src="@{'/uploads/images/' + ${image.linkImage}}"
+                            alt="Post Image" class="post-image">
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button><i class="fas fa-thumbs-up"></i> Thích</button>
+                    <button><i class="fas fa-comment-alt"></i> Bình luận</button>
+                    <button><i class="fas fa-share"></i> Chia sẻ</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
