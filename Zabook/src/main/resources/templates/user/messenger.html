@@ -2,15 +2,17 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Nhắn Tin</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<style>
-		/* CSS tùy chỉnh giao diện nhắn tin */
-		/* Thiết lập font chữ cho toàn bộ trang */
-/* CSS tùy chỉnh giao diện nhắn tin */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhắn Tin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+		integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* CSS tùy chỉnh giao diện nhắn tin */
+      /* CSS tùy chỉnh giao diện nhắn tin */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f7fb;
@@ -18,7 +20,6 @@ body {
     padding: 0;
 }
 
-/* Container của hộp chat */
 #chat-container {
     width: 100%;
     max-width: 600px;
@@ -30,29 +31,25 @@ body {
     border: 1px solid #ddd;
 }
 
-/* Tiêu đề chat */
 #chat-container h2 {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     margin-bottom: 15px;
     color: #333;
 }
 
-/* Hiển thị avatar và tên người dùng */
 .user-info {
     display: flex;
     align-items: center;
 }
 
 .user-info img {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     object-fit: cover;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-
-/* Khung chat hiển thị tin nhắn */
 #messages {
     height: 400px;
     overflow-y: auto;
@@ -64,18 +61,17 @@ body {
     box-sizing: border-box;
 }
 
-/* Các tin nhắn */
 .message {
     padding: 10px 15px;
     border-radius: 6px;
     margin-bottom: 12px;
-    max-width: 80%;
+    max-width: 55%;
     font-size: 1rem;
     line-height: 1.4;
     word-wrap: break-word;
+    transition: background-color 0.3s ease;
 }
 
-/* Tin nhắn người gửi */
 .message.sent {
     background-color: #d1e7fd;
     text-align: right;
@@ -83,14 +79,20 @@ body {
     border-radius: 12px 12px 0 12px;
 }
 
-/* Tin nhắn người nhận */
+.message.sent:hover {
+    background-color: #a3c8f7;
+}
+
 .message.received {
     background-color: #e4e4e4;
     text-align: left;
     border-radius: 12px 12px 12px 0;
 }
 
-/* Input tin nhắn */
+.message.received:hover {
+    background-color: #c4c4c4;
+}
+
 .message-input-container {
     display: flex;
     align-items: center;
@@ -130,7 +132,6 @@ body {
     background-color: #5098f2;
 }
 
-/* Cải thiện thanh cuộn */
 #messages::-webkit-scrollbar {
     width: 8px;
 }
@@ -144,7 +145,6 @@ body {
     background-color: #999;
 }
 
-/* Đảm bảo thiết kế responsive trên di động */
 @media (max-width: 600px) {
     #chat-container {
         margin: 15px;
@@ -162,81 +162,308 @@ body {
     }
 }
 
+/* General Styles */
+.header-container {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0px 10px 0px 0px;
+    margin: 20px 100px 15px 100px;
+    border-radius: 20px;
+    height: 60px;
+}
 
-	</style>
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logoBox img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    max-width: 400px;
+}
+
+.searchBox input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.searchBox a {
+    color: #333;
+    font-size: 20px;
+}
+
+.iconBox1, .iconBox2 {
+    display: flex;
+    align-items: center;
+}
+
+.iconBox1 a, .iconBox2 a {
+    color: #333;
+    margin: 0 10px;
+    font-size: 20px;
+}
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.dropdown-menu2 {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    padding: 10px;
+}
+
+.dropdown-menu2 ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu2 ul li {
+    padding: 10px;
+}
+
+.dropdown-menu2 ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.notification-Bell {
+    position: relative;
+}
+
+.notification-wrapper {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-dropdown ul li {
+    padding: 10px;
+}
+
+.notification-dropdown ul li span {
+    display: block;
+}
+
+.iconBox1 a:hover, .iconBox2 a:hover {
+    color: #007bff;
+}
+
+.notification-Bell:hover .notification-dropdown {
+    display: block;
+}
+
+.spantime {
+    display: block;
+    text-align: center;  /* Canh giữa */
+    font-size: 0.6rem;  /* Cỡ chữ nhỏ hơn */
+    font-weight: normal;  /* Không in đậm */
+    margin: 0 auto;  /* Canh giữa theo chiều ngang */
+}
+
+
+
+    </style>
 </head>
 
 <body>
-	<div id="chat-container">
-    <h2>
-        <div class="user-info">
-            <img th:src="${recipient != null ? recipient.avatar : 'avata.png'}" alt="Avatar" />
-            <span th:text="${recipient != null ? recipient.firstName + ' ' + recipient.lastName : 'Người Dùng Không Xác Định'}">
-                Tên Người Dùng
-            </span>
+	
+	
+	 <header>
+		<div class="header-container">
+			<div class="header-wrapper">
+				<div class="logoBox">
+					<img src="/images/th.png" alt="logo">
+				</div>
+				<div class="searchBox">
+					<input type="search">
+
+					<a href="/friendships">
+						<i class="fas fa-search"></i>
+					</a>
+
+				</div>
+				<!-- Navigation Icons -->
+				<div class="iconBox1">
+					<a href="/user/"><i class="fa-solid fa-house"></i></a>
+					<a href="/user/groups"><i class="fa-solid fa-user-group"></i></a>
+					<a href="/user/video"><i class="fa-solid fa-video"></i></a>
+					<a href="/user/games"><i class="fa-solid fa-gamepad"></i></a>
+				</div>
+
+				<!-- User Options -->
+				<div class="iconBox2">
+					<a href="#"><i class="fa-solid fa-circle-plus"></i></a>
+					<a href="/user/messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
+					<a href="javascript:void(0);" id="notificationBell" class="notification-Bell"><i
+							class="fa-solid fa-bell"></i></a>
+					<a class="profile" style="margin-bottom: 0px; width: auto; height: auto;" href="/user/profile"><img
+							th:src="${currentuser.avatar != null} ? ${currentuser.avatar} : '/images/icon/person.svg'"
+							alt="user"></a>
+							<div id="dropdownMenu" class="dropdown-menu2 dropdown-menu-end" style="display: none;" aria-labelledby="accountDropdown">
+								<ul >
+									<li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+									<li><a class="dropdown-item" href="/fanpage">Fanpage</a></li>
+									<li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+								</ul>
+							</div>
+					<div class="notification-wrapper">
+
+
+						<!-- Dropdown để hiển thị thông báo -->
+						<div id="notificationDropdown" class="notification-dropdown ">
+							<ul id="notificationList">
+								<th:block th:each="notification : ${notifications}">
+									<li>
+										<span th:text="${notification.senderName}">Tên người gửi</span>
+										<span th:text="${notification.content}">Nội dung thông báo</span>
+										<span th:text="${notification.time}">Thời gian</span>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</header>
+	
+	
+	
+	
+    <div id="chat-container">
+        <h2>
+            <div class="user-info">
+                <img th:src="${recipient != null ? recipient.avatar : 'avata.png'}" alt="Avatar" />
+                <span th:text="${recipient != null ? recipient.firstName + ' ' + recipient.lastName : 'Người Dùng Không Xác Định'}">
+                    Tên Người Dùng
+                </span>
+            </div>
+        </h2>
+
+        <!-- Hiển thị các tin nhắn trước đó -->
+        <div id="messages">
+			
+            <div th:each="message : ${messages}">
+				<span class="spantime" th:text="${message.getFormattedTimestamp()}"></span>
+                <div th:class="${message.getSender().getUserID() == currentuser.getUserID() ? 'message sent' : 'message received'}">
+                    <span th:text="${message.content}"></span>
+                    
+                </div>
+            </div>
         </div>
-    </h2>
-    <div id="messages"></div>
-    <input type="hidden" id="sender" th:value="${currentuser.getUserID()}">
-    <input type="hidden" id="recipent" th:value="${recipient.getUserID()}">
-    <div class="message-input-container">
-        <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
-        <button id="sendButton">Gửi</button>
+
+        <input type="hidden" id="sender" th:value="${currentuser.getUserID()}">
+        <input type="hidden" id="recipent" th:value="${recipient.getUserID()}">
+
+        <div class="message-input-container">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+            <button id="sendButton">Gửi</button>
+        </div>
     </div>
-</div>
 
+<script>
+    // Lấy dữ liệu từ input HTML
+    const senderId = document.getElementById("sender").value;
+    const recipientId = document.getElementById("recipent").value;
+    console.log("Sender ID:", senderId, "Recipient ID:", recipientId);
 
-	<script>
-		// Lấy dữ liệu từ input HTML
-		const senderId = document.getElementById("sender").value;
-		const recipientId = document.getElementById("recipent").value;
-		console.log("Sender ID:", senderId, "Recipient ID:", recipientId);
+    // Kết nối tới WebSocket Server
+    let socket = new SockJS('/ws');
+    let stompClient = Stomp.over(socket);
 
-		// Kết nối tới WebSocket Server
-		let socket = new SockJS('/ws');
-		let stompClient = Stomp.over(socket);
+    // Kết nối đến WebSocket
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/user/' + senderId + '/queue/messages', function (response) {
+            let message = JSON.parse(response.body);
+            displayMessage(message);
+        });
+    });
 
-		// Kết nối đến WebSocket
-		stompClient.connect({}, function (frame) {
-			console.log('Connected: ' + frame);
-			stompClient.subscribe('/user/' + senderId + '/queue/messages', function (response) {
-				let message = JSON.parse(response.body);
-				displayMessage(message);
-			});
+    // Gửi tin nhắn khi nhấn nút Gửi
+    document.getElementById("sendButton").addEventListener("click", sendMessage);
 
-		});
+    // Gửi tin nhắn khi nhấn Enter
+    document.getElementById("messageInput").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();  // Ngừng hành động mặc định (chẳng hạn như tạo dòng mới trong input)
+            sendMessage();  // Gửi tin nhắn
+        }
+    });
 
-		// Gửi tin nhắn
-		document.getElementById("sendButton").addEventListener("click", sendMessage);
-		function sendMessage() {
-			const messageInput = document.getElementById("messageInput");
-			const messageText = messageInput.value;
-			if (messageText.trim()) {
-				const message = {
-					senderId: senderId,
-					recipientId: recipientId,
-					content: messageText
-				};
-				// Gửi tin nhắn tới backend qua WebSocket
-				stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
-				displayMessage({content: messageText, sent: true});
-				messageInput.value = ''; // Xóa input
-			}
-		}
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const messageText = messageInput.value;
+        if (messageText.trim()) {
+            const message = {
+                senderId: senderId,
+                recipientId: recipientId,
+                content: messageText
+            };
+            // Gửi tin nhắn tới backend qua WebSocket
+            stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
+            displayMessage({content: messageText, sent: true});
+            messageInput.value = ''; // Xóa input
+        }
+    }
 
-		// Hiển thị tin nhắn trong chat-box
-		function displayMessage(message) {
-			const chatBox = document.getElementById("messages");
-			const messageDiv = document.createElement("div");
-			messageDiv.classList.add("message");
-			if (message.sent) {
-				messageDiv.classList.add("sent");
-			}
-			messageDiv.textContent = message.content;
-			chatBox.appendChild(messageDiv);
-			chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
-		}
-	</script>
+    // Hiển thị tin nhắn trong chat-box
+    function displayMessage(message) {
+        const chatBox = document.getElementById("messages");
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        if (message.sent) {
+            messageDiv.classList.add("sent");
+        } else {
+            messageDiv.classList.add("received");
+        }
+        messageDiv.textContent = message.content;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Cuộn xuống tin nhắn mới nhất
+    }
+</script>
+
 
 </body>
 
