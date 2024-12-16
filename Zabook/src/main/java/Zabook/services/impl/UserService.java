@@ -178,7 +178,7 @@ public class UserService implements IUserService {
         // Kiểm tra nếu friendships của user không phải null
         if (user.getFriendships() != null) {
             for (FriendShip fship : user.getFriendships()) {
-                if (fship.getUser2() != null && FriendshipStatus.ACCEPTED.equals(fship.getStatus())) {
+                if (fship.getUser2() != null && "accepted".equals(fship.getStatus())) {
                     Flist.add(fship.getUser2());
                 }
             }
