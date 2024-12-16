@@ -116,6 +116,9 @@ public class UserController {
     public String viewProfile(@PathVariable ObjectId userId, Model model) {
         // Lấy thông tin người dùng từ cơ sở dữ liệu
     	User user1 = userService.getCurrentUser();
+        if(userId.equals(user1.getUserID())) {
+            return "redirect:/user/profile";
+        }
         model.addAttribute("currentuser", user1);
         List<Notification> notifications = notificationService.getNotifications(user1.toString()); 
         model.addAttribute("notifications", notifications);
